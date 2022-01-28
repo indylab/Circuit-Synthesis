@@ -97,14 +97,16 @@ if __name__ == '__main__':
 
     dataset = MockSimulatorDataset(sim_outputs,sim_inputs)
 
-    dtype = torch.FloatTensor
-    loss_fn = nn.CrossEntropyLoss().type(dtype)
-    optimizer = optim.SGD(test_model.parameters(), lr = 0.1)
 
-
-    train_data = DataLoader(dataset, batch_size=5)
-    validation_data = DataLoader(dataset, batch_size=5)
-    train(test_model,train_data,loss_fn,optimizer, num_epochs=100, print_every=5)
-    acc,preds = check_accuracy(test_model, validation_data)
+    #TODO
+    # dtype = torch.FloatTensor
+    # loss_fn = nn.CrossEntropyLoss().type(dtype)
+    # optimizer = optim.SGD(test_model.parameters(), lr = 0.1)
+    #
+    #
+    # train_data = DataLoader(dataset, batch_size=5)
+    # validation_data = DataLoader(dataset, batch_size=5)
+    # train(test_model,train_data,loss_fn,optimizer, num_epochs=100, print_every=5)
+    # acc,preds = check_accuracy(test_model, validation_data)
 
         #print(test_out.shape)
