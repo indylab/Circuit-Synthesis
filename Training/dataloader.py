@@ -17,4 +17,15 @@ class CircuitSynthesisGainAndBandwidthManually(Dataset):
         return self.parameter[index], self.result[index]
 
 
+class MockSimulatorDataset(Dataset):
 
+    def __init__(self, parameters, results):
+        self.parameters = parameters
+        self.results = results
+
+
+    def __len__(self):
+        return len(parameters)
+
+    def __getitem__(self, index):
+        return self.parameters[index], self.results[index]
