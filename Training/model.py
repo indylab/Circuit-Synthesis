@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-from dataloader import *
+from .dataloader import *
 from torch.utils.data import DataLoader
 
 class CSGainAndBandwidthManually(nn.Module):
@@ -24,8 +24,8 @@ def train(model, training_data, loss_fn, optimizer, dtype=torch.FloatTensor, num
         model.train()
         for t, (x, y) in enumerate(training_data):
 
-            x_var = Variable(x.type(dtype))
-            y_var = Variable(y.type(dtype).long())
+            x_var = torch.autograd.Variable(x.type(dtype))
+            y_var = torch.autograd.Variable(y.type(dtype).long())
 
             # make predictions
             scores = model(x_var)
