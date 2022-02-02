@@ -31,11 +31,11 @@ def parseGainAndBWCsv(srcFile: str) -> list:
                 gain_raw = value_dt.iloc[row, column + 1]
 
                 # if nan value is -1
-                bandwidth = bw_raw if not pd.isnull(bw_raw) else -1.0
+                bandwidth = bw_raw/10**9 if not pd.isnull(bw_raw) else -1.0
                 gain = gain_raw if not pd.isnull(gain_raw) else -1.0
 
                 try:
-                    data_tuple = ([row_index_dict[row], float(column_index_dict[column // 2])], [bandwidth, gain])
+                    data_tuple = ([float(row_index_dict[row]), float(column_index_dict[column // 2])], [float(bandwidth), float(gain)])
                     data_list.append(data_tuple)
                 except:
                     continue
