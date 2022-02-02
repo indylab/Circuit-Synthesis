@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+from torch.utils.data import random_split
 
 DEFAULT_FILE_PATH = '../Data/BW_Gain.csv'
 
@@ -44,6 +45,30 @@ def parseGainAndBWCsv(srcFile: str) -> list:
     else:
         raise FileNotFoundError
 
+
+def mockSimulator(xy):
+    np.random.seed(123)
+    input = xy
+
+    A = np.random.rand(1, 5)
+    B = np.random.rand(5, 2)
+    C = np.random.rand(2, 15)
+
+    iA = input.dot(A)
+    iAB = iA.dot(B)
+    full = iAB.dot(C)
+
+    ret = np.array([np.mean(full[0]), np.mean(full[1])]).reshape(2, 1)
+
+    return ret
+
+
+def splitDataset(dataset, train_size_prob):
+    train_size = int(len(dataset) * train_size_prob)
+
+    train_dataset, validate_dataset = random_split(dataset, [train_size, len(dataset) - train_size])
+
+    return train_dataset, validate_dataset
 
 if __name__ == '__main__':
     k = parseGainAndBWCsv(DEFAULT_FILE_PATH)
