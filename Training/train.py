@@ -3,12 +3,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from utils import *
-from dataset import *
-from model import *
+# from utils import *
+# from dataset import *
+# from model import *
 import numpy as np
+from ray import tune
+
 
 def train(model, training_data, loss_fn, optimizer, dtype=torch.FloatTensor, num_epochs=1, print_every=10):
+    #Regular Training Loop
     loss_list = []
     for epoch in range(num_epochs):
         #print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
@@ -22,7 +25,7 @@ def train(model, training_data, loss_fn, optimizer, dtype=torch.FloatTensor, num
             # make predictions
             scores = model(x_var)
 
-            loss = loss_fn(scores, y_var)
+            loss = loss_fn(scores.float(), y_var.float())
             #TODO implement proper loss or gradient clipping
             loss = torch.clamp(loss, max = 500000, min = -500000)
             avg_loss += (loss.item() - avg_loss) / (t+1)
@@ -39,17 +42,59 @@ def train(model, training_data, loss_fn, optimizer, dtype=torch.FloatTensor, num
         loss_list.append(avg_loss)
     return loss_list
 
+def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=torch.FloatTensor, num_epochs=1, print_every=10, wTune = False, margin = 0.1):
+    """
+    Training Loop with Validation check at each step.
+    Params:
+        wTune (Bool): if your using raytune wTune = True reports accuracy and part accuracy and loss per epoch
+        margin (float): is the percent error your willing to allow.
+    """
+    loss_list = []
+    acc_list = []
+    part_acc_list = []
+    for epoch in range(num_epochs):
+        #print('Starting epoch %d / %d' % (epoch + 1, num_epochs))
+        model.train()
+        avg_loss = 0
+        for t, (x, y) in enumerate(training_data):
 
-def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True):
-    if train:
-        print('Checking accuracy on validation set')
-    else:
-        print('Checking accuracy on test set')
+            x_var = torch.autograd.Variable(x.type(dtype))
+            y_var = torch.autograd.Variable(y.type(dtype).float())
+
+            # make predictions
+            scores = model(x_var)
+
+            loss = loss_fn(scores.float(), y_var.float())
+            #TODO implement proper loss or gradient clipping
+            loss = torch.clamp(loss, max = 500000, min = -500000)
+            avg_loss += (loss.item() - avg_loss) / (t+1)
+
+
+            # Zero your gradient
+            optimizer.zero_grad()
+            # Compute the loss gradients
+            loss.backward()
+            # Adjust learning weights
+            optimizer.step()
+        if (epoch + 1) % print_every == 0:
+            print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
+        acc, part_acc, idx = check_accuracy(model,val_data,margin)
+        if wTune:
+            tune.report(acc = acc, part_acc=part_acc, loss = avg_loss)
+        loss_list.append(avg_loss)
+        acc_list.append(acc)
+        part_acc_list.append(part_acc)
+    return loss_list, acc_list, part_acc_list
+
+def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True, verbose = True):
+    num_part_correct = 0
+    num_part_samples = 0
     num_correct = 0
     num_samples = 0
+    
     model.eval()  # Put the model in test mode (the opposite of model.train(), essentially)
+    loss_list = []
     all_preds = []
-    err_list = []
     for x, y in loader:
         with torch.no_grad():
             x_var = torch.autograd.Variable(x.type(dtype))
@@ -58,49 +103,35 @@ def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True):
 
         y_hat = np.array(y_hat.detach(), dtype)
         y = np.array(y.detach(), dtype)
+        
+       
+        err = np.abs(y_hat - y)
+        for row in err:
+            num_in_row = len(np.where(row < margin)[0])
+            if num_in_row == len(row):
+                num_correct += 1
 
-        # TODO add functionality to make this a parameter so we can try multiple accuracy measures
-        err = np.mean(np.square(y_hat - y), axis=1)  # mse formula
-
-        err_list.append(np.mean(err))
-        num_correct += len(np.where(err < margin)[0])
-        num_samples += y_hat.shape[0]
-        all_preds.extend(np.array(y_hat))
+        num_samples += y.shape[0]
+        correct_idx = np.where(err < margin)
+        num_part_correct += len(correct_idx[0])
+        num_part_samples += y.shape[0] * y.shape[1]
+        
+        all_preds.extend(y_hat)
+    part_acc = float(num_part_correct) / num_part_samples
     acc = float(num_correct) / num_samples
-    print('Got %d / %d correct (%.2f)' % (num_correct, num_samples, 100 * acc))
-    print('Error for model is {}'.format(round(sum(err_list) / len(err_list), 5)))
-    return acc, all_preds
+    if verboase:
+        print('Got %d / %d partially correct (%.2f pct)' % (num_part_correct, num_part_samples, 100 * part_acc)) 
+        print('Got %d / %d correct (%.2f pct)' % (num_correct, num_samples, 100 * acc)) 
+    return acc, part_acc, all_preds
 
 
-if __name__ == '__main__':
-    # TODO turn this script into a notebook for better visualization
+# two experimental custom loss functions. VERY basic
+def L1MarginalLoss2(yhat, y, margin = 0.10):
+    errs = (torch.abs(yhat - y) / y).type(torch.float64)
+    errs = torch.where(errs > margin, errs, float(0.0))
+    return torch.mean(errs,dtype=torch.float)
 
-    test_model = CSGainAndBandwidthManually()
-
-
-    # load datasets and split into train and val sets
-
-    data = np.array(parseGainAndBWCsv('../Data/BW_Gain.csv')).astype(float)
-
-    dataset = CircuitSynthesisGainAndBandwidthManually(data[:, 1], data[:, 0])
-    train_dataset, val_dataset = splitDataset(dataset, 0.8)
-
-
-
-    dtype = torch.FloatTensor
-    loss_fn = nn.MSELoss().type(dtype)  # loss can be changed here. This is the first one i tried that gave meaningful results
-    optimizer = optim.Adam(test_model.parameters(), lr=3e-4)  # TODO haven't experimented with this yet
-
-    train_data = DataLoader(train_dataset, batch_size=5)
-    validation_data = DataLoader(val_dataset, batch_size=5)
-
-    # train nn and check accuracy
-    losses = train(test_model, train_data, loss_fn, optimizer, num_epochs=2000, print_every=10)
-    # TODO accuracy may not be right. this was a quick attempt
-    acc, preds = check_accuracy(test_model, validation_data, .20)
-
-    # plot losses per epoch
-    plt.plot(losses)
-    plt.show()
-
-    # print(test_out.shape)
+def L1MarginalLoss1(yhat, y, margin = 0.10):
+    errs = (torch.abs(yhat - y)).type(torch.float64)
+    errs = torch.where(errs > margin, errs, float(0.0))
+    return torch.mean(errs,dtype=torch.float)
