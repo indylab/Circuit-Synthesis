@@ -78,9 +78,10 @@ def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=t
             optimizer.step()
         if (epoch + 1) % print_every == 0:
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
-        acc, part_acc, idx = check_accuracy(model,val_data,margin)
+        acc, part_acc, idx = check_accuracy(model,training_data,margin)
+        val_acc, val_part_acc, val_idx = check_accuracy(model,val_data,margin)
         if wTune:
-            tune.report(acc = acc, part_acc=part_acc, loss = avg_loss)
+            tune.report(accuracy = acc, partial_accuracy = part_acc, validation_accuracy = val_acc, validation_partial_accuracy=val_part_acc, loss = avg_loss)
         loss_list.append(avg_loss)
         acc_list.append(acc)
         part_acc_list.append(part_acc)
@@ -119,7 +120,7 @@ def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True, v
         all_preds.extend(y_hat)
     part_acc = float(num_part_correct) / num_part_samples
     acc = float(num_correct) / num_samples
-    if verboase:
+    if verbose:
         print('Got %d / %d partially correct (%.2f pct)' % (num_part_correct, num_part_samples, 100 * part_acc)) 
         print('Got %d / %d correct (%.2f pct)' % (num_correct, num_samples, 100 * acc)) 
     return acc, part_acc, all_preds

@@ -75,6 +75,7 @@ def splitDataset(dataset, train_size_prob):
 
 def openPickle(filename):
     infile = open(filename,'rb')
+    infile.seek(0)
     new_dict = pickle.load(infile)
     infile.close()
     return new_dict

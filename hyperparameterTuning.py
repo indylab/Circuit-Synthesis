@@ -8,6 +8,8 @@ import numpy as np
 from ray import tune
 from ray.tune import CLIReporter
 import pickle
+import sys
+import os
 
 def normalize(data):
     data_min = np.min(data)
@@ -18,9 +20,9 @@ def normalize(data):
 def denormalize(data,data_min,data_max):
     denorm_data = (data * (data_max - data_min) + data_min)
     return denorm_data
-def training_function(config):
+def training_function(config, checkpoint_dir=None):
     # Hyperparameters
-    test_model = model.CSGainAndBandwidthManually()
+    test_model = config["model"]()
 
     # load datasets and split into train and val sets
     data = np.array(utils.parseGainAndBWCsv('/home/reevest/Circuit-Synthesis/Data/BW_Gain2.0.csv')).astype(float)
@@ -45,63 +47,58 @@ def training_function(config):
     
     # set loss and optimizer
     dtype = torch.FloatTensor
-    loss_fn = config["loss_fn"]#nn.L1Loss().type(dtype)  # loss can be changed here. This is the first one i tried that gave meaningful results
-    optimizer = config["optim"](test_model.parameters(), lr=config["lr"])  # TODO haven't experimented with this yet
+    loss_fn = config["loss_fn"]
+    optimizer = config["optim"](test_model.parameters(), lr=config["lr"])  
 
     # Create Data Loaders
     train_data = DataLoader(train_dataset, batch_size=config["bs"])
     validation_data = DataLoader(val_dataset, batch_size=config["bs"])
     
     # train
-    losses = train.trainWValidation(test_model, train_data, validation_data, loss_fn, optimizer, num_epochs=int(config["epochs"]), print_every=10,wTune=True,margin=.1)
+    losses, accs, part_accs = train.trainWValidation(test_model, train_data, validation_data, loss_fn, optimizer, num_epochs=int(config["epochs"]), print_every=10,wTune=True,margin=.05)
     
-    # return final acc
-    acc, part_acc, preds = train.check_accuracy(test_model, validation_data, .1)
-    return {"acc": acc, "part_acc": part_acc, "loss": losses[-1]}
-    # tune.report(acc=1)
-    # tune.report(loss=losses[-1])
+    if checkpoint_dir:
+        tune.checkpoint_dir() # don't think this works yet
 
 
 if __name__ == '__main__':
-    # config = {"lr": 1e-6, "epochs": 100, "loss_fn": nn.L1Loss().type(float)}
-    # training_function(config)
-    experiment_name = "Feb-14-fix-uniform-2"
+    '''USAGE:
+        use createConfig to set experiment parameters for hyperparametertunining.py 
+        Allows multiple experiments to be run simultaneously.
+        Pass resulting file to this program (hyperparametertunining.py) as the first and only argument 
+    '''
+    params = utils.openPickle(sys.argv[1])
+    experiment_name = params["experiment_name"]
     dtype = torch.FloatTensor
-    loss_functions = [nn.L1Loss().type(dtype),
-                      nn.MSELoss().type(dtype),
-                      nn.HuberLoss(reduction='mean', delta=1.0)]
-    optimizers = [optim.Adagrad, optim.SGD,
-                 optim.Adam]
+    loss_functions = [nn.L1Loss().type(dtype)]
+    optimizers = [optim.Adagrad]
+    
+    models = [model.Model500GELU]
 
     
     # Add a custom metric column, in addition to the default metrics.
     # Note that this must be a metric that is returned in your training results.
     reporter = CLIReporter(
     parameter_columns=["loss_fn", "lr", "epochs", "optim"],
-    metric_columns=["loss", "acc", "part_acc"])
+    metric_columns=["accuracy", "validation_accuracy", "partial_accuracy", "validation_partial_accuracy", "loss" ])
     
     analysis = tune.run(
     training_function,
-    config={
-        "epochs": tune.uniform(100, 4000),
-        "lr": tune.uniform(0.000001, 0.1),
-        "bs":  tune.grid_search([16,32,62,128]),
-        "loss_fn" : tune.grid_search(loss_functions),
-        "optim" : tune.grid_search(optimizers)
-    },
-        num_samples = 20,
+    config = params["config"],
+    num_samples = params["num_samples"],
     progress_reporter=reporter,
+    keep_checkpoints_num=3, 
+    checkpoint_score_attr="validation_accuracy",
     name=experiment_name)
 
-    
-
     print("Best config: ", analysis.get_best_config(
-        metric="acc", mode="max"))
+        metric="validation_accuracy", mode="max"))
 
     # Get a dataframe for analyzing trial results.
     filename = f"Experiments/{experiment_name}"
     outfile = open(filename,'wb')
 
+    # store dataframe as pickle in "Experiments/{experiment_name}"
     df = analysis.results_df
     pickle.dump(df,outfile)
     outfile.close()
