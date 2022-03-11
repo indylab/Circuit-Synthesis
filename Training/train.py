@@ -42,7 +42,7 @@ def train(model, training_data, loss_fn, optimizer, dtype=torch.FloatTensor, num
         loss_list.append(avg_loss)
     return loss_list
 
-def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=torch.FloatTensor, num_epochs=1, print_every=10, wTune = False, margin = 0.1):
+def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=torch.FloatTensor, num_epochs=1, print_every=10, wTune = False, margin = 0.05):
     """
     Training Loop with Validation check at each step.
     Params:
@@ -64,7 +64,7 @@ def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=t
             # make predictions
             scores = model(x_var)
 
-            loss = loss_fn(scores.float(), y_var.float())
+            loss = 0.8 * loss_fn(scores.float(), y_var.float())
             #TODO implement proper loss or gradient clipping
             loss = torch.clamp(loss, max = 500000, min = -500000)
             avg_loss += (loss.item() - avg_loss) / (t+1)
@@ -77,9 +77,10 @@ def trainWValidation(model, training_data, val_data, loss_fn, optimizer, dtype=t
             # Adjust learning weights
             optimizer.step()
         if (epoch + 1) % print_every == 0:
-            print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
-        acc, part_acc, idx = check_accuracy(model,training_data,margin)
-        val_acc, val_part_acc, val_idx = check_accuracy(model,val_data,margin)
+            acc, part_acc, idx = check_accuracy(model,training_data,margin)
+        else:
+            acc, part_acc, idx = check_accuracy(model,training_data,margin, verbose=False)
+        print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
         if wTune:
             tune.report(accuracy = acc, partial_accuracy = part_acc, validation_accuracy = val_acc, validation_partial_accuracy=val_part_acc, loss = avg_loss)
         loss_list.append(avg_loss)
