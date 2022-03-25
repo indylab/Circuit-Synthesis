@@ -9,7 +9,7 @@ DEFAULT_FILE_PATH = '../Data/BW_Gain.csv'
 def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
     if os.path.exists(srcFile):
         dt = pd.read_csv(srcFile)
-        width_column = dt['Width']
+        width_column = dt['width']
         # store each row transistor width value
         row_index_dict = dict()
 
@@ -23,7 +23,7 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
                 dt.columns[1:len(dt.columns):2]):  # skip every other column cause of joint csv table
             column_index_dict[index] = column
 
-        value_dt = dt.loc[:, dt.columns != 'Width']
+        value_dt = dt.loc[:, dt.columns != 'width']
         data_list = []
 
         for row in range(len(dt)):
@@ -49,6 +49,36 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
         raise FileNotFoundError
 
 
+def get_rid_of_duplicate(data_tuple):
+    # data tuple is a list where it holds all data tuple
+    # Each index represent a data point 
+    # Each index is a tuple with value ([transistor width, resistor load],[bandwidth, gain])
+    return_tuple = []
+    exists_set = set()
+    
+    for i in data_tuple:
+        if (round(i[1][0],5), round(i[1][1],5)) not in exists_set:
+            return_tuple.append(i)
+            exists_set.add((round(i[1][0], 5), round(i[1][1],5)))
+    return return_tuple
+
+
+def check_same_x_different_y(data_tuple):
+    #Function called after calling get rid of duplicate function
+    # There shouldn't be any same y, but can there be any same x?
+    
+    exists_set = dict()
+    duplicate_sample_count = 0
+    return_tuple = []
+    for i in data_tuple:
+        if ((i[0][0], i[0][1])) not in exists_set:
+            exists_set[(i[0][0], i[0][1])] = i
+            return_tuple.append(i)
+        else:
+            print(i, exists_set[(i[0][0], i[0][1])])
+            duplicate_sample_count += 1
+    return duplicate_sample_count, return_tuple
+        
 def mockSimulator(xy):
     np.random.seed(123)
     input = xy
