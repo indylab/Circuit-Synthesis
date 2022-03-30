@@ -111,13 +111,29 @@ def openPickle(filename):
     return new_dict
 
 def normalize(data):
-    data_min = np.min(data)
-    data_max = np.max(data)
-    norm_data = (data-data_min)/(data_max-data_min)
-    return norm_data, data_min, data_max
+    assert len(data.shape) == 2, "data must be 2D"
+    norm_data = np.zeros(data.shape)
+    def _normfeature(feature):
+        data_min = np.min(feature)
+        data_max = np.max(feature)
+        norm_data = (feature-data_min)/(data_max-data_min)
+        return norm_data, data_min, data_max
+    min_max = np.zeros((data.shape[1],2))
+    for i in range(data.shape[1]):
+        feature = data.T[i]
+        norm_feature, data_min, data_max = _normfeature(feature)
+        norm_data.T[i] = norm_feature
+        min_max[i] = [data_min, data_max]
+    return norm_data,min_max
+    
+    
 
-def denormalize(data,data_min,data_max):
-    denorm_data = (data * (data_max - data_min) + data_min)
+def denormalize(data,min_max):
+    denorm_data = np.zeros(data.shape)
+    def _denormfeature(feature, data_min, data_max):
+        return (feature * (data_max - data_min) + data_min)
+    for i in range(data.shape[1]):
+        denorm_data.T[i] = _denormfeature(data.T[i],min_max[i][0],min_max[i][1])
     return denorm_data
     
 if __name__ == '__main__':

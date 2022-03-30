@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-# from utils import *
+from .utils import *
 # from dataset import *
 # from model import *
 import numpy as np
@@ -126,6 +126,46 @@ def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True, v
         print('Got %d / %d correct (%.2f pct)' % (num_correct, num_samples, 100 * acc)) 
     return acc, part_acc, all_preds
 
+def check_raw_accuracy(model, loader, min_max, margin, dtype=torch.FloatTensor, train=True, verbose = True):
+    num_part_correct = 0
+    num_part_samples = 0
+    num_correct = 0
+    num_samples = 0
+    
+    model.eval()  # Put the model in test mode (the opposite of model.train(), essentially)
+    loss_list = []
+    all_preds = []
+    for x, y in loader:
+        with torch.no_grad():
+            x_var = torch.autograd.Variable(x.type(dtype))
+
+        y_hat = model(x_var)
+
+        y_hat = np.array(y_hat.detach(), dtype)
+        y = np.array(y.detach(), dtype)
+        
+        y_min_max = min_max[2:,:] # discard x min_maxs
+        y = denormalize(y,y_min_max)
+        y_hat = denormalize(y_hat,y_min_max)
+       
+        err = np.abs(y_hat - y)/y
+        for row in err:
+            num_in_row = len(np.where(row < margin)[0])
+            if num_in_row == len(row):
+                num_correct += 1
+
+        num_samples += y.shape[0]
+        correct_idx = np.where(err < margin)
+        num_part_correct += len(correct_idx[0])
+        num_part_samples += y.shape[0] * y.shape[1]
+        
+        all_preds.extend(y_hat)
+    part_acc = float(num_part_correct) / num_part_samples
+    acc = float(num_correct) / num_samples
+    if verbose:
+        print('Got %d / %d partially correct (%.2f pct)' % (num_part_correct, num_part_samples, 100 * part_acc)) 
+        print('Got %d / %d correct (%.2f pct)' % (num_correct, num_samples, 100 * acc)) 
+    return acc, part_acc, all_preds
 
 # two experimental custom loss functions. VERY basic
 def L1MarginalLoss2(yhat, y, margin = 0.10):
