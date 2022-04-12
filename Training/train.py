@@ -126,7 +126,7 @@ def check_accuracy(model, loader, margin, dtype=torch.FloatTensor, train=True, v
         print('Got %d / %d correct (%.2f pct)' % (num_correct, num_samples, 100 * acc)) 
     return acc, part_acc, all_preds
 
-def check_raw_accuracy(model, loader, min_max, margin, dtype=torch.FloatTensor, train=True, verbose = True):
+def check_raw_accuracy(model, loader, min_max, margin, dtype=torch.FloatTensor, verbose = True):
     num_part_correct = 0
     num_part_samples = 0
     num_correct = 0

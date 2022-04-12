@@ -39,7 +39,7 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
                     continue
                 
                 try:
-                    data_tuple = ([float(row_index_dict[row]), float(column_index_dict[column // 2])], [float(bandwidth), float(gain)])
+                    data_tuple = ([float(row_index_dict[row]), float(column_index_dict[column // 2])], [float(bandwidth), float(gain)/10000000000])
                     data_list.append(data_tuple)
                 except:
                     continue
