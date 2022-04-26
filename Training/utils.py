@@ -3,13 +3,14 @@ import pandas as pd
 import numpy as np
 from torch.utils.data import random_split
 import pickle
+from sklearn import preprocessing
 DEFAULT_FILE_PATH = '../Data/BW_Gain.csv'
 
 
 def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
     if os.path.exists(srcFile):
         dt = pd.read_csv(srcFile)
-        width_column = dt['Width']
+        width_column = dt['width']
         # store each row transistor width value
         row_index_dict = dict()
 
@@ -23,7 +24,7 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
                 dt.columns[1:len(dt.columns):2]):  # skip every other column cause of joint csv table
             column_index_dict[index] = column
 
-        value_dt = dt.loc[:, dt.columns != 'Width']
+        value_dt = dt.loc[:, dt.columns != 'width']
         data_list = []
 
         for row in range(len(dt)):
@@ -48,7 +49,28 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
     else:
         raise FileNotFoundError
 
+def parseGainAndBWCsv2(srcFile):
+    try: 
+        os.path.exists(srcFile)
+    except FileNotFoundError:
+        print(f"FIle {srcFile} doesnt exist")
+        raise FileNotFoundError
+    
+    data = pd.io.parsers.read_csv(srcFile)
+    resistors = data.keys()[::2][1:] # get column labels (every other col minus 1st)
+    widths = data.iloc[:,0] # get width values from first column
 
+    values = data.values[:,1:] # get values minus first column (row labels)
+
+    res = []
+    for r in range(len(resistors)):
+        for w in range(len(widths)):
+            p = [resistors[r], widths[w], values[w,r*2], values[w,r*2+1]]
+            if " " in p:  # ignore values with null values
+                continue
+            res.append(p)
+    res = np.array(res)
+    return res
 def mockSimulator(xy):
     np.random.seed(123)
     input = xy
@@ -81,14 +103,55 @@ def openPickle(filename):
     return new_dict
 
 def normalize(data):
-    data_min = np.min(data)
-    data_max = np.max(data)
-    norm_data = (data-data_min)/(data_max-data_min)
-    return norm_data, data_min, data_max
+    assert data.shape[1] == 4, "reshape the data first to (-1, 4)"
+    normed_data = np.zeros(data.shape)
+    normers = []
+    for i in range(len(data.T)):
+        normer = preprocessing.MinMaxScaler((-1,1))
+        normed_data.T[i] = normer.fit_transform(data.T[i].reshape(-1,1)).reshape(-1)
+        normers.append(normer)
+    return normed_data,normers
 
-def denormalize(data,data_min,data_max):
-    denorm_data = (data * (data_max - data_min) + data_min)
-    return denorm_data
+def denormalize(normed_data,normers):
+    denormed_data = np.zeros(normed_data.shape)
+    for i in range(len(normed_data.T)):
+        denormed_data.T[i] = normers[i].inverse_transform(normed_data.T[i].reshape(-1,1)).reshape(-1)
+    return denormed_data
+
+def dropCollisions(data, perform_sim, param_sim):
+    assert(data.shape[1] == 2), "data should be of shape ([x1],[y1]) ... ([xn],[yn])"
+    e = 0.01
+    alias = 0
+    diffs = []
+    for i in range(len(data)):
+        for j in range(i+1,len(data)):
+            x1 = data[i][0] # params 1
+            y1 = data[i][1] # performance 1
+            x2 = data[j][0] # params 2
+            y2 = data[j][1] # performance 2
+            # print("*"*100)
+            # print(data[i])
+            # print(data[j])
+            diff_y = np.linalg.norm(y1 - y2) # 
+            diff_x = np.linalg.norm(x1 - x2)
+            
+            diffs.append([diff_y,diff_x,(i,j)])
+    diffs = np.array(diffs,dtype=object)
+    print("Dropping Collisions")
+    print("Size of Data", data.shape)
+    print("Size of Diffs", len(diffs))
+    
+    to_del = set([])
+    for pair in diffs:
+        if pair[0] > perform_sim and pair[1] < param_sim:
+            to_del = to_del.union(set(pair[2]))
+            
+    for i in sorted(list(to_del))[::-1]:
+        data = np.delete(data,i,0)
+    print("dropped",(len(to_del)))
+    return data
+            
+    
     
 if __name__ == '__main__':
     k = parseGainAndBWCsv(DEFAULT_FILE_PATH)
