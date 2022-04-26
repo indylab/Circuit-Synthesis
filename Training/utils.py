@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from torch.utils.data import random_split
 import pickle
+from sklearn import preprocessing
 DEFAULT_FILE_PATH = '../Data/BW_Gain.csv'
 
 
@@ -39,7 +40,7 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
                     continue
                 
                 try:
-                    data_tuple = ([float(row_index_dict[row]), float(column_index_dict[column // 2])], [float(bandwidth), float(gain)/10000000000])
+                    data_tuple = ([float(row_index_dict[row]), float(column_index_dict[column // 2])], [float(bandwidth), float(gain)])
                     data_list.append(data_tuple)
                 except:
                     continue
@@ -48,37 +49,28 @@ def parseGainAndBWCsv(srcFile: str, discard = True) -> list:
     else:
         raise FileNotFoundError
 
-
-def get_rid_of_duplicate(data_tuple):
-    # data tuple is a list where it holds all data tuple
-    # Each index represent a data point 
-    # Each index is a tuple with value ([transistor width, resistor load],[bandwidth, gain])
-    return_tuple = []
-    exists_set = set()
+def parseGainAndBWCsv2(srcFile):
+    try: 
+        os.path.exists(srcFile)
+    except FileNotFoundError:
+        print(f"FIle {srcFile} doesnt exist")
+        raise FileNotFoundError
     
-    for i in data_tuple:
-        if (round(i[1][0],5), round(i[1][1],5)) not in exists_set:
-            return_tuple.append(i)
-            exists_set.add((round(i[1][0], 5), round(i[1][1],5)))
-    return return_tuple
+    data = pd.io.parsers.read_csv(srcFile)
+    resistors = data.keys()[::2][1:] # get column labels (every other col minus 1st)
+    widths = data.iloc[:,0] # get width values from first column
 
+    values = data.values[:,1:] # get values minus first column (row labels)
 
-def check_same_x_different_y(data_tuple):
-    #Function called after calling get rid of duplicate function
-    # There shouldn't be any same y, but can there be any same x?
-    
-    exists_set = dict()
-    duplicate_sample_count = 0
-    return_tuple = []
-    for i in data_tuple:
-        if ((i[0][0], i[0][1])) not in exists_set:
-            exists_set[(i[0][0], i[0][1])] = i
-            return_tuple.append(i)
-        else:
-            print(i, exists_set[(i[0][0], i[0][1])])
-            duplicate_sample_count += 1
-    return duplicate_sample_count, return_tuple
-        
+    res = []
+    for r in range(len(resistors)):
+        for w in range(len(widths)):
+            p = [resistors[r], widths[w], values[w,r*2], values[w,r*2+1]]
+            if " " in p:  # ignore values with null values
+                continue
+            res.append(p)
+    res = np.array(res)
+    return res
 def mockSimulator(xy):
     np.random.seed(123)
     input = xy
@@ -111,30 +103,55 @@ def openPickle(filename):
     return new_dict
 
 def normalize(data):
-    assert len(data.shape) == 2, "data must be 2D"
-    norm_data = np.zeros(data.shape)
-    def _normfeature(feature):
-        data_min = np.min(feature)
-        data_max = np.max(feature)
-        norm_data = (feature-data_min)/(data_max-data_min)
-        return norm_data, data_min, data_max
-    min_max = np.zeros((data.shape[1],2))
-    for i in range(data.shape[1]):
-        feature = data.T[i]
-        norm_feature, data_min, data_max = _normfeature(feature)
-        norm_data.T[i] = norm_feature
-        min_max[i] = [data_min, data_max]
-    return norm_data,min_max
-    
-    
+    assert data.shape[1] == 4, "reshape the data first to (-1, 4)"
+    normed_data = np.zeros(data.shape)
+    normers = []
+    for i in range(len(data.T)):
+        normer = preprocessing.MinMaxScaler((-1,1))
+        normed_data.T[i] = normer.fit_transform(data.T[i].reshape(-1,1)).reshape(-1)
+        normers.append(normer)
+    return normed_data,np.array(normers)
 
-def denormalize(data,min_max):
-    denorm_data = np.zeros(data.shape)
-    def _denormfeature(feature, data_min, data_max):
-        return (feature * (data_max - data_min) + data_min)
-    for i in range(data.shape[1]):
-        denorm_data.T[i] = _denormfeature(data.T[i],min_max[i][0],min_max[i][1])
-    return denorm_data
+def denormalize(normed_data,normers):
+    denormed_data = np.zeros(normed_data.shape)
+    for i in range(len(normed_data.T)):
+        denormed_data.T[i] = normers[i].inverse_transform(normed_data.T[i].reshape(-1,1)).reshape(-1)
+    return denormed_data
+
+def dropCollisions(data, perform_sim, param_sim):
+    assert(data.shape[1] == 2), "data should be of shape ([x1],[y1]) ... ([xn],[yn])"
+    e = 0.01
+    alias = 0
+    diffs = []
+    for i in range(len(data)):
+        for j in range(i+1,len(data)):
+            x1 = data[i][0] # params 1
+            y1 = data[i][1] # performance 1
+            x2 = data[j][0] # params 2
+            y2 = data[j][1] # performance 2
+            # print("*"*100)
+            # print(data[i])
+            # print(data[j])
+            diff_y = np.linalg.norm(y1 - y2) # 
+            diff_x = np.linalg.norm(x1 - x2)
+            
+            diffs.append([diff_y,diff_x,(i,j)])
+    diffs = np.array(diffs,dtype=object)
+    print("Dropping Collisions")
+    print("Size of Data", data.shape)
+    print("Size of Diffs", len(diffs))
+    
+    to_del = set([])
+    for pair in diffs:
+        if pair[0] > perform_sim and pair[1] < param_sim:
+            to_del = to_del.union(set(pair[2]))
+            
+    for i in sorted(list(to_del))[::-1]:
+        data = np.delete(data,i,0)
+    print("dropped",(len(to_del)))
+    return data
+            
+    
     
 if __name__ == '__main__':
     k = parseGainAndBWCsv(DEFAULT_FILE_PATH)
