@@ -196,8 +196,8 @@ def check_guassian_raw_accuracy(model, loader, min_max, margin, dtype=torch.Floa
         y_hat = np.array(y_hat.detach())
         var1_expectation = y_hat[:,0]
         var2_expectation = y_hat[:,1]
-        var1_std = np.sqrt(np.absolute(y_hat[:,2]))
-        var2_std = np.sqrt(np.absolute(y_hat[:,3]))
+        var1_std = np.exp(y_hat[:,2])
+        var2_std = np.exp(y_hat[:,3])
         
         var1 = np.random.normal(var1_expectation, var1_std)[:,None]
         var2 = np.random.normal(var2_expectation, var2_std)[:,None]
