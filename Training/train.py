@@ -54,7 +54,7 @@ def trainProbModel(model, training_data, loss_fn, optimizer, dtype=torch.FloatTe
             # make predictions
             scores = model(x_var)
             inputs = scores[:,:2]
-            var = scores[:,2:]
+            var = np.exp(2 * scores[:,2:])
             loss = loss_fn(inputs.float(), y_var.float(), var.float())
             #TODO implement proper loss or gradient clipping
             loss = torch.clamp(loss, max = 500000, min = -500000)

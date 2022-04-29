@@ -182,19 +182,19 @@ class Model500RELUBN(nn.Module):
         super(Model500RELUBN, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(parameter_count, 200),
-            nn.BatchNorm1d(200),
+            #nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, 500),
-            nn.BatchNorm1d(500),
+            #nn.BatchNorm1d(500),
             nn.ReLU(),
             ResidualNetwork(500),
-            nn.BatchNorm1d(500),
+            #nn.BatchNorm1d(500),
             nn.ReLU(),
             nn.Linear(500, 300),
-            nn.BatchNorm1d(300),
+            #nn.BatchNorm1d(300),
             nn.ReLU(),
             nn.Linear(300, 200),
-            nn.BatchNorm1d(200),
+            #nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, output_count)
         )
