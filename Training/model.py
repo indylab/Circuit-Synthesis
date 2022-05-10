@@ -13,7 +13,6 @@ class StanDistModel(nn.Module):
             nn.Linear(20, 20),
             nn.ReLU(),
             nn.Linear(20, output_count),
-            nn.ReLU(),
         )
 
     def forward(self, x):
@@ -23,26 +22,25 @@ class DistModel50x10(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(DistModel50x10, self).__init__()
         self.network = nn.Sequential(
-            nn.Linear(parameter_count, 50),
+            nn.Linear(parameter_count, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, 50),
+            nn.Linear(200, 200),
             nn.ReLU(),
-            nn.Linear(50, output_count),
-            nn.ReLU(),
+            nn.Linear(200, output_count),
         )
 
     def forward(self, x):
