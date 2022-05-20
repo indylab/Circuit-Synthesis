@@ -1,6 +1,52 @@
 import torch.nn as nn
 
 
+
+class StanDistModel(nn.Module):
+    def __init__(self, parameter_count=2, output_count=2):
+        super(StanDistModel, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(parameter_count, 20),
+            nn.ReLU(),
+            nn.Linear(20, 20),
+            nn.ReLU(),
+            nn.Linear(20, 20),
+            nn.ReLU(),
+            nn.Linear(20, output_count),
+        )
+
+    def forward(self, x):
+        return self.network(x)
+    
+class DistModel50x10(nn.Module):
+    def __init__(self, parameter_count=2, output_count=2):
+        super(DistModel50x10, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(parameter_count, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.ReLU(),
+            nn.Linear(200, output_count),
+        )
+
+    def forward(self, x):
+        return self.network(x)
+    
+    
 class ResidualNetwork(nn.Module):
     def __init__(self, num_channel):
         super(ResidualNetwork, self).__init__()
@@ -197,6 +243,7 @@ class Model500RELUBN(nn.Module):
             #nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, output_count)
+            
         )
 
     def forward(self, x):
