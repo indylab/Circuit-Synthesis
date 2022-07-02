@@ -34,6 +34,8 @@ while w_test le w_stop
 		let cdb = abs(@mn0[cdb])
 		let cp = (1+a0)*cgd+cdb
 		let bw = 1/(2*pi*r_test*cp)
+		wrdata {out}w.csv w_test
+		wrdata {out}r.csv r_test
 		wrdata {out}bw.csv bw
 		wrdata {out}pw.csv pw
 		wrdata {out}a0.csv a0
