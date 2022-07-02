@@ -35,20 +35,19 @@ def getData(param_outfile_names, perform_outfile_names, out):
 
 
 def runSimulation(x1_list, x2_list):
-    netlist = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\nmos-testing-pro.sp"
-    updated_netlist = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\formatted" \
-                      "-nmos-testing.sp "
-    pm = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\45nm_CS.pm"
+    netlist = "NgSpicePipeline/assets/nmos-testing-pro.sp"
+    updated_netlist = "NgSpicePipeline/assets/formatted-nmos-testing.sp"
+    pm = "NgSpicePipeline/assets/45nm_CS.pm"
     argumentMap = {
         "model_path": pm,
         "r_array": " ".join(list(x1_list.astype(str))),
         "w_array": " ".join(list(x2_list.astype(str))),
         "num_samples": len(x2_list),
-        "out": "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\out\\"
+        "out": "NgSpicePipeline/out"
     }
     updateFile(netlist, updated_netlist, argumentMap)
 
-    ngspice_exec = "C:\\Users\\tjtom\\Downloads\\ngspice-37_64\\Spice64\\bin\\ngspice.exe"
+    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
     subprocess.run([ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist])
 
     param_outfile_names = ["r-test.csv", "w-test.csv"]  # must be in order
@@ -60,20 +59,20 @@ def runSimulation(x1_list, x2_list):
 
 def run_training():
     arguments = {
-        "model_path": "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\45nm_CS.pm",
+        "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
         "start1": 620,
         "stop1": 1450,
         "change1": 11,
         "start2": "2.88u",
         "stop2": "6.63u",
         "change2": "0.3750u",
-        "out": "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\out\\"
+        "out": "NgSpicePipeline/out"
     }
-    netlist = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\nmos-training.sp"
-    formatted_netlist = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\assets\\formatted-nmos-training.sp"
+    netlist = "NgSpicePipeline/assets/nmos-training.sp"
+    formatted_netlist = "NgSpicePipeline/assets/nmos-training.sp"
     updateFile(netlist, formatted_netlist, arguments)
 
-    ngspice_exec = "C:\\Users\\tjtom\\Downloads\\ngspice-37_64\\Spice64\\bin\\ngspice.exe"
+    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
     subprocess.run([ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', formatted_netlist])
 
     param_outfile_names = ["r.csv", "w.csv"]  # must be in order
@@ -91,7 +90,7 @@ if __name__ == '__main__':
     else:
         param_outfile_names = ["r.csv", "w.csv"]  # must be in order
         perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
-        out = "C:\\Users\\tjtom\\OneDrive\\Desktop\\File_Cabinet\\Code\\NgSpicePipeline\\out\\"
+        out = "NgSpicePipeline/out"
         x, y = getData(param_outfile_names, perform_outfile_names, out)
 
     data = np.hstack((x, y)).astype(float)
