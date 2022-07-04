@@ -45,7 +45,43 @@ class DistModel50x10(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+  
+class DistModelBatchNorm(nn.Module):
+    def __init__(self, parameter_count=2, output_count=2):
+        super(DistModelBatchNorm, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(parameter_count, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, 200),
+            nn.BatchNorm1d(200),
+            nn.ReLU(),
+            nn.Linear(200, output_count),
+        )
+
+    def forward(self, x):
+        return self.network(x)
     
 class ResidualNetwork(nn.Module):
     def __init__(self, num_channel):
@@ -228,19 +264,19 @@ class Model500RELUBN(nn.Module):
         super(Model500RELUBN, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(parameter_count, 200),
-            #nn.BatchNorm1d(200),
+            nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, 500),
-            #nn.BatchNorm1d(500),
+            nn.BatchNorm1d(500),
             nn.ReLU(),
             ResidualNetwork(500),
-            #nn.BatchNorm1d(500),
+            nn.BatchNorm1d(500),
             nn.ReLU(),
             nn.Linear(500, 300),
-            #nn.BatchNorm1d(300),
+            nn.BatchNorm1d(300),
             nn.ReLU(),
             nn.Linear(300, 200),
-            #nn.BatchNorm1d(200),
+            nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, output_count)
             
@@ -375,12 +411,3 @@ class DeepModel2(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-        
-        
-
-
-
-
-
-
-
