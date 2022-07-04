@@ -110,7 +110,7 @@ def normalize(data):
         normer = preprocessing.MinMaxScaler((-1,1))
         normed_data.T[i] = normer.fit_transform(data.T[i].reshape(-1,1)).reshape(-1)
         normers.append(normer)
-    return normed_data,np.array(normers)
+    return normed_data,normers
 
 def denormalize(normed_data,normers):
     denormed_data = np.zeros(normed_data.shape)
