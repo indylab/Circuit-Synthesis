@@ -1,5 +1,4 @@
 from torch.utils.data import Dataset
-import torch
 
 
 class CircuitSynthesisGainAndBandwidthManually(Dataset):
@@ -13,6 +12,9 @@ class CircuitSynthesisGainAndBandwidthManually(Dataset):
 
     def __getitem__(self, index):
         return self.parameters[index], self.result[index]
+
+    def getAll(self):
+        return self.parameters, self.result
 
 
 class MockSimulatorDataset(Dataset):
