@@ -43,7 +43,7 @@ def runSimulation(x1_list, x2_list):
         "r_array": " ".join(list(x1_list.astype(str))),
         "w_array": " ".join(list(x2_list.astype(str))),
         "num_samples": len(x2_list),
-        "out": "NgSpicePipeline/out"
+        "out": "NgSpicePipeline/out/"
     }
     updateFile(netlist, updated_netlist, argumentMap)
 
@@ -62,14 +62,14 @@ def run_training():
         "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
         "start1": 620,
         "stop1": 1450,
-        "change1": 11,
+        "change1": 5.5,
         "start2": "2.88u",
         "stop2": "6.63u",
         "change2": "0.3750u",
-        "out": "NgSpicePipeline/out"
+        "out": "NgSpicePipeline/out/"
     }
     netlist = "NgSpicePipeline/assets/nmos-training.sp"
-    formatted_netlist = "NgSpicePipeline/assets/nmos-training.sp"
+    formatted_netlist = "NgSpicePipeline/assets/formatted-nmos-training.sp"
     updateFile(netlist, formatted_netlist, arguments)
 
     ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     else:
         param_outfile_names = ["r.csv", "w.csv"]  # must be in order
         perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
-        out = "NgSpicePipeline/out"
+        out = "NgSpicePipeline/out/"
         x, y = getData(param_outfile_names, perform_outfile_names, out)
 
     data = np.hstack((x, y)).astype(float)
