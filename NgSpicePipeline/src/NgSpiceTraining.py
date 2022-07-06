@@ -8,7 +8,7 @@ from torch import optim, cuda
 import torch
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-
+from Simulator import Simulator
 
 def check_acc(y_hat, y, margins=None):
     if margins is None:
@@ -35,7 +35,7 @@ def check_acc(y_hat, y, margins=None):
     return accs
 
 
-def simulate_points(paramater_preds, norm_perform, scaler):
+def simulate_points(paramater_preds, norm_perform, scaler, simulator):
     data = np.hstack((paramater_preds, norm_perform))
     MAX_LENGTH = 750
     if data.shape[0] > MAX_LENGTH:
@@ -45,13 +45,13 @@ def simulate_points(paramater_preds, norm_perform, scaler):
         data)[:, 2:]
     param1, param2 = unnorm_param_preds[:, 0], unnorm_param_preds[:, 1]
 
-    _, y_sim = trainingUtils.runSimulation(param1, param2)
+    _, y_sim = simulator.runSimulation(unnorm_param_preds)
     assert y_sim.shape == norm_perform.shape or y_sim.shape[0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
     accs = check_acc(y_sim, unnorm_true_perform)
     return accs
 
 
-def train(model, train_data, val_data, optimizer, loss_fn, scaler, num_epochs=1000):
+def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, num_epochs=1000):
     print_every = 50
     train_accs = []
     val_accs = []
@@ -83,14 +83,14 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, num_epochs=10
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-            acc_list = simulate_points(paramater_preds, norm_perform, scaler)
+            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator)
             val_accs.append(acc_list)
             print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][0]}")
             if train_acc:
                 norm_perform, _ = train_data.dataset.getAll()
                 model.eval()
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-                acc_list = simulate_points(paramater_preds, norm_perform, scaler)
+                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator)
                 train_accs.append(acc_list)
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
 
@@ -105,18 +105,38 @@ if __name__ == '__main__':
     device = 'cuda:0' if cuda.is_available() else 'cpu'
     print(device)
     model = models.Model50GELU(3, 2).to(device)
-    rerun_training = False
+    rerun_training = True
+
+    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
+    train_netlist = "NgSpicePipeline/assets/nmos-training.sp"
+    test_netlist = "NgSpicePipeline/assets/nmos-testing-pro.sp"
+    param_list = ["r", "w"]
+    perform_list = ["bw", "pw", "a0"]
+
+    arguments = {
+        "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
+        "w_start": 620,
+        "w_stop": 1450,
+        "w_change": 11,
+        "r_start": "2.88u",
+        "r_stop": "6.63u",
+        "r_change": "0.3750u",
+        "out": "NgSpicePipeline/out/"
+    }
+    simulator = Simulator(ngspice_exec, train_netlist, test_netlist, param_list, perform_list, arguments)
+
+
     if rerun_training:
-        x, y = trainingUtils.run_training()
+        x, y = simulator.run_training()
     else:
         param_outfile_names = ["r.csv", "w.csv"]  # must be in order
         perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
         out = r"NgSpicePipeline/out/"
-        x, y = trainingUtils.getData(param_outfile_names, perform_outfile_names, out)
+        x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
 
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     loss_fn = torch.nn.L1Loss()
-
+    print(x.shape,y.shape)
     data = np.hstack((x, y))
     scaler_arg = MinMaxScaler()
     scaler_arg.fit(data)
@@ -132,9 +152,11 @@ if __name__ == '__main__':
     train_dataloader = DataLoader(train_data, batch_size=100)
     val_dataloader = DataLoader(val_data, batch_size=100)
 
-    losses, accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg, num_epochs=1000)
+    losses, val_accs, train_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,simulator, num_epochs=1000)
 
     plt.plot(range(len(losses)), losses)
     plt.show()
-    plt.plot(range(len(accs)), accs)
+    plt.plot(range(len(val_accs)), val_accs)
+    plt.show()
+    plt.plot(range(len(train_accs)), train_accs)
     plt.show()

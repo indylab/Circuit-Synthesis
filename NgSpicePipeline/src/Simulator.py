@@ -16,16 +16,16 @@ class Simulator:
 
         # create output filenames
         self.train_param_filenames = [str(x) + ".csv" for x in parameter_list]
-        self.train_perform_filenames = [str(x) + ".csv" for x in parameter_list]
+        self.train_perform_filenames = [str(x) + ".csv" for x in performance_list]
 
         self.test_param_filenames = [str(x) + "-test.csv" for x in parameter_list]
-        self.test_perform_filenames = [str(x) + "-test.csv" for x in parameter_list]
+        self.test_perform_filenames = [str(x) + "-test.csv" for x in performance_list]
 
         # validate arguments
         for p in parameter_list:
-            assert (str(p) + "_start" in arguments.keys()), "Each paramater must have a start index"
-            assert (str(p) + "_stop" in arguments.keys()), "Each paramater must have a start index"
-            assert (str(p) + "_change" in arguments.keys()), "Each paramater must have a start index"
+            assert (str(p) + "_start" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
+            assert (str(p) + "_stop" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
+            assert (str(p) + "_change" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
 
     def _updateFile(self, trainingFilePath, outputFilePath, argumentMap):
         with open(trainingFilePath, 'r') as read_file:
@@ -78,7 +78,7 @@ class Simulator:
 
         subprocess.run([self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filename])
         print(self.test_param_filenames)
-        x, y = simulator.getData(self.test_param_filenames, self.test_perform_filenames, argumentMap["out"])
+        x, y = self.getData(self.test_param_filenames, self.test_perform_filenames, argumentMap["out"])
         return [x, y]
 
     def run_training(self):
@@ -93,21 +93,21 @@ class Simulator:
 
 
 if __name__ == '__main__':  # TODO: remove print statements
-    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist = "../assets/nmos-training-2.sp"
-    test_netlist = "../assets/nmos-testing-pro.sp"
+    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
+    train_netlist = "NgSpicePipeline/assets/nmos-training-2.sp"
+    test_netlist = "NgSpicePipeline/assets/nmos-testing-pro.sp"
     param_list = ["r", "w"]
     perform_list = ["bw", "pw", "a0"]
 
     arguments = {
-        "model_path": "../assets/45nm_CS.pm",
-        "w_start": 620,
-        "w_stop": 1450,
-        "w_change": 11,
-        "r_start": "2.88u",
-        "r_stop": "6.63u",
-        "r_change": "0.3750u",
-        "out": "../out/"
+        "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
+        "start1": "2.88u",
+        "stop1": "6.63u",
+        "change1": "0.3750u",
+        "start2": 620,
+        "stop2": 1450,
+        "change2": 5.5,
+        "out": "NgSpicePipeline/out/"
     }
     #TODO: find work around for too many arguments crashing simulator
     #TODO: find way to include simulator console logging for easier debugging (try -o output filename)
