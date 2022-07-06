@@ -11,9 +11,9 @@ mn0 out net2 0 0 NMOS W=5u L=45n
 
 .control
 
-let w_start = {start1}
-let w_stop = {stop1}
-let delta_w = {change1}
+let w_start = {w_start}
+let w_stop = {w_stop}
+let delta_w = {delta_w}
 let w_test = w_start
 let r_start = {start2}
 let r_stop = {stop2}

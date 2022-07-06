@@ -1,7 +1,6 @@
 import torch.nn as nn
 
 
-
 class StanDistModel(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(StanDistModel, self).__init__()
@@ -17,7 +16,8 @@ class StanDistModel(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class DistModel50x10(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(DistModel50x10, self).__init__()
@@ -45,7 +45,8 @@ class DistModel50x10(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-  
+
+
 class DistModelBatchNorm(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(DistModelBatchNorm, self).__init__()
@@ -82,7 +83,8 @@ class DistModelBatchNorm(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class ResidualNetwork(nn.Module):
     def __init__(self, num_channel):
         super(ResidualNetwork, self).__init__()
@@ -90,12 +92,10 @@ class ResidualNetwork(nn.Module):
         self.linear2 = nn.Linear(num_channel, num_channel)
         self.relu = nn.ReLU()
 
-        
     def forward(self, x):
         out1 = self.linear2(self.relu((self.linear1(x))))
-        
+
         return out1 + x
-       
 
 
 class CSGainAndBandwidthManually(nn.Module):
@@ -123,7 +123,8 @@ class CSGainAndBandwidthManually(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class Shallow_Net(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Shallow_Net, self).__init__()
@@ -136,7 +137,8 @@ class Shallow_Net(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class Sigmoid_Net(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Sigmoid_Net, self).__init__()
@@ -161,6 +163,8 @@ class Sigmoid_Net(nn.Module):
 
     def forward(self, x):
         return self.network(x)
+
+
 class WideModel(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(WideModel, self).__init__()
@@ -178,6 +182,7 @@ class WideModel(nn.Module):
 
     def forward(self, x):
         return self.network(x)
+
 
 class DeepModel(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
@@ -230,35 +235,54 @@ class DeepModel(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
+class Model50GELU(nn.Module):
+    def __init__(self, parameter_count=2, output_count=2):
+        super(Model50GELU, self).__init__()
+        self.network = nn.Sequential(
+            nn.Linear(parameter_count, 20),
+            nn.GELU(),
+            nn.Linear(20, 30),
+            nn.GELU(),
+            nn.Linear(30, 50),
+            nn.GELU(),
+            nn.Linear(50, 50),
+            nn.GELU(),
+            nn.Linear(50, 30),
+            nn.GELU(),
+            nn.Linear(30, 20),
+            nn.GELU(),
+            nn.Linear(20, output_count)
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+
 class Model500GELU(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500GELU, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(parameter_count, 200),
-            nn.BatchNorm1d(200),
             nn.GELU(),
             nn.Linear(200, 300),
-            nn.BatchNorm1d(300),
             nn.GELU(),
             nn.Linear(300, 500),
-            nn.BatchNorm1d(500),
             nn.GELU(),
             nn.Linear(500, 500),
-            nn.BatchNorm1d(500),
             nn.GELU(),
             nn.Linear(500, 300),
-            nn.BatchNorm1d(300),
             nn.GELU(),
             nn.Linear(300, 200),
-            nn.BatchNorm1d(200),
             nn.GELU(),
             nn.Linear(200, output_count)
         )
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class Model500RELUBN(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500RELUBN, self).__init__()
@@ -279,13 +303,13 @@ class Model500RELUBN(nn.Module):
             nn.BatchNorm1d(200),
             nn.ReLU(),
             nn.Linear(200, output_count)
-            
+
         )
 
     def forward(self, x):
         return self.network(x)
-    
-    
+
+
 class Model500RELUBNResidual(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500RELUBNResidual, self).__init__()
@@ -300,7 +324,6 @@ class Model500RELUBNResidual(nn.Module):
         self.batchnorm3 = nn.BatchNorm1d(500)
         self.batchnorm4 = nn.BatchNorm1d(200)
 
-
     def forward(self, x):
         out200_1 = self.relu(self.batchnorm1(self.layer1(x)))
         out500_1 = self.relu(self.batchnorm2(self.layer2(out200_1)))
@@ -308,8 +331,8 @@ class Model500RELUBNResidual(nn.Module):
         out200_2 = self.layer4(out500_2)
         out200_2 = self.relu(self.batchnorm4(out200_1 + out200_2))
         return self.layer5(out200_2)
-    
-    
+
+
 class ModelSmallGELU(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(ModelSmallGELU, self).__init__()
@@ -327,7 +350,8 @@ class ModelSmallGELU(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class Model500SiLU(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500SiLU, self).__init__()
@@ -349,7 +373,8 @@ class Model500SiLU(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class Model500Tan(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500Tan, self).__init__()
@@ -371,7 +396,8 @@ class Model500Tan(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 class DeepModel2(nn.Module):
     def __init__(self, input_size=2, output_size=2):
         super(DeepModel2, self).__init__()

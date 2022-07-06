@@ -1,11 +1,12 @@
 from torch.utils.data import Dataset
+import numpy as np
 
 
 class CircuitSynthesisGainAndBandwidthManually(Dataset):
 
     def __init__(self, parameters, results):
-        self.parameters = parameters
-        self.result = results
+        self.parameters = np.array(parameters)
+        self.result = np.array(results)
 
     def __len__(self):
         return len(self.parameters)
