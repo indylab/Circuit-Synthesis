@@ -11,9 +11,9 @@ mn0 out net2 0 0 NMOS W=5u L=45n
 
 .control
 
-let w_start = 620
-let w_stop = 1450
-let delta_w = 11
+let w_start = {w_start}
+let w_stop = {w_stop}
+let delta_w = {w_change}
 let w_test = w_start
 let r_start = 2.88u
 let r_stop = 6.63u
