@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
@@ -9,6 +11,7 @@ import torch
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from Simulator import Simulator
+from visualutils import *
 
 def check_acc(y_hat, y, margins=None):
     if margins is None:
@@ -97,31 +100,61 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
     return losses, train_accs,val_accs
 
 
+
+def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg):
+    #TODO different margin accuracy
+    accuracy_list = []
+
+    for percentage in percentages:
+        model = models.Model50GELU(3, 2).to(device)
+        optimizer = optims(model.parameters(), lr=0.001)
+        subset_index = np.random.choice(np.arange(X_train.shape[0]), int(percentage * X_train.shape[0]), replace=False)
+        new_X_train = X_train[subset_index, :]
+        new_Y_train = y_train[subset_index, :]
+        train_data = dataset.CircuitSynthesisGainAndBandwidthManually(new_X_train, new_Y_train)
+        val_data = dataset.CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
+        train_dataloader = DataLoader(train_data, batch_size=100)
+        val_dataloader = DataLoader(val_data, batch_size=100)
+        _, _, val_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,
+                                             simulator, num_epochs=300)
+
+        accs = []
+        for acc in val_accs:
+            accs.append(acc[-2])
+
+        accuracy_list.append(accs)
+
+    for index, acc in enumerate(accuracy_list):
+        plt.plot(range(len(acc)), acc, label=percentages[index])
+    plt.legend()
+    plt.show()
+
 if __name__ == '__main__':
 
     # TODO: Change Run simulation and run_training methods to be a "simulator" class defend by netlist,
     #  netlist arguments and ngspice executable
 
-    device = 'cuda:0' if cuda.is_available() else 'cpu'
+    #device = 'cuda:0' if cuda.is_available() else 'cpu'
+    device = 'cpu'
     print(device)
-    model = models.Model50GELU(3, 2).to(device)
-    rerun_training = True
 
-    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
+    rerun_training = False
+
+    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
     train_netlist = "NgSpicePipeline/assets/nmos-training.sp"
-    test_netlist = "NgSpicePipeline/assets/nmos-testing-pro.sp"
+    test_netlist = "../assets/nmos-testing-pro.sp"
     param_list = ["r", "w"]
     perform_list = ["bw", "pw", "a0"]
 
     arguments = {
-        "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
+        "model_path": "../assets/45nm_CS.pm",
         "w_start": 620,
         "w_stop": 1450,
         "w_change": 11,
         "r_start": "2.88u",
         "r_stop": "6.63u",
         "r_change": "0.3750u",
-        "out": "NgSpicePipeline/out/"
+        "out": "../out/"
     }
     simulator = Simulator(ngspice_exec, train_netlist, test_netlist, param_list, perform_list, arguments)
 
@@ -131,10 +164,16 @@ if __name__ == '__main__':
     else:
         param_outfile_names = ["r.csv", "w.csv"]  # must be in order
         perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
-        out = r"NgSpicePipeline/out/"
+        curPath = os.getcwd()
+        out = os.path.join(curPath, "../out/")
+
         x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
 
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    #plot_parameter(x, y, reduce_dim_y=True)
+
+
+    
+    optims = optim.Adam
     loss_fn = torch.nn.L1Loss()
     print(x.shape,y.shape)
     data = np.hstack((x, y))
@@ -147,16 +186,18 @@ if __name__ == '__main__':
     print(X_train.shape, y_train.shape)
     print(X_test.shape, y_test.shape)
 
-    train_data = dataset.CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
-    val_data = dataset.CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
-    train_dataloader = DataLoader(train_data, batch_size=100)
-    val_dataloader = DataLoader(val_data, batch_size=100)
+    get_subsetdata_accuracy(X_train, y_train, X_test, y_test, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], optims, loss_fn, scaler_arg)
 
-    losses, val_accs, train_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,simulator, num_epochs=1000)
+    #plt.plot(range(len(losses)), losses)
+    #plt.show()
+    #plt.plot(range(len(val_accs)), val_accs)
+    #plt.show()
+    #plt.plot(range(len(train_accs)), train_accs)
+    #plt.show()
 
-    plt.plot(range(len(losses)), losses)
-    plt.show()
-    plt.plot(range(len(val_accs)), val_accs)
-    plt.show()
-    plt.plot(range(len(train_accs)), train_accs)
-    plt.show()
+    
+
+
+
+
+
