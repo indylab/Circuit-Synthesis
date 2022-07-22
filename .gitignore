@@ -4,3 +4,4 @@
 *.sub
 *.out
 *.err
+**main.py
