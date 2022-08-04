@@ -93,6 +93,16 @@ def run_training():
 
     return x, y
 
+def generate_duplicate_data(train, test, thresholds):
+
+    return_train, return_test = train, test
+
+    for threshold in thresholds:
+        new_train = train * threshold
+        return_train = np.concatenate((return_train, new_train), axis=0)
+        return_test = np.concatenate((return_test, return_test), axis=0)
+
+    return return_train, return_test
 
 if __name__ == '__main__':
     rerun_training = False
@@ -116,3 +126,5 @@ if __name__ == '__main__':
     # for i in range(x.shape[0]):
     #     assert np.all(x[i] == x_sim[i]),  (x[i] == x_sim[i])
     #     assert np.all(y[i] == y_sim[i]), (y[i] == y_sim[i])
+
+
