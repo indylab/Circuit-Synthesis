@@ -35,29 +35,39 @@ def check_acc(y_hat, y, margins=None):
     return accs
 
 
-def simulate_points(paramater_preds, norm_perform, scaler, simulator):
+def check_minimum_requirement_acc(y_hat, y):
+
+    greater = y_hat >= y
+
+    return [np.all(greater, axis=1).sum().item() / y_hat.shape[0]]
+
+def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin):
+    paramater_len = paramater_preds.shape[1]
     data = np.hstack((paramater_preds, norm_perform))
     MAX_LENGTH = 750
     if data.shape[0] > MAX_LENGTH:
         n = np.random.randint(0, paramater_preds.shape[0], MAX_LENGTH)
         data = data[n, :]
-    unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :3], scaler.inverse_transform(
-        data)[:, 3:]
+    unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :paramater_len], scaler.inverse_transform(
+        data)[:, paramater_len:]
 
     _, y_sim = simulator.runSimulation(unnorm_param_preds)
     assert y_sim.shape == norm_perform.shape or y_sim.shape[
         0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
-    accs = check_acc(y_sim, unnorm_true_perform)
+    if margin:
+        accs = check_acc(y_sim, unnorm_true_perform)
+    else:
+        accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform)
     return accs
 
 
-def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, num_epochs=1000):
+def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000, margin=True, train_acc = False):
     print_every = 50
     train_accs = []
     val_accs = []
     losses = []
     val_losses = []
-    train_acc = False
+
     for epoch in range(num_epochs):
         model.train()
         avg_loss = 0
@@ -101,14 +111,14 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator)
+            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin)
             val_accs.append(acc_list)
             print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][0]}")
             if train_acc:
                 norm_perform, _ = train_data.dataset.getAll()
                 model.eval()
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator)
+                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin)
                 train_accs.append(acc_list)
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
 
@@ -131,7 +141,7 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         train_dataloader = DataLoader(train_data, batch_size=100)
         val_dataloader = DataLoader(val_data, batch_size=100)
         _, _, _, val_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,
-                                             simulator, num_epochs=300)
+                                             simulator, device, num_epochs=300)
 
         accs = []
         for acc in val_accs:
@@ -143,5 +153,6 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         plt.plot(range(len(acc)), acc, label=percentages[index])
     plt.legend()
     plt.show()
+
 
 
