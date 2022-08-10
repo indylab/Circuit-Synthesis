@@ -104,6 +104,30 @@ def generate_duplicate_data(train, test, thresholds):
 
     return return_train, return_test
 
+
+def baseline_testing(X_train, X_test, thresholds = None):
+
+    if thresholds is None:
+        thresholds = [0.01, 0.05, 0.1]
+
+    total = X_test.shape[0]
+    correct = [0 for _ in range(len(thresholds))]
+
+    for datapoint in X_test:
+        for index, threshold in enumerate(thresholds):
+            for train_datapoint in X_train:
+                diff = np.abs((datapoint - train_datapoint)) / datapoint
+                if np.all(diff <= threshold):
+                    correct[index] += 1
+                    break
+
+    return [i/total for i in correct]
+
+
+
+
+
+
 if __name__ == '__main__':
     rerun_training = False
     if rerun_training:
