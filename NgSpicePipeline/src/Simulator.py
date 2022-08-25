@@ -70,6 +70,8 @@ class Simulator:
         assert parameters.shape[1] == len(self.parameter_list), f"list of points to simulate should be same length " \
                                                                 f"as number of parameters {parameters.shape[1]} != " \
                                                                 f"{len(self.parameter_list)} "
+        num_params_to_sim = parameters.shape[0]
+        MAX_SIM_SIZE = 750
 
         if self.delete_existing_data:
             self._delete_training_files()
@@ -77,18 +79,29 @@ class Simulator:
 
         updated_netlist_filename = self.test_netlist + "-formatted"
         argumentMap = self.arguments
-        argumentMap["num_samples"] = parameters.shape[0]
-        for i, p in enumerate(self.parameter_list):
-            argumentMap[f"{p}_array"] = " ".join(list(parameters[:, i].astype(str)))
-        self._updateFile(self.test_netlist, updated_netlist_filename, argumentMap)
-        if self.save_error_log:
-            args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o", os.path.join(self.arguments["out"]), '-i',
-                    updated_netlist_filename]
-        else:
-            args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filename]
-        subprocess.run(args)
-        x, y = self.getData(self.test_param_filenames, self.test_perform_filenames, argumentMap["out"])
-        return [x, y]
+        all_x, all_y = [],[]
+        for i in range(int(num_params_to_sim/MAX_SIM_SIZE)+1):  # sim in batches of MAX_SIM_SIZE (ngspice has a max size)
+            argumentMap["num_samples"] = parameters[i*MAX_SIM_SIZE:(i+1)*MAX_SIM_SIZE, i].shape[0]
+            for param_index, p in enumerate(self.parameter_list):
+                argumentMap[f"{p}_array"] = " ".join(list(parameters[i*MAX_SIM_SIZE:(i+1)*MAX_SIM_SIZE, param_index].astype(str)))
+            self._updateFile(self.test_netlist, updated_netlist_filename, argumentMap)
+            if self.save_error_log:
+                args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o", os.path.join(self.arguments["out"],"log.txt"), '-i',
+                        updated_netlist_filename]
+            else:
+                args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filename]
+            subprocess.run(args)
+
+            x, y = self.getData(self.test_param_filenames, self.test_perform_filenames, argumentMap["out"])
+            self._delete_testing_files()
+            all_x.append(x)
+            all_y.append(y)
+
+        final_x = np.vstack(all_x)
+        final_y = np.vstack(all_y)
+        assert final_x.shape[0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
+        assert final_y.shape[0] == num_params_to_sim, f"y has to few values. Original: {parameters.shape} Y: {final_y.shape}"
+        return [final_x, final_y]
 
     def run_training(self):
         if self.delete_existing_data:

@@ -36,23 +36,26 @@ def check_acc(y_hat, y, margins=None):
 
 
 def simulate_points(paramater_preds, norm_perform, scaler, simulator):
+    num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
     data = np.hstack((paramater_preds, norm_perform))
+    print("data.shape",data.shape,num_param)
     MAX_LENGTH = 750
     if data.shape[0] > MAX_LENGTH:
         n = np.random.randint(0, paramater_preds.shape[0], MAX_LENGTH)
         data = data[n, :]
-    unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :3], scaler.inverse_transform(
-        data)[:, 3:]
+    unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :num_param], scaler.inverse_transform(
+        data)[:, num_param:]
 
     _, y_sim = simulator.runSimulation(unnorm_param_preds)
-    assert y_sim.shape == norm_perform.shape or y_sim.shape[
-        0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
+    assert y_sim.shape == unnorm_true_perform.shape or y_sim.shape[
+        0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {unnorm_true_perform.shape}"
+    #print((y_sim[:5,:],unnorm_true_perform[:5,:]))
     accs = check_acc(y_sim, unnorm_true_perform)
     return accs
 
 
 def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, num_epochs=1000):
-    print_every = 50
+    print_every = num_epochs
     train_accs = []
     val_accs = []
     losses = []
@@ -65,8 +68,8 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
         for t, (x, y) in enumerate(train_data):
             # Zero your gradient
             optimizer.zero_grad()
-            x_var = torch.autograd.Variable(x.type(torch.FloatTensor)).to(device)
-            y_var = torch.autograd.Variable(y.type(torch.FloatTensor).float()).to(device)
+            x_var = torch.autograd.Variable(x.type(torch.FloatTensor))
+            y_var = torch.autograd.Variable(y.type(torch.FloatTensor).float())
 
             scores = model(x_var)
 
@@ -81,8 +84,8 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
         for t, (x, y) in enumerate(val_data):
             # Zero your gradient
 
-            x_var = torch.autograd.Variable(x.type(torch.FloatTensor)).to(device)
-            y_var = torch.autograd.Variable(y.type(torch.FloatTensor).float()).to(device)
+            x_var = torch.autograd.Variable(x.type(torch.FloatTensor))
+            y_var = torch.autograd.Variable(y.type(torch.FloatTensor).float())
             model.eval()
             scores = model(x_var)
 
@@ -97,7 +100,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
             print('t = %d, val loss = %.4f' % (epoch + 1, val_avg_loss))
 
-        if epoch % 50 == 0:
+        if (epoch + 1) % num_epochs == 0:
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
@@ -115,9 +118,9 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, nu
     return losses, val_losses, train_accs, val_accs
 
 
-
-def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator, device = 'cpu'):
-    #TODO different margin accuracy
+def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator,
+                            device='cpu'):
+    # TODO different margin accuracy
     accuracy_list = []
 
     for percentage in percentages:
@@ -131,7 +134,7 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         train_dataloader = DataLoader(train_data, batch_size=100)
         val_dataloader = DataLoader(val_data, batch_size=100)
         _, _, _, val_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,
-                                             simulator, num_epochs=300)
+                                  simulator, num_epochs=300)
 
         accs = []
         for acc in val_accs:
@@ -143,5 +146,3 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         plt.plot(range(len(acc)), acc, label=percentages[index])
     plt.legend()
     plt.show()
-
-
