@@ -124,6 +124,49 @@ def baseline_testing(X_train, X_test, thresholds = None):
     return [i/total for i in correct]
 
 
+def generate_new_dataset_maximum_performance(performance, parameter, order, sign):
+
+    # parameter x -> performance y using simulator
+    # Go through original Dataset D where D consists of pairs of (x,y)
+    # For each pair of (x,y)
+    # Go through Dataset D again and find out the maximum y' from pair (x',y')
+    # that is greater than y in all performance requirement
+    # Generate New pair of (x',y) and put them into new dataset
+
+
+    num_performance = performance.shape[1]
+    def sort_helper(greater_val):
+
+        return_val = 0
+        counter = 100
+        for x in order:
+            return_val += counter * greater_val[x]
+            counter -= 5
+        return return_val
+
+    new_performance = []
+    new_parameter = []
+
+    for i in range(len(performance)):
+        temp_performance = performance[i, :]
+
+        greater_list = []
+        for x in range(len(performance)):
+            order_temp_performance = temp_performance[np.array(order)] * sign
+            order_compare_performance = performance[x, :][np.array(order)] * sign
+
+            if np.all(order_compare_performance >= order_temp_performance):
+                greater_list.append(list(order_compare_performance) + list(parameter[x,:]))
+
+
+        greater_list.sort(key=sort_helper)
+        new_performance.append(temp_performance)
+
+        new_parameter.append(greater_list[0][num_performance:])
+
+    return np.array(new_performance), np.array(new_parameter)
+
+
 
 
 
