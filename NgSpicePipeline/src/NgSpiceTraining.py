@@ -35,13 +35,15 @@ def check_acc(y_hat, y, margins=None):
     return accs
 
 
-def check_minimum_requirement_acc(y_hat, y):
-
+def check_minimum_requirement_acc(y_hat, y, sign):
+    if sign is not None:
+        y_hat = y_hat * np.array(sign)[None,:]
+        y = y * np.array(sign)[None,:]
     greater = y_hat >= y
 
     return [np.all(greater, axis=1).sum().item() / y_hat.shape[0]]
 
-def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin):
+def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign):
     paramater_len = paramater_preds.shape[1]
     data = np.hstack((paramater_preds, norm_perform))
     MAX_LENGTH = 750
@@ -57,11 +59,11 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin):
     if margin:
         accs = check_acc(y_sim, unnorm_true_perform)
     else:
-        accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform)
+        accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform, sign)
     return accs
 
 
-def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000, margin=True, train_acc = False):
+def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000, margin=True, train_acc = False, sign=None):
     print_every = 50
     train_accs = []
     val_accs = []
@@ -111,14 +113,14 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin)
+            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
             val_accs.append(acc_list)
             print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][0]}")
             if train_acc:
                 norm_perform, _ = train_data.dataset.getAll()
                 model.eval()
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin)
+                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
                 train_accs.append(acc_list)
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
 
