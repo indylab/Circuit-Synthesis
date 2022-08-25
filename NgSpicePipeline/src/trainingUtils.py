@@ -142,6 +142,7 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
         for x in order:
             return_val += counter * greater_val[x]
             counter -= 5
+
         return return_val
 
     new_performance = []
@@ -159,7 +160,8 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
                 greater_list.append(list(order_compare_performance) + list(parameter[x,:]))
 
 
-        greater_list.sort(key=sort_helper)
+        greater_list.sort(key=sort_helper, reverse=True)
+
         new_performance.append(temp_performance)
 
         new_parameter.append(greater_list[0][num_performance:])
@@ -172,26 +174,10 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
 
 if __name__ == '__main__':
-    rerun_training = False
-    if rerun_training:
-        x, y = run_training()
-    else:
-        param_outfile_names = ["r.csv", "w.csv"]  # must be in order
-        perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
-        out = "../out/"
-        x, y = getData(param_outfile_names, perform_outfile_names, out)
+    test_perform = np.array([[30,20],[10,100],[15,1],[20,10]])
+    test_parameter = np.array([[10],[30],[50],[20]])
+    new_perform, new_parameter = generate_new_dataset_maximum_performance(test_perform, test_parameter, [0,1], [1,1])
 
-    data = np.hstack((x, y)).astype(float)
-
-    x1, x2 = np.array(x[0, 0]), np.array(x[0, 1])
-
-    x_sim, y_sim = runSimulation(x1, x2)
-    print(x.shape, x_sim.shape)
-    print(x[0], y[0])
-    print(x_sim[0], y_sim[0])
-
-    # for i in range(x.shape[0]):
-    #     assert np.all(x[i] == x_sim[i]),  (x[i] == x_sim[i])
-    #     assert np.all(y[i] == y_sim[i]), (y[i] == y_sim[i])
-
-
+    print(new_perform)
+    print('here')
+    print(new_parameter)
