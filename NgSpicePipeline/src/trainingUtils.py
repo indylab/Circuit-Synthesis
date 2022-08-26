@@ -135,36 +135,35 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
 
     num_performance = performance.shape[1]
-    def sort_helper(greater_val):
 
-        return_val = 0
-        counter = 100
+
+    def cmp_helper(val1, val2, order):
+
         for x in order:
-            return_val += counter * greater_val[x]
-            counter -= 5
-
-        return return_val
-
+            if val1[x] != val2[x]:
+                return val1[x] > val2[x]
+        return True
     new_performance = []
     new_parameter = []
 
     for i in range(len(performance)):
         temp_performance = performance[i, :]
 
-        greater_list = []
+
+        new_temp_parameter = None
         for x in range(len(performance)):
             order_temp_performance = temp_performance[np.array(order)] * sign
             order_compare_performance = performance[x, :][np.array(order)] * sign
 
             if np.all(order_compare_performance >= order_temp_performance):
-                greater_list.append(list(order_compare_performance) + list(parameter[x,:]))
+                if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
+                    new_temp_parameter = list(order_compare_performance) + list(parameter[x,:])
 
 
-        greater_list.sort(key=sort_helper, reverse=True)
 
         new_performance.append(temp_performance)
 
-        new_parameter.append(greater_list[0][num_performance:])
+        new_parameter.append(new_temp_parameter[num_performance:])
 
     return np.array(new_performance), np.array(new_parameter)
 
