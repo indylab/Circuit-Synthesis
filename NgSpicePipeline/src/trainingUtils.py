@@ -124,7 +124,7 @@ def baseline_testing(X_train, X_test, thresholds = None):
     return [i/total for i in correct]
 
 
-def generate_new_dataset_maximum_performance(performance, parameter, order, sign):
+def generate_new_dataset_maximum_performance(performance, parameter, order, sign, greater=False):
 
     # parameter x -> performance y using simulator
     # Go through original Dataset D where D consists of pairs of (x,y)
@@ -155,15 +155,18 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
             order_temp_performance = temp_performance[np.array(order)] * sign
             order_compare_performance = performance[x, :][np.array(order)] * sign
 
-            if np.all(order_compare_performance >= order_temp_performance):
-                if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
-                    new_temp_parameter = list(order_compare_performance) + list(parameter[x,:])
+            if greater:
+                if np.all(order_compare_performance > order_temp_performance):
+                    if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
+                        new_temp_parameter = list(order_compare_performance) + list(parameter[x,:])
+            else:
+                if np.all(order_compare_performance >= order_temp_performance):
+                    if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
+                        new_temp_parameter = list(order_compare_performance) + list(parameter[x,:])
 
-
-
-        new_performance.append(temp_performance)
-
-        new_parameter.append(new_temp_parameter[num_performance:])
+        if new_temp_parameter is not None:
+            new_performance.append(temp_performance)
+            new_parameter.append(new_temp_parameter[num_performance:])
 
     return np.array(new_performance), np.array(new_parameter)
 
