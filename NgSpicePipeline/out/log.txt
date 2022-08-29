@@ -2,11 +2,5046 @@
 Note: No compatibility mode selected!
 
 
-Circuit:  circuit: lna
+Circuit: nmos: cs amp
 
-index = 1.000000e+00
-5.83e-11 = 5.830000e-11
-4.9e-09 = 4.900000e-09
-1.552e-08 = 1.552000e-08
-800 = 8.000000e+02
-which variable: ngspice-37 done
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.862388e+18
+cgd = 6.845071e-15
+cdb = 1.247292e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.092008e+18
+cgd = 1.804918e-14
+cdb = 3.269884e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.053558e+18
+cgd = 6.425145e-15
+cdb = 1.171753e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.047086e+18
+cgd = 4.838114e-15
+cdb = 8.864566e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.974151e+18
+cgd = 1.001834e-14
+cdb = 1.791709e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.226762e+18
+cgd = 1.607471e-14
+cdb = 2.909497e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.855651e+18
+cgd = 1.058515e-14
+cdb = 1.921837e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.071655e+18
+cgd = 4.774381e-15
+cdb = 8.798136e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.623181e+17
+cgd = 2.049389e-14
+cdb = 3.711580e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.070128e+17
+cgd = 4.880423e-14
+cdb = 8.677702e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.267820e+17
+cgd = 4.674221e-14
+cdb = 8.297710e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.871177e+17
+cgd = 2.007885e-14
+cdb = 3.591556e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.389255e+18
+cgd = 1.415939e-14
+cdb = 2.567454e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.741540e+17
+cgd = 2.245818e-14
+cdb = 4.067895e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.636049e+18
+cgd = 1.203061e-14
+cdb = 2.170557e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.792419e+18
+cgd = 7.040287e-15
+cdb = 1.265629e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.537081e+17
+cgd = 4.353382e-14
+cdb = 7.850797e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.881217e+18
+cgd = 1.046393e-14
+cdb = 1.885011e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.620398e+18
+cgd = 7.497010e-15
+cdb = 1.363448e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.081717e+18
+cgd = 9.479999e-15
+cdb = 1.699710e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.768978e+18
+cgd = 7.090750e-15
+cdb = 1.290393e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.822357e+18
+cgd = 1.081678e-14
+cdb = 1.945330e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.568377e+17
+cgd = 5.578176e-14
+cdb = 9.932856e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.158199e+17
+cgd = 3.191393e-14
+cdb = 5.783415e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.051478e+18
+cgd = 1.875133e-14
+cdb = 3.393208e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.192196e+18
+cgd = 8.955219e-15
+cdb = 1.627692e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.089950e+18
+cgd = 6.349413e-15
+cdb = 1.158127e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.618861e+18
+cgd = 5.411243e-15
+cdb = 9.887465e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.820567e+18
+cgd = 1.082108e-14
+cdb = 1.961834e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.961215e+18
+cgd = 6.615642e-15
+cdb = 1.205978e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.672091e+17
+cgd = 4.213037e-14
+cdb = 7.655741e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.742161e+18
+cgd = 5.232606e-15
+cdb = 9.572742e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.687516e+17
+cgd = 4.200946e-14
+cdb = 7.638223e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.281248e+17
+cgd = 2.701559e-14
+cdb = 4.889158e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.584065e+18
+cgd = 1.249426e-14
+cdb = 2.236523e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.778139e+17
+cgd = 2.013944e-14
+cdb = 3.647210e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.797639e+17
+cgd = 2.239307e-14
+cdb = 4.051752e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.310190e+18
+cgd = 1.502675e-14
+cdb = 2.723936e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.566054e+18
+cgd = 7.631524e-15
+cdb = 1.390568e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.198931e+18
+cgd = 8.922985e-15
+cdb = 1.621868e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.799634e+17
+cgd = 5.224410e-14
+cdb = 9.340209e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.112316e+18
+cgd = 1.771767e-14
+cdb = 3.210001e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.561089e+17
+cgd = 2.615498e-14
+cdb = 4.694003e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.035349e+18
+cgd = 4.846179e-15
+cdb = 8.876562e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.006240e+18
+cgd = 9.801041e-15
+cdb = 1.779495e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.216447e+18
+cgd = 6.076629e-15
+cdb = 1.111453e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.394632e+17
+cgd = 2.667190e-14
+cdb = 4.828691e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.194637e+18
+cgd = 1.648947e-14
+cdb = 2.988149e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.893685e+18
+cgd = 5.028498e-15
+cdb = 9.206195e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.793503e+18
+cgd = 1.096292e-14
+cdb = 1.991325e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.793382e+17
+cgd = 2.010866e-14
+cdb = 3.641595e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.320927e+18
+cgd = 8.457385e-15
+cdb = 1.537890e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.124160e+18
+cgd = 6.280927e-15
+cdb = 1.145805e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.744004e+18
+cgd = 7.156050e-15
+cdb = 1.302152e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.740210e+18
+cgd = 5.231223e-15
+cdb = 9.484614e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.691216e+17
+cgd = 2.050217e-14
+cdb = 3.654986e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.807408e+18
+cgd = 1.096591e-14
+cdb = 1.956903e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.777805e+17
+cgd = 4.105306e-14
+cdb = 7.497308e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.083576e+18
+cgd = 1.817795e-14
+cdb = 3.292565e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.642911e+17
+cgd = 2.036359e-14
+cdb = 3.689546e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.202390e+18
+cgd = 8.914027e-15
+cdb = 1.620255e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.289770e+18
+cgd = 5.940551e-15
+cdb = 1.087171e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.330064e+17
+cgd = 3.114773e-14
+cdb = 5.608824e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.948545e+18
+cgd = 6.644925e-15
+cdb = 1.210924e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.000860e+18
+cgd = 1.967686e-14
+cdb = 3.563574e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.269731e+18
+cgd = 5.987997e-15
+cdb = 1.092713e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.263037e+17
+cgd = 4.662201e-14
+cdb = 8.275320e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.414890e+17
+cgd = 2.106612e-14
+cdb = 3.764894e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.582895e+18
+cgd = 1.245127e-14
+cdb = 2.242576e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.469812e+17
+cgd = 4.420200e-14
+cdb = 7.969369e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.320320e+18
+cgd = 8.453408e-15
+cdb = 1.537172e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.283794e+17
+cgd = 2.700303e-14
+cdb = 4.888972e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.771350e+18
+cgd = 5.190765e-15
+cdb = 9.491969e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.583929e+17
+cgd = 3.530878e-14
+cdb = 6.354700e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.564152e+18
+cgd = 7.663212e-15
+cdb = 1.393361e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.117369e+17
+cgd = 2.430399e-14
+cdb = 4.400249e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.492743e+17
+cgd = 3.569830e-14
+cdb = 6.495674e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.348016e+17
+cgd = 6.083214e-14
+cdb = 1.041119e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.071409e+18
+cgd = 1.839818e-14
+cdb = 3.332931e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.944067e+17
+cgd = 5.086421e-14
+cdb = 8.978391e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.346660e+18
+cgd = 1.464346e-14
+cdb = 2.651165e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.789224e+17
+cgd = 5.211625e-14
+cdb = 9.368623e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.043608e+18
+cgd = 1.887271e-14
+cdb = 3.418177e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.572658e+17
+cgd = 5.568408e-14
+cdb = 9.905741e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.884742e+18
+cgd = 4.999867e-15
+cdb = 9.200244e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.077535e+18
+cgd = 4.795862e-15
+cdb = 8.786275e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.102955e+17
+cgd = 2.156830e-14
+cdb = 3.907115e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.502565e+18
+cgd = 1.308730e-14
+cdb = 2.373748e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.544586e+17
+cgd = 4.360991e-14
+cdb = 7.790944e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.021015e+18
+cgd = 1.928998e-14
+cdb = 3.493566e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.469599e+18
+cgd = 5.656347e-15
+cdb = 1.033505e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.485167e+18
+cgd = 7.889547e-15
+cdb = 1.435489e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.576852e+18
+cgd = 1.246795e-14
+cdb = 2.261857e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.905918e+17
+cgd = 2.840878e-14
+cdb = 5.146241e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.368240e+18
+cgd = 1.438555e-14
+cdb = 2.608116e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.925756e+18
+cgd = 4.985245e-15
+cdb = 9.123432e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.179405e+17
+cgd = 2.741790e-14
+cdb = 4.964686e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.142113e+18
+cgd = 1.724782e-14
+cdb = 3.124399e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.146719e+18
+cgd = 4.689487e-15
+cdb = 8.669762e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.575795e+17
+cgd = 4.320897e-14
+cdb = 7.788244e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.260540e+18
+cgd = 4.580778e-15
+cdb = 8.431680e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.977301e+18
+cgd = 6.589876e-15
+cdb = 1.201399e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.205554e+18
+cgd = 6.115806e-15
+cdb = 1.115213e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.774278e+17
+cgd = 2.530940e-14
+cdb = 4.582221e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.829473e+17
+cgd = 2.878224e-14
+cdb = 5.210407e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.032604e+17
+cgd = 3.266895e-14
+cdb = 5.884148e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.087687e+18
+cgd = 6.343559e-15
+cdb = 1.156673e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.937260e+17
+cgd = 5.026827e-14
+cdb = 8.990774e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.761704e+17
+cgd = 2.017231e-14
+cdb = 3.654144e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.658471e+18
+cgd = 5.352586e-15
+cdb = 9.788278e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.882234e+18
+cgd = 1.043475e-14
+cdb = 1.894684e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.935630e+17
+cgd = 2.842615e-14
+cdb = 5.146558e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.737353e+18
+cgd = 1.131785e-14
+cdb = 2.055288e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.243594e+18
+cgd = 1.587165e-14
+cdb = 2.855599e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.007047e+17
+cgd = 3.909907e-14
+cdb = 7.158535e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.427688e+18
+cgd = 5.696921e-15
+cdb = 1.042941e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.194146e+18
+cgd = 6.142121e-15
+cdb = 1.120836e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.642074e+17
+cgd = 2.970207e-14
+cdb = 5.345738e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.022599e+18
+cgd = 9.734284e-15
+cdb = 1.766092e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.122525e+18
+cgd = 1.754833e-14
+cdb = 3.178729e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.388838e+17
+cgd = 4.527413e-14
+cdb = 8.054445e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.694576e+18
+cgd = 1.160016e-14
+cdb = 2.105091e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.874616e+17
+cgd = 4.025559e-14
+cdb = 7.331793e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.548600e+18
+cgd = 7.698459e-15
+cdb = 1.400553e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.472911e+18
+cgd = 5.649757e-15
+cdb = 1.032317e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.878840e+17
+cgd = 5.139657e-14
+cdb = 9.122499e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.410681e+18
+cgd = 5.738722e-15
+cdb = 1.047923e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.888234e+18
+cgd = 6.775869e-15
+cdb = 1.237318e-14
+../out/r-test.csv: Permission denied
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.065595e+18
+cgd = 9.507029e-15
+cdb = 1.727243e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.698004e+17
+cgd = 4.180095e-14
+cdb = 7.620631e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.778177e+17
+cgd = 2.243422e-14
+cdb = 4.063010e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.070395e+17
+cgd = 3.241948e-14
+cdb = 5.874769e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.706482e+18
+cgd = 5.282279e-15
+cdb = 9.656121e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.713671e+18
+cgd = 7.230336e-15
+cdb = 1.316724e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.160534e+18
+cgd = 1.693544e-14
+cdb = 3.069816e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.419662e+17
+cgd = 3.617095e-14
+cdb = 6.587644e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.110043e+17
+cgd = 6.606922e-14
+cdb = 1.111182e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.051692e+17
+cgd = 2.461751e-14
+cdb = 4.405116e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.200384e+17
+cgd = 3.163767e-14
+cdb = 5.734161e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.271975e+18
+cgd = 1.548750e-14
+cdb = 2.806252e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.648662e+18
+cgd = 1.192226e-14
+cdb = 2.163287e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.020805e+18
+cgd = 1.945119e-14
+cdb = 3.470458e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.134916e+17
+cgd = 3.211832e-14
+cdb = 5.786226e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.936476e+18
+cgd = 6.672160e-15
+cdb = 1.216170e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.494271e+18
+cgd = 1.318005e-14
+cdb = 2.389384e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.598309e+17
+cgd = 3.504628e-14
+cdb = 6.367952e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.386065e+18
+cgd = 1.419229e-14
+cdb = 2.573386e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.625259e+17
+cgd = 2.965844e-14
+cdb = 5.370195e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.979026e+18
+cgd = 6.585883e-15
+cdb = 1.199660e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.203732e+18
+cgd = 1.635005e-14
+cdb = 2.963324e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.711872e+18
+cgd = 1.149890e-14
+cdb = 2.085805e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.299085e+18
+cgd = 1.522145e-14
+cdb = 2.730917e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.262718e+18
+cgd = 8.668681e-15
+cdb = 1.578088e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.984011e+18
+cgd = 6.601904e-15
+cdb = 1.183348e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.748491e+18
+cgd = 7.138559e-15
+cdb = 1.300193e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.543043e+18
+cgd = 5.522980e-15
+cdb = 1.009170e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.182372e+18
+cgd = 1.666137e-14
+cdb = 3.018377e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.294031e+18
+cgd = 1.522352e-14
+cdb = 2.758542e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.580537e+17
+cgd = 2.294142e-14
+cdb = 4.153803e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.240353e+18
+cgd = 6.049454e-15
+cdb = 1.103298e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.039244e+18
+cgd = 6.456033e-15
+cdb = 1.177311e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.545353e+18
+cgd = 7.719993e-15
+cdb = 1.403528e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.495822e+17
+cgd = 5.738838e-14
+cdb = 1.012661e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.694993e+17
+cgd = 3.450565e-14
+cdb = 6.262101e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.224944e+18
+cgd = 1.608287e-14
+cdb = 2.913797e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.448844e+18
+cgd = 1.357467e-14
+cdb = 2.461803e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.981809e+18
+cgd = 6.580411e-15
+cdb = 1.199694e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.427561e+18
+cgd = 8.084981e-15
+cdb = 1.470236e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.329188e+18
+cgd = 8.431091e-15
+cdb = 1.532528e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.555723e+18
+cgd = 1.267708e-14
+cdb = 2.281304e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.731647e+17
+cgd = 2.546739e-14
+cdb = 4.611537e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.667935e+18
+cgd = 1.181456e-14
+cdb = 2.140791e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.684424e+18
+cgd = 7.280689e-15
+cdb = 1.319951e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.720774e+17
+cgd = 2.554975e-14
+cdb = 4.625592e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.504824e+18
+cgd = 7.825407e-15
+cdb = 1.426357e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.284509e+17
+cgd = 2.114755e-14
+cdb = 3.831438e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.454853e+17
+cgd = 2.638743e-14
+cdb = 4.777395e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.923865e+17
+cgd = 4.010801e-14
+cdb = 7.198174e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.446053e+18
+cgd = 8.036764e-15
+cdb = 1.460546e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.062928e+18
+cgd = 6.383257e-15
+cdb = 1.166272e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.673029e+17
+cgd = 5.392238e-14
+cdb = 9.657392e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.638719e+18
+cgd = 1.201457e-14
+cdb = 2.178904e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.612868e+17
+cgd = 4.286518e-14
+cdb = 7.738326e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.519371e+18
+cgd = 7.789303e-15
+cdb = 1.417443e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.904591e+18
+cgd = 6.740657e-15
+cdb = 1.218467e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.957818e+18
+cgd = 6.615613e-15
+cdb = 1.208620e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.695600e+18
+cgd = 1.165348e-14
+cdb = 2.089866e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.446820e+17
+cgd = 4.470478e-14
+cdb = 7.957937e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.477017e+18
+cgd = 1.331499e-14
+cdb = 2.414868e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.517450e+18
+cgd = 1.297945e-14
+cdb = 2.353070e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.079280e+18
+cgd = 6.422277e-15
+cdb = 1.145429e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.677820e+18
+cgd = 7.327352e-15
+cdb = 1.334202e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.851130e+18
+cgd = 5.045468e-15
+cdb = 9.268208e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.723023e+18
+cgd = 5.271687e-15
+cdb = 9.644088e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.782050e+18
+cgd = 5.188723e-15
+cdb = 9.495078e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.341580e+18
+cgd = 8.365072e-15
+cdb = 1.513843e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.157814e+17
+cgd = 6.433598e-14
+cdb = 1.105496e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.493219e+17
+cgd = 5.725974e-14
+cdb = 1.009792e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.227718e+18
+cgd = 6.078191e-15
+cdb = 1.109338e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.991992e+18
+cgd = 9.859895e-15
+cdb = 1.792856e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.201064e+18
+cgd = 4.660336e-15
+cdb = 8.545589e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.225109e+17
+cgd = 2.732736e-14
+cdb = 4.913773e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.191707e+18
+cgd = 1.658938e-14
+cdb = 2.977842e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.685102e+18
+cgd = 1.169481e-14
+cdb = 2.119266e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.399707e+17
+cgd = 5.968895e-14
+cdb = 1.026892e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.277983e+18
+cgd = 8.615872e-15
+cdb = 1.555249e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.087585e+18
+cgd = 9.406052e-15
+cdb = 1.711124e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.244198e+17
+cgd = 3.742482e-14
+cdb = 6.801858e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.183424e+18
+cgd = 6.151161e-15
+cdb = 1.122086e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.445939e+18
+cgd = 5.704446e-15
+cdb = 1.026327e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.851481e+18
+cgd = 6.883602e-15
+cdb = 1.253182e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.261780e+18
+cgd = 1.560651e-14
+cdb = 2.828669e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.756762e+17
+cgd = 5.319714e-14
+cdb = 9.418080e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.074701e+18
+cgd = 9.464768e-15
+cdb = 1.719623e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.705505e+18
+cgd = 5.295931e-15
+cdb = 9.687588e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.238671e+18
+cgd = 1.589955e-14
+cdb = 2.881596e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.129466e+18
+cgd = 9.216030e-15
+cdb = 1.674731e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.196131e+18
+cgd = 9.027939e-15
+cdb = 1.607306e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.045568e+18
+cgd = 1.898180e-14
+cdb = 3.388770e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.710670e+17
+cgd = 4.198094e-14
+cdb = 7.518901e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.299242e+18
+cgd = 1.514446e-14
+cdb = 2.745438e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.317035e+18
+cgd = 8.471297e-15
+cdb = 1.540403e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.870795e+17
+cgd = 4.054984e-14
+cdb = 7.275844e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.709430e+17
+cgd = 3.434839e-14
+cdb = 6.237569e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.741582e+18
+cgd = 1.131374e-14
+cdb = 2.050573e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.871971e+18
+cgd = 1.050892e-14
+cdb = 1.907209e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.445893e+18
+cgd = 1.362323e-14
+cdb = 2.469366e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.380513e+17
+cgd = 3.647655e-14
+cdb = 6.624765e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.646000e+18
+cgd = 5.326249e-15
+cdb = 9.773699e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.501667e+18
+cgd = 5.593906e-15
+cdb = 1.021523e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.663174e+17
+cgd = 4.212477e-14
+cdb = 7.665133e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.344470e+18
+cgd = 5.859396e-15
+cdb = 1.069176e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.249963e+18
+cgd = 1.577701e-14
+cdb = 2.855800e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.133908e+17
+cgd = 3.208976e-14
+cdb = 5.814221e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.923445e+18
+cgd = 1.022485e-14
+cdb = 1.856012e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.591354e+18
+cgd = 1.237356e-14
+cdb = 2.243725e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.610667e+18
+cgd = 5.423005e-15
+cdb = 9.914689e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.014574e+17
+cgd = 3.261746e-14
+cdb = 5.913197e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.820145e+18
+cgd = 5.125542e-15
+cdb = 9.380449e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.773775e+18
+cgd = 1.107701e-14
+cdb = 2.010633e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.385634e+17
+cgd = 2.098151e-14
+cdb = 3.800406e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.102443e+18
+cgd = 6.301347e-15
+cdb = 1.151614e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.057173e+17
+cgd = 2.173843e-14
+cdb = 3.936245e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.446967e+18
+cgd = 5.677759e-15
+cdb = 1.036997e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.239934e+17
+cgd = 3.150323e-14
+cdb = 5.708067e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.200712e+18
+cgd = 1.640625e-14
+cdb = 2.972319e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.185879e+18
+cgd = 1.662903e-14
+cdb = 3.009641e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.409830e+18
+cgd = 1.395962e-14
+cdb = 2.530921e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.897821e+18
+cgd = 5.021092e-15
+cdb = 9.187757e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.332372e+18
+cgd = 1.477495e-14
+cdb = 2.678459e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.981404e+17
+cgd = 3.927260e-14
+cdb = 7.205486e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.712836e+18
+cgd = 5.273207e-15
+cdb = 9.639835e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.707840e+17
+cgd = 4.171043e-14
+cdb = 7.592528e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.398129e+17
+cgd = 3.073521e-14
+cdb = 5.567616e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.292816e+18
+cgd = 1.525355e-14
+cdb = 2.761264e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.606962e+18
+cgd = 5.446960e-15
+cdb = 9.813299e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.165140e+18
+cgd = 1.686467e-14
+cdb = 3.057107e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.093310e+18
+cgd = 9.375713e-15
+cdb = 1.705489e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.008656e+18
+cgd = 1.954454e-14
+cdb = 3.536538e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.274578e+18
+cgd = 5.985567e-15
+cdb = 1.091826e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.766101e+18
+cgd = 7.084654e-15
+cdb = 1.290454e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.969223e+18
+cgd = 9.970802e-15
+cdb = 1.810946e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.399613e+17
+cgd = 4.492431e-14
+cdb = 8.096703e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.358511e+17
+cgd = 2.348526e-14
+cdb = 4.253595e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.264063e+18
+cgd = 1.557871e-14
+cdb = 2.823628e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.289733e+17
+cgd = 4.646977e-14
+cdb = 8.254157e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.191054e+18
+cgd = 6.148862e-15
+cdb = 1.122049e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.513694e+18
+cgd = 7.821612e-15
+cdb = 1.406949e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.352092e+18
+cgd = 8.338547e-15
+cdb = 1.516450e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.892107e+18
+cgd = 6.763507e-15
+cdb = 1.234443e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.299331e+18
+cgd = 8.526952e-15
+cdb = 1.552234e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.256192e+18
+cgd = 6.019841e-15
+cdb = 1.097985e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.626500e+18
+cgd = 1.208863e-14
+cdb = 2.193293e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.206608e+18
+cgd = 8.916146e-15
+cdb = 1.618740e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.609141e+18
+cgd = 7.512788e-15
+cdb = 1.367589e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.573516e+17
+cgd = 2.999447e-14
+cdb = 5.401275e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.282687e+18
+cgd = 1.533958e-14
+cdb = 2.780321e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.064451e+18
+cgd = 4.797313e-15
+cdb = 8.818691e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.842314e+18
+cgd = 6.881866e-15
+cdb = 1.255345e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.613967e+18
+cgd = 5.418645e-15
+cdb = 9.906963e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.666805e+18
+cgd = 1.180757e-14
+cdb = 2.142747e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.354091e+18
+cgd = 1.456210e-14
+cdb = 2.636417e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.011120e+18
+cgd = 9.765477e-15
+cdb = 1.773887e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.071189e+18
+cgd = 1.840715e-14
+cdb = 3.330989e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.420637e+17
+cgd = 3.059158e-14
+cdb = 5.540843e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.200481e+17
+cgd = 2.140423e-14
+cdb = 3.876817e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.987758e+18
+cgd = 6.566453e-15
+cdb = 1.196179e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.367706e+18
+cgd = 1.447830e-14
+cdb = 2.591734e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.524781e+18
+cgd = 7.770993e-15
+cdb = 1.413661e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.623298e+18
+cgd = 5.388213e-15
+cdb = 9.880234e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.951870e+18
+cgd = 1.007600e-14
+cdb = 1.829097e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.350581e+18
+cgd = 8.365992e-15
+cdb = 1.519759e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.123787e+18
+cgd = 1.751671e-14
+cdb = 3.174170e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.019846e+17
+cgd = 2.183327e-14
+cdb = 3.954373e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.401256e+18
+cgd = 1.404445e-14
+cdb = 2.546509e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.050331e+18
+cgd = 9.577358e-15
+cdb = 1.739950e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.777023e+17
+cgd = 5.238046e-14
+cdb = 9.397428e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.708162e+18
+cgd = 7.229611e-15
+cdb = 1.318702e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.011980e+18
+cgd = 1.957608e-14
+cdb = 3.503944e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.682925e+18
+cgd = 1.167799e-14
+cdb = 2.119182e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.197278e+18
+cgd = 6.162141e-15
+cdb = 1.104611e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.118008e+18
+cgd = 1.772099e-14
+cdb = 3.171277e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.428515e+18
+cgd = 5.711947e-15
+cdb = 1.043404e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.110838e+18
+cgd = 6.296641e-15
+cdb = 1.148567e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.926607e+18
+cgd = 1.020413e-14
+cdb = 1.854611e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.059181e+18
+cgd = 9.532445e-15
+cdb = 1.731839e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.510578e+17
+cgd = 2.619874e-14
+cdb = 4.740959e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.678503e+17
+cgd = 2.269849e-14
+cdb = 4.106950e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.213933e+18
+cgd = 1.622626e-14
+cdb = 2.940588e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.552328e+17
+cgd = 4.322073e-14
+cdb = 7.846651e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.320256e+17
+cgd = 2.366862e-14
+cdb = 4.286190e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.064673e+18
+cgd = 1.845260e-14
+cdb = 3.344279e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.483882e+18
+cgd = 1.328618e-14
+cdb = 2.406210e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.665328e+18
+cgd = 5.353977e-15
+cdb = 9.791826e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.417697e+17
+cgd = 2.110113e-14
+cdb = 3.761214e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.091266e+17
+cgd = 4.834504e-14
+cdb = 8.658580e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.350135e+17
+cgd = 2.350749e-14
+cdb = 4.257949e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.713908e+18
+cgd = 7.317241e-15
+cdb = 1.297937e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.044696e+18
+cgd = 4.852501e-15
+cdb = 8.891703e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.543157e+18
+cgd = 7.715660e-15
+cdb = 1.404174e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.450693e+17
+cgd = 3.618107e-14
+cdb = 6.509145e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.872352e+18
+cgd = 5.035529e-15
+cdb = 9.240444e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.441856e+17
+cgd = 5.859238e-14
+cdb = 1.018463e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.573235e+18
+cgd = 1.250734e-14
+cdb = 2.269177e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.733529e+18
+cgd = 1.133762e-14
+cdb = 2.057700e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.203085e+18
+cgd = 8.931087e-15
+cdb = 1.621471e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.073482e+18
+cgd = 6.373453e-15
+cdb = 1.162392e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.431093e+18
+cgd = 1.375421e-14
+cdb = 2.493657e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.552593e+18
+cgd = 1.266369e-14
+cdb = 2.297217e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.336332e+18
+cgd = 8.393614e-15
+cdb = 1.528558e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.066505e+18
+cgd = 1.846911e-14
+cdb = 3.345142e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.544533e+17
+cgd = 2.614479e-14
+cdb = 4.733261e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.117912e+18
+cgd = 4.748669e-15
+cdb = 8.701601e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.685213e+18
+cgd = 5.308788e-15
+cdb = 9.706894e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.614442e+18
+cgd = 1.217600e-14
+cdb = 2.209132e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.902577e+17
+cgd = 5.069808e-14
+cdb = 9.076786e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.220340e+18
+cgd = 6.082525e-15
+cdb = 1.110057e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.498039e+17
+cgd = 2.321506e-14
+cdb = 4.203369e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.938143e+18
+cgd = 6.669422e-15
+cdb = 1.215278e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.508392e+18
+cgd = 5.592593e-15
+cdb = 1.022045e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.266155e+18
+cgd = 8.661521e-15
+cdb = 1.577108e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.024849e+18
+cgd = 9.699049e-15
+cdb = 1.763887e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.457480e+18
+cgd = 5.645806e-15
+cdb = 1.033246e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.277412e+18
+cgd = 8.618720e-15
+cdb = 1.566997e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.251139e+18
+cgd = 1.572866e-14
+cdb = 2.851013e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.583492e+18
+cgd = 7.592088e-15
+cdb = 1.369905e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.306873e+18
+cgd = 1.504865e-14
+cdb = 2.728392e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.810784e+18
+cgd = 1.084873e-14
+cdb = 1.969441e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.196092e+17
+cgd = 3.165983e-14
+cdb = 5.738232e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.466088e+18
+cgd = 5.650332e-15
+cdb = 1.032336e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.963129e+18
+cgd = 4.952420e-15
+cdb = 9.070987e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.813098e+17
+cgd = 2.233823e-14
+cdb = 4.044716e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.600798e+18
+cgd = 1.228054e-14
+cdb = 2.228004e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.115079e+17
+cgd = 3.836704e-14
+cdb = 6.978611e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.116535e+17
+cgd = 3.823041e-14
+cdb = 7.010625e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.715918e+18
+cgd = 1.148253e-14
+cdb = 2.080936e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.888555e+17
+cgd = 2.853835e-14
+cdb = 5.166006e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.904143e+18
+cgd = 1.031700e-14
+cdb = 1.873430e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.634181e+18
+cgd = 7.448310e-15
+cdb = 1.355997e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.146181e+18
+cgd = 1.718603e-14
+cdb = 3.113282e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.460717e+17
+cgd = 4.421004e-14
+cdb = 7.997674e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.298906e+18
+cgd = 1.514823e-14
+cdb = 2.746133e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.124193e+18
+cgd = 6.254266e-15
+cdb = 1.142297e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.923842e+18
+cgd = 4.969166e-15
+cdb = 9.122801e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.996491e+18
+cgd = 9.836959e-15
+cdb = 1.786797e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.324072e+18
+cgd = 5.903372e-15
+cdb = 1.077905e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.948870e+18
+cgd = 4.917559e-15
+cdb = 9.077072e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.059909e+18
+cgd = 9.542633e-15
+cdb = 1.732952e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.889262e+18
+cgd = 5.045606e-15
+cdb = 9.238154e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.271671e+18
+cgd = 5.969566e-15
+cdb = 1.091212e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.259511e+17
+cgd = 3.136924e-14
+cdb = 5.683559e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.917748e+18
+cgd = 1.024307e-14
+cdb = 1.860093e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.847269e+18
+cgd = 1.064323e-14
+cdb = 1.933720e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.304680e+18
+cgd = 8.637547e-15
+cdb = 1.528635e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.513337e+18
+cgd = 1.299754e-14
+cdb = 2.357452e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.464703e+17
+cgd = 4.446478e-14
+cdb = 7.929965e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.603912e+18
+cgd = 7.535123e-15
+cdb = 1.371640e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.894902e+18
+cgd = 1.036432e-14
+cdb = 1.881982e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.994480e+18
+cgd = 9.858094e-15
+cdb = 1.789850e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.380606e+17
+cgd = 3.643151e-14
+cdb = 6.639661e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.293287e+18
+cgd = 1.524687e-14
+cdb = 2.759982e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.316680e+18
+cgd = 8.475403e-15
+cdb = 1.540599e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.927274e+17
+cgd = 3.310812e-14
+cdb = 6.005109e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.779398e+18
+cgd = 5.148125e-15
+cdb = 9.421123e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.285829e+18
+cgd = 8.605333e-15
+cdb = 1.562861e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.260677e+18
+cgd = 1.560400e-14
+cdb = 2.828362e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.049075e+17
+cgd = 2.179876e-14
+cdb = 3.947376e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.260784e+17
+cgd = 4.667246e-14
+cdb = 8.285690e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.301335e+18
+cgd = 5.936716e-15
+cdb = 1.083058e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.860076e+18
+cgd = 1.058999e-14
+cdb = 1.920195e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.608811e+18
+cgd = 5.417869e-15
+cdb = 9.825979e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.134516e+18
+cgd = 9.198314e-15
+cdb = 1.671548e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.230785e+18
+cgd = 4.621580e-15
+cdb = 8.473635e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.736273e+17
+cgd = 2.917567e-14
+cdb = 5.282119e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.285756e+18
+cgd = 1.529368e-14
+cdb = 2.772789e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.250475e+18
+cgd = 6.009944e-15
+cdb = 1.098849e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.790570e+17
+cgd = 2.906299e-14
+cdb = 5.228784e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.784517e+18
+cgd = 1.101181e-14
+cdb = 1.998877e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.057032e+17
+cgd = 4.886607e-14
+cdb = 8.707177e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.266120e+18
+cgd = 4.583190e-15
+cdb = 8.404781e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.950738e+17
+cgd = 5.000913e-14
+cdb = 8.969935e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.369097e+17
+cgd = 3.648329e-14
+cdb = 6.653589e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.023882e+18
+cgd = 1.918138e-14
+cdb = 3.475788e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.385855e+17
+cgd = 3.071851e-14
+cdb = 5.566508e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.959390e+17
+cgd = 3.296028e-14
+cdb = 5.976252e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.838930e+18
+cgd = 1.068457e-14
+cdb = 1.939789e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.043262e+18
+cgd = 1.887240e-14
+cdb = 3.419192e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.076571e+17
+cgd = 3.854063e-14
+cdb = 7.072765e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.298325e+17
+cgd = 4.624724e-14
+cdb = 8.209341e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.362148e+17
+cgd = 4.556210e-14
+cdb = 8.110233e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.685870e+17
+cgd = 5.397798e-14
+cdb = 9.635167e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.126618e+18
+cgd = 4.744645e-15
+cdb = 8.696850e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.895163e+18
+cgd = 1.044810e-14
+cdb = 1.866223e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.010996e+17
+cgd = 4.965145e-14
+cdb = 8.817185e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.134478e+17
+cgd = 4.816083e-14
+cdb = 8.551045e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.234452e+18
+cgd = 8.790615e-15
+cdb = 1.597392e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.953962e+17
+cgd = 1.995536e-14
+cdb = 3.558686e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.919807e+18
+cgd = 5.007155e-15
+cdb = 9.169209e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.147277e+18
+cgd = 6.223490e-15
+cdb = 1.135404e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.384460e+18
+cgd = 8.246056e-15
+cdb = 1.498176e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.817017e+18
+cgd = 6.956044e-15
+cdb = 1.267288e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.270887e+17
+cgd = 6.276573e-14
+cdb = 1.065401e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.910373e+18
+cgd = 6.732025e-15
+cdb = 1.226944e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.186641e+18
+cgd = 1.660186e-14
+cdb = 3.008433e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.445755e+18
+cgd = 5.730568e-15
+cdb = 1.025037e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.722285e+18
+cgd = 1.141002e-14
+cdb = 2.070771e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.974367e+18
+cgd = 6.565612e-15
+cdb = 1.191115e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.147090e+18
+cgd = 1.719109e-14
+cdb = 3.111202e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.198941e+18
+cgd = 1.639811e-14
+cdb = 2.972466e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.524836e+17
+cgd = 3.552129e-14
+cdb = 6.447368e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.406255e+18
+cgd = 1.402165e-14
+cdb = 2.538926e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.523490e+17
+cgd = 2.309412e-14
+cdb = 4.181463e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.178067e+18
+cgd = 1.673991e-14
+cdb = 3.029749e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.485980e+17
+cgd = 2.320714e-14
+cdb = 4.202752e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.351964e+18
+cgd = 8.345016e-15
+cdb = 1.517631e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.561816e+18
+cgd = 7.659928e-15
+cdb = 1.394125e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.294490e+18
+cgd = 1.521924e-14
+cdb = 2.757692e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.300233e+18
+cgd = 8.526288e-15
+cdb = 1.552444e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.141792e+18
+cgd = 1.721109e-14
+cdb = 3.119716e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.543682e+18
+cgd = 1.275699e-14
+cdb = 2.312971e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.417544e+18
+cgd = 8.132168e-15
+cdb = 1.477682e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.214667e+17
+cgd = 3.168115e-14
+cdb = 5.739282e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.991312e+18
+cgd = 4.899857e-15
+cdb = 8.972888e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.405556e+17
+cgd = 2.649745e-14
+cdb = 4.799355e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.892240e+18
+cgd = 6.785578e-15
+cdb = 1.235550e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.630763e+18
+cgd = 7.444002e-15
+cdb = 1.357220e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.527926e+18
+cgd = 1.286907e-14
+cdb = 2.334321e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.126138e+18
+cgd = 1.754057e-14
+cdb = 3.152644e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.164083e+18
+cgd = 1.690869e-14
+cdb = 3.064280e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.351868e+18
+cgd = 5.843298e-15
+cdb = 1.067029e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.250608e+18
+cgd = 6.050162e-15
+cdb = 1.087220e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.740630e+18
+cgd = 5.206434e-15
+cdb = 9.508158e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.092905e+18
+cgd = 6.343987e-15
+cdb = 1.157150e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.516941e+18
+cgd = 7.789387e-15
+cdb = 1.417432e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.313439e+18
+cgd = 1.501372e-14
+cdb = 2.717955e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.589861e+18
+cgd = 1.239835e-14
+cdb = 2.246117e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.575851e+18
+cgd = 5.475954e-15
+cdb = 1.000983e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.504884e+18
+cgd = 1.306154e-14
+cdb = 2.362906e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.377464e+18
+cgd = 1.431538e-14
+cdb = 2.591941e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.581536e+18
+cgd = 5.430434e-15
+cdb = 9.929715e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.781750e+18
+cgd = 5.177705e-15
+cdb = 9.474132e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.419943e+18
+cgd = 1.385215e-14
+cdb = 2.511939e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.591214e+18
+cgd = 7.565110e-15
+cdb = 1.377023e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.897711e+18
+cgd = 1.037787e-14
+cdb = 1.881928e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.646206e+17
+cgd = 3.491324e-14
+cdb = 6.284744e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.644513e+18
+cgd = 1.195773e-14
+cdb = 2.170639e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.305456e+18
+cgd = 1.507543e-14
+cdb = 2.732301e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.203415e+18
+cgd = 1.638743e-14
+cdb = 2.966067e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.385853e+17
+cgd = 3.639670e-14
+cdb = 6.632732e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.160091e+18
+cgd = 6.208384e-15
+cdb = 1.132756e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.527824e+18
+cgd = 1.291696e-14
+cdb = 2.322511e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.342895e+18
+cgd = 8.393915e-15
+cdb = 1.524813e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.554089e+18
+cgd = 1.268479e-14
+cdb = 2.297774e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.624886e+17
+cgd = 4.279527e-14
+cdb = 7.656701e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.845021e+18
+cgd = 6.876456e-15
+cdb = 1.254725e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.054902e+17
+cgd = 3.905350e-14
+cdb = 7.013744e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.248977e+17
+cgd = 2.387218e-14
+cdb = 4.319451e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.381578e+18
+cgd = 5.803031e-15
+cdb = 1.059867e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.608214e+18
+cgd = 7.532061e-15
+cdb = 1.369726e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.676622e+18
+cgd = 5.332085e-15
+cdb = 9.637853e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.878300e+18
+cgd = 6.808393e-15
+cdb = 1.240347e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.558803e+18
+cgd = 1.259058e-14
+cdb = 2.282450e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.157720e+18
+cgd = 6.280406e-15
+cdb = 1.116223e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.266515e+17
+cgd = 3.717004e-14
+cdb = 6.793099e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.177759e+18
+cgd = 9.035250e-15
+cdb = 1.640182e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.151666e+18
+cgd = 9.132559e-15
+cdb = 1.658998e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.030239e+18
+cgd = 9.696965e-15
+cdb = 1.759334e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.107282e+18
+cgd = 4.747664e-15
+cdb = 8.730758e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.833993e+17
+cgd = 3.362494e-14
+cdb = 6.101328e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.088265e+17
+cgd = 3.847496e-14
+cdb = 7.040899e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.697337e+18
+cgd = 1.157863e-14
+cdb = 2.101220e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.845569e+18
+cgd = 6.898038e-15
+cdb = 1.255766e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.644727e+17
+cgd = 2.965966e-14
+cdb = 5.370528e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.326400e+17
+cgd = 2.369301e-14
+cdb = 4.289798e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.706704e+18
+cgd = 5.263513e-15
+cdb = 9.651161e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.708754e+18
+cgd = 1.150295e-14
+cdb = 2.087551e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.643133e+18
+cgd = 1.197714e-14
+cdb = 2.173378e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.464247e+18
+cgd = 5.654892e-15
+cdb = 1.032467e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.787660e+17
+cgd = 5.214916e-14
+cdb = 9.372263e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.405903e+17
+cgd = 3.066474e-14
+cdb = 5.554923e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.786969e+18
+cgd = 5.169150e-15
+cdb = 9.453230e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.476260e+18
+cgd = 1.332546e-14
+cdb = 2.417060e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.569366e+18
+cgd = 7.634979e-15
+cdb = 1.389157e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.988907e+17
+cgd = 2.813341e-14
+cdb = 5.094008e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.442560e+18
+cgd = 1.363939e-14
+cdb = 2.473369e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.769638e+18
+cgd = 5.189315e-15
+cdb = 9.492324e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.091130e+18
+cgd = 9.399067e-15
+cdb = 1.707060e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.117948e+18
+cgd = 9.270532e-15
+cdb = 1.686723e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.320901e+18
+cgd = 1.489506e-14
+cdb = 2.700381e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.815737e+18
+cgd = 6.967765e-15
+cdb = 1.269433e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.866980e+17
+cgd = 4.058917e-14
+cdb = 7.280869e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.662738e+18
+cgd = 1.184027e-14
+cdb = 2.147434e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.474462e+18
+cgd = 7.931044e-15
+cdb = 1.442990e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.441223e+18
+cgd = 8.072712e-15
+cdb = 1.447800e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.288546e+18
+cgd = 5.956066e-15
+cdb = 1.087310e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.531014e+18
+cgd = 1.287582e-14
+cdb = 2.332181e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.567579e+18
+cgd = 1.256100e-14
+cdb = 2.277629e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.091736e+17
+cgd = 3.841072e-14
+cdb = 7.041113e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.348315e+18
+cgd = 5.849133e-15
+cdb = 1.068071e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.917033e+17
+cgd = 2.491839e-14
+cdb = 4.511361e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.623503e+18
+cgd = 5.415772e-15
+cdb = 9.902823e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.025707e+17
+cgd = 2.181862e-14
+cdb = 3.951724e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.634762e+18
+cgd = 7.437452e-15
+cdb = 1.356670e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.959825e+18
+cgd = 1.003369e-14
+cdb = 1.821527e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.468587e+18
+cgd = 5.629358e-15
+cdb = 1.030903e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.220642e+18
+cgd = 8.840004e-15
+cdb = 1.606909e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.469115e+18
+cgd = 5.646944e-15
+cdb = 1.031042e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.327566e+18
+cgd = 1.481620e-14
+cdb = 2.686262e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.555764e+17
+cgd = 2.997268e-14
+cdb = 5.428570e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.376589e+18
+cgd = 1.433263e-14
+cdb = 2.579401e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.213975e+18
+cgd = 8.882233e-15
+cdb = 1.599424e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.327059e+18
+cgd = 1.483491e-14
+cdb = 2.679066e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.437657e+17
+cgd = 2.334208e-14
+cdb = 4.223493e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.179536e+18
+cgd = 1.666514e-14
+cdb = 3.020860e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.796886e+18
+cgd = 1.090750e-14
+cdb = 1.978666e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.672988e+18
+cgd = 1.176629e-14
+cdb = 2.134144e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.760626e+17
+cgd = 2.535363e-14
+cdb = 4.590260e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.200768e+18
+cgd = 6.103152e-15
+cdb = 1.115171e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.046977e+18
+cgd = 9.648419e-15
+cdb = 1.728317e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.425708e+18
+cgd = 5.719112e-15
+cdb = 1.043994e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.356406e+18
+cgd = 1.450362e-14
+cdb = 2.629654e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.015177e+18
+cgd = 4.873574e-15
+cdb = 8.923245e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.525928e+18
+cgd = 1.289354e-14
+cdb = 2.338976e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.399118e+17
+cgd = 3.065428e-14
+cdb = 5.554849e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.252262e+18
+cgd = 6.021902e-15
+cdb = 1.099135e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.702519e+18
+cgd = 5.289210e-15
+cdb = 9.674498e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.744483e+18
+cgd = 1.126368e-14
+cdb = 2.044359e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.393032e+18
+cgd = 5.783848e-15
+cdb = 1.056420e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.342164e+17
+cgd = 4.565362e-14
+cdb = 8.184785e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.910208e+18
+cgd = 1.029764e-14
+cdb = 1.856710e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.240068e+18
+cgd = 8.758136e-15
+cdb = 1.592131e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.506984e+17
+cgd = 2.073102e-14
+cdb = 3.751096e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.337673e+18
+cgd = 5.850368e-15
+cdb = 1.069852e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.103936e+18
+cgd = 1.783261e-14
+cdb = 3.231261e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.206226e+18
+cgd = 1.631616e-14
+cdb = 2.957191e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.564145e+18
+cgd = 5.474557e-15
+cdb = 1.002273e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.263467e+17
+cgd = 6.186977e-14
+cdb = 1.077484e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.235506e+18
+cgd = 8.799912e-15
+cdb = 1.597818e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.943775e+17
+cgd = 3.958375e-14
+cdb = 7.254143e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.004902e+18
+cgd = 4.889187e-15
+cdb = 8.956233e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.641809e+18
+cgd = 7.419278e-15
+cdb = 1.350724e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.317307e+17
+cgd = 4.597823e-14
+cdb = 8.221851e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.192655e+18
+cgd = 8.959599e-15
+cdb = 1.627858e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.670059e+18
+cgd = 7.333579e-15
+cdb = 1.337376e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.818904e+17
+cgd = 3.371905e-14
+cdb = 6.114879e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.640194e+18
+cgd = 5.374782e-15
+cdb = 9.825441e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.009620e+18
+cgd = 1.952622e-14
+cdb = 3.533301e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.441317e+18
+cgd = 1.366546e-14
+cdb = 2.477067e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.348022e+18
+cgd = 1.459345e-14
+cdb = 2.645875e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.576493e+18
+cgd = 1.250294e-14
+cdb = 2.264924e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.501214e+18
+cgd = 1.309945e-14
+cdb = 2.375924e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.235394e+17
+cgd = 2.135767e-14
+cdb = 3.867663e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.437261e+18
+cgd = 1.375807e-14
+cdb = 2.467401e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.326033e+18
+cgd = 5.885708e-15
+cdb = 1.074348e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.456961e+18
+cgd = 7.975226e-15
+cdb = 1.452810e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.036465e+17
+cgd = 2.172631e-14
+cdb = 3.935995e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.731312e+17
+cgd = 2.928121e-14
+cdb = 5.301773e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.149042e+18
+cgd = 9.232857e-15
+cdb = 1.642384e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.126307e+17
+cgd = 3.819506e-14
+cdb = 6.986207e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.740548e+18
+cgd = 1.130857e-14
+cdb = 2.052648e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.820589e+18
+cgd = 1.079951e-14
+cdb = 1.961879e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.511807e+17
+cgd = 2.070310e-14
+cdb = 3.750085e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.549775e+18
+cgd = 1.269596e-14
+cdb = 2.303263e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.063823e+18
+cgd = 1.851477e-14
+cdb = 3.353463e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.570406e+17
+cgd = 4.335402e-14
+cdb = 7.747464e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.996768e+17
+cgd = 2.810192e-14
+cdb = 5.088272e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.489426e+18
+cgd = 5.608462e-15
+cdb = 1.024510e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.717784e+18
+cgd = 7.214165e-15
+cdb = 1.313386e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.334149e+18
+cgd = 8.403101e-15
+cdb = 1.528079e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.309795e+17
+cgd = 3.690420e-14
+cdb = 6.731660e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.299370e+18
+cgd = 8.541341e-15
+cdb = 1.552401e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.743523e+18
+cgd = 7.133283e-15
+cdb = 1.300886e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.976729e+17
+cgd = 3.967273e-14
+cdb = 7.123139e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.828808e+18
+cgd = 1.074141e-14
+cdb = 1.950051e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.696909e+18
+cgd = 7.282218e-15
+cdb = 1.324821e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.584656e+18
+cgd = 7.592456e-15
+cdb = 1.381963e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.666234e+18
+cgd = 5.353288e-15
+cdb = 9.790622e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.210827e+18
+cgd = 8.886260e-15
+cdb = 1.614586e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.171849e+18
+cgd = 4.689688e-15
+cdb = 8.593666e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.068472e+18
+cgd = 9.489512e-15
+cdb = 1.724081e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.482166e+17
+cgd = 5.818414e-14
+cdb = 1.010415e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.610137e+18
+cgd = 1.221320e-14
+cdb = 2.216712e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.895640e+18
+cgd = 6.766131e-15
+cdb = 1.233076e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.870624e+18
+cgd = 6.827498e-15
+cdb = 1.243734e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.264612e+18
+cgd = 8.685850e-15
+cdb = 1.577285e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.253309e+18
+cgd = 6.007429e-15
+cdb = 1.099101e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.342282e+18
+cgd = 5.843544e-15
+cdb = 1.069101e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.426226e+17
+cgd = 2.092381e-14
+cdb = 3.789266e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.733393e+18
+cgd = 7.184011e-15
+cdb = 1.307161e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.824906e+18
+cgd = 1.073216e-14
+cdb = 1.948683e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.156856e+18
+cgd = 4.704032e-15
+cdb = 8.621529e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.312052e+18
+cgd = 8.493102e-15
+cdb = 1.543759e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.781811e+18
+cgd = 7.036828e-15
+cdb = 1.284100e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.688761e+18
+cgd = 1.163910e-14
+cdb = 2.103648e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.505702e+18
+cgd = 1.309163e-14
+cdb = 2.371042e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.365710e+17
+cgd = 3.656808e-14
+cdb = 6.660863e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.073877e+18
+cgd = 1.835493e-14
+cdb = 3.325138e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.564300e+18
+cgd = 5.475195e-15
+cdb = 1.002788e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.492911e+18
+cgd = 1.319334e-14
+cdb = 2.391705e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.096059e+17
+cgd = 3.220052e-14
+cdb = 5.836772e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.820529e+17
+cgd = 4.067227e-14
+cdb = 7.438849e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.448530e+17
+cgd = 5.839502e-14
+cdb = 1.024363e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.270514e+18
+cgd = 1.550636e-14
+cdb = 2.809589e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.244553e+17
+cgd = 2.388487e-14
+cdb = 4.321688e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.639978e+18
+cgd = 1.200425e-14
+cdb = 2.177104e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.984679e+17
+cgd = 3.925044e-14
+cdb = 7.206476e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.611790e+18
+cgd = 7.509903e-15
+cdb = 1.366626e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.953302e+18
+cgd = 1.006439e-14
+cdb = 1.829441e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.608494e+18
+cgd = 5.426811e-15
+cdb = 9.915424e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.965555e+17
+cgd = 3.289389e-14
+cdb = 5.965082e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.090667e+18
+cgd = 1.806074e-14
+cdb = 3.271309e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.968279e+17
+cgd = 3.940790e-14
+cdb = 7.215339e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.477462e+18
+cgd = 8.009784e-15
+cdb = 1.422853e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.394899e+17
+cgd = 2.673168e-14
+cdb = 4.800110e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.541295e+17
+cgd = 3.543941e-14
+cdb = 6.439510e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.714433e+18
+cgd = 1.146218e-14
+cdb = 2.080208e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.234770e+18
+cgd = 6.053153e-15
+cdb = 1.104431e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.206120e+17
+cgd = 3.763452e-14
+cdb = 6.882533e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.373774e+17
+cgd = 3.645234e-14
+cdb = 6.647395e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.001175e+18
+cgd = 1.961503e-14
+cdb = 3.554091e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.170209e+18
+cgd = 6.184707e-15
+cdb = 1.127587e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.973249e+17
+cgd = 2.195740e-14
+cdb = 3.972930e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.524139e+17
+cgd = 4.368568e-14
+cdb = 7.868394e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.498966e+18
+cgd = 1.317424e-14
+cdb = 2.366772e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.406727e+18
+cgd = 5.730063e-15
+cdb = 1.048017e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.941751e+18
+cgd = 1.011615e-14
+cdb = 1.837178e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.600339e+18
+cgd = 5.434559e-15
+cdb = 9.932966e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.998846e+18
+cgd = 9.850325e-15
+cdb = 1.786955e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 6.757759e+17
+cgd = 2.911655e-14
+cdb = 5.272869e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.791035e+17
+cgd = 4.096711e-14
+cdb = 7.460823e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.537594e+18
+cgd = 7.744118e-15
+cdb = 1.407896e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.924275e+17
+cgd = 3.320062e-14
+cdb = 6.018881e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.040053e+17
+cgd = 2.793114e-14
+cdb = 5.055535e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.538214e+18
+cgd = 1.278603e-14
+cdb = 2.319257e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.148891e+18
+cgd = 9.157592e-15
+cdb = 1.662210e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.249002e+18
+cgd = 8.728033e-15
+cdb = 1.586713e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.038316e+18
+cgd = 1.906830e-14
+cdb = 3.415846e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.915114e+17
+cgd = 2.487845e-14
+cdb = 4.504993e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.071540e+17
+cgd = 2.774528e-14
+cdb = 5.025742e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.034997e+18
+cgd = 6.454577e-15
+cdb = 1.176994e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.784224e+18
+cgd = 1.101406e-14
+cdb = 1.999270e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.573502e+18
+cgd = 1.249763e-14
+cdb = 2.268021e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.261563e+18
+cgd = 6.005164e-15
+cdb = 1.096134e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.621759e+18
+cgd = 1.215253e-14
+cdb = 2.201730e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.118315e+18
+cgd = 9.291332e-15
+cdb = 1.686329e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.382675e+18
+cgd = 1.424602e-14
+cdb = 2.581955e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.971447e+18
+cgd = 6.594098e-15
+cdb = 1.201721e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.217554e+18
+cgd = 6.092839e-15
+cdb = 1.111099e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.894963e+18
+cgd = 6.777489e-15
+cdb = 1.235171e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.028443e+18
+cgd = 1.917107e-14
+cdb = 3.472556e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.992363e+17
+cgd = 3.930647e-14
+cdb = 7.154983e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.465551e+18
+cgd = 1.342406e-14
+cdb = 2.434481e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.004102e+18
+cgd = 1.963738e-14
+cdb = 3.556824e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.794824e+18
+cgd = 1.097641e-14
+cdb = 1.989778e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.792087e+18
+cgd = 1.100658e-14
+cdb = 1.977938e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.420917e+17
+cgd = 5.879694e-14
+cdb = 1.029662e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.592834e+17
+cgd = 2.584456e-14
+cdb = 4.681265e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 8.807283e+17
+cgd = 2.252600e-14
+cdb = 4.024845e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.050304e+18
+cgd = 1.876991e-14
+cdb = 3.400085e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.385838e+18
+cgd = 5.787114e-15
+cdb = 1.056199e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.210911e+17
+cgd = 4.712587e-14
+cdb = 8.389533e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 9.532899e+17
+cgd = 2.065612e-14
+cdb = 3.740632e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.225577e+18
+cgd = 1.607363e-14
+cdb = 2.912196e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.433213e+17
+cgd = 5.860456e-14
+cdb = 1.023570e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.537375e+18
+cgd = 7.724446e-15
+cdb = 1.408215e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.048426e+18
+cgd = 6.425848e-15
+cdb = 1.171479e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.358226e+18
+cgd = 1.450368e-14
+cdb = 2.628450e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.090401e+18
+cgd = 1.808354e-14
+cdb = 3.272495e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.105312e+18
+cgd = 6.315355e-15
+cdb = 1.151062e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.942971e+18
+cgd = 6.745805e-15
+cdb = 1.196943e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.236646e+18
+cgd = 4.621080e-15
+cdb = 8.475166e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.592876e+18
+cgd = 5.445962e-15
+cdb = 9.953321e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.801456e+18
+cgd = 1.090545e-14
+cdb = 1.979671e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.013664e+18
+cgd = 6.574748e-15
+cdb = 1.169610e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 5.951127e+17
+cgd = 3.297227e-14
+cdb = 5.979649e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.900149e+18
+cgd = 1.034647e-14
+cdb = 1.880255e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.365510e+17
+cgd = 6.026402e-14
+cdb = 1.044611e-13
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.166283e+18
+cgd = 1.690838e-14
+cdb = 3.060116e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.944655e+18
+cgd = 6.662201e-15
+cdb = 1.214419e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.527329e+17
+cgd = 2.614094e-14
+cdb = 4.730436e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.201568e+18
+cgd = 6.102559e-15
+cdb = 1.115428e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.361937e+18
+cgd = 1.443829e-14
+cdb = 2.618319e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.738360e+17
+cgd = 2.556615e-14
+cdb = 4.585838e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.320874e+18
+cgd = 5.908476e-15
+cdb = 1.078821e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.173121e+17
+cgd = 4.764270e-14
+cdb = 8.455762e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.073969e+18
+cgd = 1.835919e-14
+cdb = 3.322238e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.002288e+18
+cgd = 1.959444e-14
+cdb = 3.550637e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.921762e+18
+cgd = 4.987118e-15
+cdb = 9.129293e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.504004e+18
+cgd = 5.588559e-15
+cdb = 1.021223e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.003206e+18
+cgd = 9.827739e-15
+cdb = 1.782834e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.605457e+18
+cgd = 5.443434e-15
+cdb = 9.952530e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 7.218766e+17
+cgd = 2.724449e-14
+cdb = 4.932713e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 4.096615e+18
+cgd = 4.776197e-15
+cdb = 8.748704e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.971595e+18
+cgd = 4.927353e-15
+cdb = 9.019649e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.286193e+18
+cgd = 5.959516e-15
+cdb = 1.087912e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 2.374048e+18
+cgd = 8.268835e-15
+cdb = 1.503369e-14
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 3.866250e+18
+cgd = 5.064862e-15
+cdb = 9.271591e-15
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+
+No. of Data Rows : 1
+bw = 1.763110e+18
+cgd = 1.116181e-14
+cdb = 2.025032e-14
+ASCII raw file "rawfile.raw"
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+OP information in rawfile.
+
+Total analysis time (seconds) = 1.247
+
+Total elapsed time (seconds) = 10.483 
+
+Total DRAM available = 16145.691 MB.
+DRAM currently available = 5535.062 MB.
+Maximum ngspice program size =   21.602 MB.
+Current ngspice program size =   21.598 MB.
+

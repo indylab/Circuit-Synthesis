@@ -29,6 +29,28 @@ if __name__ == '__main__':
     simulator_lna = Simulator(ngspice_exec, train_netlist_lna, test_netlist_lna, param_list_lna, perform_list_lna,
                               arguments_lna)
     simulator_lna.delete_existing_data = True
+
+    train_netlist_cascade = "../assets/nmos-training-cascode.sp"
+    test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
+    param_list_cascade = ["r", "w0", "w1"]
+    perform_list_cascade = ["bw", "pw", "a0"]
+
+    arguments_cascade = {
+        "model_path": "../assets/45nm_CS.pm",
+        "w0_start": 620,
+        "w0_stop": 1450,
+        "w0_change": 50,
+        "w1_start": 620,
+        "w1_stop": 1450,
+        "w1_change": 50,
+        "r_start": "2.88u",
+        "r_stop": "6.63u",
+        "r_change": "0.7500u",
+        "out": "../out/"
+    }
+    simulator_cascade = Simulator(ngspice_exec, train_netlist_cascade, test_netlist_cascade, param_list_cascade,
+                                  perform_list_cascade,
+                                  arguments_cascade)
     param, perform = simulator_lna.run_training()
     param_sim, perform_sim = simulator_lna.run_training() #simulator_lna.runSimulation(parameters=param)
     perform_sim = np.array(perform_sim)

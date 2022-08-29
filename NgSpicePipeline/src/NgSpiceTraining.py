@@ -34,43 +34,42 @@ def check_acc(y_hat, y, margins=None):
 
     return accs
 
-def check_minimum_requirement_acc(y_hat, y, sign):
-    if sign is not None:
-        y_hat = y_hat * np.array(sign)[None,:]
-        y = y * np.array(sign)[None,:]
-    greater = y_hat >= y
 
+def check_minimum_requirement_acc(y_hat, y, sign, margin=0.5):
+    sign = np.array(sign)
+    if sign is not None:
+        y_hat = y_hat * sign
+        y = y * sign
+    greater = y_hat >= y * (1-(sign*margin)) # take away or add margin% to "requested" performance to allow for margin% error
+    debug_y = y * (1-(sign*margin))
+    for i in range(5):
+        print(f"y: {debug_y[i,:] * (1 - margin)}, yh: {y_hat[i,:]}, g: {greater[i,:]}, diff: {(debug_y[i,:] - y_hat[i,:])/debug_y[i,:]}")
     return [np.all(greater, axis=1).sum().item() / y_hat.shape[0]]
 
-def simulate_points(paramater_preds, norm_perform, scaler, simulator):
+
+def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign):
     num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
     data = np.hstack((paramater_preds, norm_perform))
-    MAX_LENGTH = 750
-    if data.shape[0] > MAX_LENGTH:
-        n = np.random.randint(0, paramater_preds.shape[0], MAX_LENGTH)
-        data = data[n, :]
     unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :num_param], scaler.inverse_transform(
-        data)[:, num_param:]
+        data)[:,
+                                                                                             num_param:]
 
     _, y_sim = simulator.runSimulation(unnorm_param_preds)
-    assert y_sim.shape == unnorm_true_perform.shape or y_sim.shape[
-        0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {unnorm_true_perform.shape}"
-    assert y_sim.shape == norm_perform.shape or y_sim.shape[
-        0] == MAX_LENGTH, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
-    if margin:
-        accs = check_acc(y_sim, unnorm_true_perform)
-    else:
-        accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform, sign)
+    assert y_sim.shape == unnorm_true_perform.shape, f"simulation failed, {y_sim.shape} != {unnorm_true_perform.shape}"
+    assert y_sim.shape == norm_perform.shape, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
+    check_acc(y_sim, unnorm_true_perform)
+    accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform, sign)
     return accs
 
 
-def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000, margin=True, train_acc = False, sign=None):
-    print_every = 50
+def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000,
+          margin=True, train_acc=False, sign=None):
+    print_every = 200
     train_accs = []
     val_accs = []
     losses = []
     val_losses = []
-    train_acc = False
+    train_acc = True
     for epoch in range(num_epochs):
         model.train()
         avg_loss = 0
@@ -120,6 +119,8 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
             if train_acc:
                 norm_perform, _ = train_data.dataset.getAll()
                 model.eval()
+                simulator.save_error_log = True
+                print(norm_perform, norm_perform.shape)
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
                 acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
                 train_accs.append(acc_list)
@@ -128,9 +129,9 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
     return losses, val_losses, train_accs, val_accs
 
 
-
-def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator, device = 'cpu'):
-    #TODO different margin accuracy
+def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator,
+                            device='cpu'):
+    # TODO different margin accuracy
     accuracy_list = []
 
     for percentage in percentages:
@@ -144,7 +145,7 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         train_dataloader = DataLoader(train_data, batch_size=100)
         val_dataloader = DataLoader(val_data, batch_size=100)
         _, _, _, val_accs = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,
-                                             simulator, device, num_epochs=300)
+                                  simulator, device, num_epochs=300)
 
         accs = []
         for acc in val_accs:
@@ -156,5 +157,3 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
         plt.plot(range(len(acc)), acc, label=percentages[index])
     plt.legend()
     plt.show()
-
-
