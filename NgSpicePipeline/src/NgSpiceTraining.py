@@ -35,7 +35,7 @@ def check_acc(y_hat, y, margins=None):
     return accs
 
 
-def check_minimum_requirement_acc(y_hat, y, sign, margin=0.5):
+def check_minimum_requirement_acc(y_hat, y, sign, margin=0.05):
     sign = np.array(sign)
     if sign is not None:
         y_hat = y_hat * sign

@@ -131,7 +131,7 @@ if __name__ == '__main__':
     simulator = simulator_cascade
     simulator.delete_existing_data = False
 
-    rerun_training = True
+    rerun_training = False
 
     if rerun_training:
         x, y = simulator.run_training()
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     data = scaler_arg.transform(data)
     param, perform = data[:, :num_param], data[:, num_param:]
 
-    perform, param = generate_new_dataset_maximum_performance(perform, param, [0,1,2], [1, -1, 1])
+    perform, param = generate_new_dataset_maximum_performance(perform, param, [0,2,1], [1, -1, 1], greater=False)
     X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
     # newX_train, newy_train = generate_duplicate_data(X_train, y_train, [0.98,0.96,0.94,0.92,0.9])
