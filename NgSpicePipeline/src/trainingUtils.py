@@ -146,8 +146,8 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
         new_temp_parameter = None
         for x in range(len(performance)):
-            order_temp_performance = temp_performance[np.array(order)] * sign
-            order_compare_performance = performance[x, :][np.array(order)] * sign
+            order_temp_performance = (temp_performance * sign)[np.array(order)]
+            order_compare_performance = (performance[x, :] * sign)[np.array(order)]
 
             if greater:
                 if np.all(order_compare_performance > order_temp_performance):
@@ -162,16 +162,16 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
             new_performance.append(temp_performance)
             new_parameter.append(new_temp_parameter[num_performance:])
 
-    def get_similarity(new, old):
-        count = 0
-        for i in range(old.shape[0]):
-            if np.allclose(old[i, :], new[i, :]): count += 1
-        print(f"{count}/{old.shape[0]}, {count/old.shape[0]}%. {old.shape[0]-count} diff")
+    # def get_similarity(new, old):
+    #     count = 0
+    #     for i in range(old.shape[0]):
+    #         if np.allclose(old[i, :], new[i, :]): count += 1
+    #     print(f"{count}/{old.shape[0]}, {count / old.shape[0]}%. {old.shape[0] - count} diff")
 
-    print("performance")
-    get_similarity(np.array(new_performance),performance)
-    print("parameter")
-    get_similarity(np.array(new_parameter), parameter)
+    # print("performance")
+    # get_similarity(np.array(new_performance), performance)
+    # print("parameter")
+    # get_similarity(np.array(new_parameter), parameter)
     return np.array(new_performance), np.array(new_parameter)
 
 
