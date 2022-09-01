@@ -1,6 +1,6 @@
 nmos: cs amp
 
-.include NgSpicePipeline/assets/45nm_CS.pm
+.include ../assets/45nm_CS.pm
 
 .option TEMP=27C
 
@@ -42,12 +42,12 @@ while w_test le w_stop
 			let cp = (1+a0)*cgd+cdb
 			let bw = 1/(2*pi*r_test*cp)
 			print bw cgd cdb
-			wrdata NgSpicePipeline/out/r.csv r_test
-            wrdata NgSpicePipeline/out/w0.csv w_test
-            wrdata NgSpicePipeline/out/w1.csv w1_test
-            wrdata NgSpicePipeline/out/bw.csv bw
-            wrdata NgSpicePipeline/out/pw.csv pw
-            wrdata NgSpicePipeline/out/a0.csv a0
+			wrdata ../out/r.csv r_test
+            wrdata ../out/w0.csv w_test
+            wrdata ../out/w1.csv w1_test
+            wrdata ../out/bw.csv bw
+            wrdata ../out/pw.csv pw
+            wrdata ../out/a0.csv a0
 			set appendwrite
 			let w1_test = w1_test + delta_w1
 		end

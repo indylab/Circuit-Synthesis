@@ -1,5 +1,5 @@
 circuit: TwoStageAmplifier
-.include NgSpicePipeline/assets/45nm_CS.pm
+.include ../assets/45nm_CS.pm
 .option TEMP=27C
 
 V1 net14 0 dc 1
@@ -66,17 +66,17 @@ while w_test le w_stop
 			let id1 = @mn8[id]
 			let pw = (id1+id2)*3.3
 			let av = v(out2)/v(net1)
-			wrdata NgSpicePipeline/out/w0.csv w_test
-			wrdata NgSpicePipeline/out/w1.csv w1_test
-			wrdata NgSpicePipeline/out/w2.csv w2_test
-			wrdata NgSpicePipeline/out/pw.csv pw
-			wrdata NgSpicePipeline/out/a0.csv av
+			wrdata ../out/w0.csv w_test
+			wrdata ../out/w1.csv w1_test
+			wrdata ../out/w2.csv w2_test
+			wrdata ../out/pw.csv pw
+			wrdata ../out/a0.csv av
 
 			ac dec 1000 1G 100G
 			let resp = db(v(out2)/v(net1)) 
 			let measurement_point = vecmax (resp) - 3.0
 			meas AC upper_3dB WHEN resp = measurement_point 
-			print upper_3dB >> NgSpicePipeline/out/bw.csv
+			print upper_3dB >> ../out/bw.csv
 			
 			set appendwrite
 			let w1_test = w1_test + delta_w1
