@@ -15,8 +15,8 @@ if __name__ == '__main__':
         print(np.array(v))
         object[k] = np.array(v).mean(axis=0)
         means_d[k] = np.array(v).mean(axis=0)
-        lows[k] = means_d[k] - np.min(np.array(v),axis=0)
-        highs[k] = np.max(np.array(v),axis=0) -  means_d[k]
+        lows[k] = means_d[k] - np.min(np.array(v), axis=0)
+        highs[k] = np.max(np.array(v), axis=0) - means_d[k]
 
     cir_name = "Two Stage Amplifier"
     trials = 5
@@ -25,11 +25,11 @@ if __name__ == '__main__':
     means = [x[acc_lvl] for x in means_d.values()]
     highs = [x[acc_lvl] for x in highs.values()]
     lows = [x[acc_lvl] for x in lows.values()]
-    big_errors = np.vstack((lows,highs))
+    big_errors = np.vstack((lows, highs))
     x_pos = np.arange(len(object.keys()))
     fig, ax = plt.subplots()
     print(big_errors)
-    ax.bar(x_pos, np.array(means)*100, yerr=big_errors*100, align='center', alpha=0.5, ecolor='black', capsize=10)
+    ax.bar(x_pos, np.array(means) * 100, yerr=big_errors * 100, align='center', alpha=0.5, ecolor='black', capsize=10)
     ax.set_ylabel(f'% Success rate at {accs[acc_lvl]}% accuracy')
     ax.set_xlabel(f'Training Test Size')
     ax.set_xticks(x_pos)

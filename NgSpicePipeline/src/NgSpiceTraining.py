@@ -35,17 +35,25 @@ def check_acc(y_hat, y, margins=None):
     return accs
 
 
-def check_minimum_requirement_acc(y_hat, y, sign, margin=0.05):
+def check_minimum_requirement_acc(y_hat, y, sign, margins=None):
+    all_margins = []
+    if margins is None:
+        margins = [0.01, 0.05, 0.1]
     sign = np.array(sign)
     if sign is not None:
         y_hat = y_hat * sign
         y = y * sign
-    greater = y_hat >= y * (1-(sign*margin)) # take away or add margin% to "requested" performance to allow for margin% error
 
-    debug_y = y * (1-(sign*margin))
-    for i in range(5):
-        print(f"y: {debug_y[i,:] * (1 - margin)}, yh: {y_hat[i,:]}, g: {greater[i,:]}, diff: {(debug_y[i,:] - y_hat[i,:])/debug_y[i,:]}")
-    return [np.all(greater, axis=1).sum().item() / y_hat.shape[0]]
+    for margin in margins:
+        greater = y_hat >= y * (1-(sign*margin)) # take away or add margin% to "requested" performance to allow for margin% error
+        acc_at_margin = np.all(greater, axis=1).sum().item() / y_hat.shape[0]
+        all_margins.append(acc_at_margin)
+    # DEBUG OUTPUT
+    # debug_y = y * (1-(sign*margin))
+    # for i in range(5):
+    #     print(f"y: {debug_y[i,:] * (1 - margin)}, yh: {y_hat[i,:]}, g: {greater[i,:]}, diff: {(debug_y[i,:] - y_hat[i,:])/debug_y[i,:]}")
+    return all_margins
+
 
 
 def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign, final = False):
@@ -71,14 +79,18 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, si
 
 
 def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000,
-          margin=True, train_acc=False, sign=None):
+          margin=None, train_acc=False, sign=None):
+    if margin is None:
+        margin = [0.05]
     print_every = 200
     train_accs = []
     val_accs = []
     losses = []
     val_losses = []
+
     final_param = None
     final_perform = None
+
     for epoch in range(num_epochs):
         model.train()
         avg_loss = 0
@@ -98,7 +110,6 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
             loss.backward()
             optimizer.step()
 
-        losses.append(avg_loss)
         for t, (x, y) in enumerate(val_data):
             # Zero your gradient
 
@@ -142,7 +153,6 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
 
 def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator,
                             device='cpu'):
-    # TODO different margin accuracy
     accuracy_list = []
 
     for percentage in percentages:
