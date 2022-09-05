@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE, LocallyLinearEmbedding, MDS
 import numpy as np
+import seaborn as sns
 
 def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
 
@@ -33,3 +34,21 @@ def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
     fig.add_subplot(122)
     plt.scatter(embedded_Y[:, 0], embedded_Y[:, 1], c= C)
     plt.show()
+
+
+def graph_get_margin_error(y_hat, y, sign=None):
+    sign = np.array(sign)
+    if sign is not None:
+        y_hat = y_hat * sign
+        y = y * sign
+
+    greater = np.all(y_hat >= y, axis=1)
+
+    a_err = (np.abs(y_hat - y))
+    err = np.divide(a_err, y, where=y != 0)
+    max_err = np.max(err, axis=1)
+    max_err[greater] = 0
+
+    ax = sns.distplot(max_err)
+    plt.show()
+    return max_err
