@@ -110,7 +110,7 @@ if __name__ == '__main__':
     simulator.delete_existing_data = False
 
     # if you want to rerun training. MANDATORY of switching between circuits or altering arguments
-    rerun_training = True
+    rerun_training = False
 
     if rerun_training:
         x, y = simulator.run_training()
@@ -123,7 +123,8 @@ if __name__ == '__main__':
 
         x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
 
-    device = 'cuda:0' if cuda.is_available() else 'cpu'
+    #device = 'cuda:0' if cuda.is_available() else 'cpu'
+    device = 'cpu'
     print(device)
     num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
     model = models.Model500GELU(num_perform, num_param).to(device)
@@ -143,9 +144,10 @@ if __name__ == '__main__':
     MARGINS = [0.01, 0.05, 0.1]
 
     assert (len(SIGN) == len(ORDER)), f"SIGN and ORDER should have the same length. Sign: {len(SIGN)} != Order: {len(ORDER)} "
-    assert (len(SIGN) == len(simulator.parameter_list)), f"SIGN should have length equal to number of parameters. Sign: {len(SIGN)} != Num Params: {len(simulator.parameter_list)}"
-    assert (len(ORDER) == len(simulator.parameter_list)), f"ORDER should have length equal to number of parameters. " \
-                                                          f"Order: {len(ORDER)} != Num Params: {len(simulator.parameter_list)} "
+    assert (len(SIGN) == len(simulator.performance_list)), f"SIGN should have length equal to number of performance. Sign: " \
+                                                           f"{len(SIGN)} != Num Params: {len(simulator.performance_list)}"
+    assert (len(ORDER) == len(simulator.performance_list)), f"ORDER should have length equal to number of performance. " \
+                                                          f"Order: {len(ORDER)} != Num Params: {len(simulator.performance_list)} "
 
     # create new D' dataset. Definition in generate_new_dataset_maximum_performance
     perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param, order=ORDER,

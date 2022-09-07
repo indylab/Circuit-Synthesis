@@ -175,6 +175,7 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
     return np.array(new_performance), np.array(new_parameter)
 
 
+
 if __name__ == '__main__':
     test_perform = np.array([[30, 20], [10, 100], [15, 1], [20, 10]])
     test_parameter = np.array([[10], [30], [50], [20]])

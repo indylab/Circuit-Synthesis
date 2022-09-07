@@ -36,7 +36,7 @@ def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
     plt.show()
 
 
-def graph_get_margin_error(y_hat, y, sign=None):
+def get_margin_error(y_hat, y, sign=None):
     sign = np.array(sign)
     if sign is not None:
         y_hat = y_hat * sign
@@ -49,6 +49,20 @@ def graph_get_margin_error(y_hat, y, sign=None):
     max_err = np.max(err, axis=1)
     max_err[greater] = 0
 
-    ax = sns.distplot(max_err)
-    plt.show()
     return max_err
+
+def graph_margin(margin_error, margins, percentage = False):
+    counts = []
+    margin_error = np.array(margin_error)
+    for margin in margins:
+        if percentage:
+            counts.append((margin_error <= margin).sum() / len(margin_error))
+        else:
+            counts.append((margin_error <= margin).sum())
+
+    sns.lineplot(x = margins, y = counts)
+    if percentage:
+        plt.ylim(0,1.2)
+
+    plt.xlim(0.5, 0)
+    plt.show()
