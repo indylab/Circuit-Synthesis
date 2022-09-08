@@ -7,11 +7,11 @@ from Simulator import Simulator
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from visualutils import *
 from trainingUtils import *
-import copy
 
 
 
-def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runtime = 1, device='cpu', plot_loss=True):
+def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runtime = 1,
+                  device='cpu', plot_loss=True, generate_new_dataset=True, resplit_dataset=True):
     if rerun_training:
         x, y = simulator.run_training()
     else:
@@ -41,24 +41,36 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runti
 
 
     # create new D' dataset. Definition in generate_new_dataset_maximum_performance
-    perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param, order=simulator.order,
-                                                              sign=simulator.sign)
-    X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
+    if generate_new_dataset:
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param, order=simulator.order,
+                                                                  sign=simulator.sign)
+    if not resplit_dataset:
+        X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
-    train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
-    val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
+        train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
+        val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
 
-    train_data = DataLoader(train_dataset, batch_size=100)
-    val_data = DataLoader(val_dataset, batch_size=100)
+        train_data = DataLoader(train_dataset, batch_size=100)
+        val_data = DataLoader(val_dataset, batch_size=100)
 
     test_margins, train_margins = [],[]
 
     for run in range(runtime):
+        if resplit_dataset:
+            X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
+
+            train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
+            val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
+
+            train_data = DataLoader(train_dataset, batch_size=100)
+            val_data = DataLoader(val_dataset, batch_size=100)
         model = model_template(num_perform, num_param).to(device)
         optimizer = optim.Adam(model.parameters())
         train_losses, val_losses, train_accs, val_accs, test_margin, train_margin = train(model, train_data, val_data, optimizer, loss, scaler_arg,
                                                          simulator, device=device, num_epochs=epochs,
                                                            margin=MARGINS, train_acc=False, sign=simulator.sign)
+        test_margins.append(test_margin)
+        train_margins.append(train_margin)
         if plot_loss:
             _, ax = plt.subplots()
             ax.set_title("Train and Val Losses")
@@ -84,7 +96,6 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runti
             ax.plot(range(len(train_accs)), train_accs)
             ax.legend(MARGINS)
             plt.show()
-            test_margins.append(test_margin)
-            train_margins.append(train_margin)
+
 
     return test_margins, train_margins

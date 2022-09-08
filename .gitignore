@@ -5,3 +5,5 @@
 *.out
 *.err
 **main.py
+.ipynb_checkpoints
+./Training/.ipynb_checkpoints

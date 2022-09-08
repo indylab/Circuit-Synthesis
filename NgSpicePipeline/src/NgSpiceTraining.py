@@ -133,7 +133,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
         if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
-            paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
+            paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
             acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
             final_test_param = paramater_preds
             final_test_perform = norm_perform

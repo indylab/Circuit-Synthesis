@@ -27,6 +27,7 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
 
 
 def cascade_circuit(arguments_cascade = None, order=None, sign=None):
+    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
     train_netlist_cascade = "../assets/nmos-training-cascode.sp"
     test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
     param_list_cascade = ["r", "w0", "w1"]
@@ -54,6 +55,7 @@ def cascade_circuit(arguments_cascade = None, order=None, sign=None):
                                   arguments_cascade, order, sign)
 
 def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
+    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
     train_netlist_two_stage = "../assets/TwoStageAmplifier.sp"
     test_netlist_two_stage = "../assets/TwoStageAmplifier-Test.sp"
     param_list_two_stage = ["w0", "w1", "w2"]
@@ -85,6 +87,7 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
 
 
 def LNA_circuit(arguments_lna=None, order=None, sign=None):
+    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
     train_netlist_lna = "../assets/LNA.sp"
     test_netlist_lna = "../assets/LNA_test"
     param_list_lna = ["ls", "ld", "lg", "r", "w"]

@@ -67,11 +67,12 @@ def graph_margin(margin_error, margins, percentage = False):
     plt.xlim(0.5, 0)
     plt.show()
 
-def graph_margin_with_confidence(margin_errors, margins, percentage = False):
+def graph_margin_with_confidence(margin_errors, margins, percentage = True, std=True):
     counts = []
 
     for margin in margins:
         tmp_margin_counts = []
+
         for margin_err in margin_errors:
             margin_err = np.array(margin_err)
             if percentage:
@@ -81,7 +82,10 @@ def graph_margin_with_confidence(margin_errors, margins, percentage = False):
         counts.append(tmp_margin_counts)
 
     counts_mean = np.array([np.average(i) for i in counts])
-    counts_var = np.array([np.var(i) for i in counts])
+    if std:
+        counts_var = np.array([np.std(i) for i in counts])
+    else:
+        counts_var = np.array([np.var(i) for i in counts])
 
     lower_bound = counts_mean - counts_var
     upper_bound = counts_mean + counts_var
@@ -92,5 +96,10 @@ def graph_margin_with_confidence(margin_errors, margins, percentage = False):
     if percentage:
         plt.ylim(0,1.2)
 
-    plt.xlim(0.5, 0)
+    plt.xlim(0, 0.5)
+    plt.xlabel("Margins")
+    if percentage:
+        plt.ylabel("Success Percentage")
+    else:
+        plt.ylabel("Success Amount")
     plt.show()
