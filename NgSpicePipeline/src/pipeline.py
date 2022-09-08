@@ -1,9 +1,6 @@
 from NgSpiceTraining import *
-from Training import models
 from torch import optim, cuda
-import torch
 from sklearn.preprocessing import MinMaxScaler
-from Simulator import Simulator
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from visualutils import *
 from trainingUtils import *
