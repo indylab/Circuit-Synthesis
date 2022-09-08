@@ -66,3 +66,31 @@ def graph_margin(margin_error, margins, percentage = False):
 
     plt.xlim(0.5, 0)
     plt.show()
+
+def graph_margin_with_confidence(margin_errors, margins, percentage = False):
+    counts = []
+
+    for margin in margins:
+        tmp_margin_counts = []
+        for margin_err in margin_errors:
+            margin_err = np.array(margin_err)
+            if percentage:
+                tmp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
+            else:
+                tmp_margin_counts.append((margin_err <= margin).sum())
+        counts.append(tmp_margin_counts)
+
+    counts_mean = np.array([np.average(i) for i in counts])
+    counts_var = np.array([np.var(i) for i in counts])
+
+    lower_bound = counts_mean - counts_var
+    upper_bound = counts_mean + counts_var
+
+
+    plt.plot(margins, counts_mean)
+    plt.fill_between(margins, lower_bound, upper_bound, alpha=.3)
+    if percentage:
+        plt.ylim(0,1.2)
+
+    plt.xlim(0.5, 0)
+    plt.show()

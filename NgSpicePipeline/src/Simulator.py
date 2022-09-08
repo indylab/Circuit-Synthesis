@@ -6,7 +6,7 @@ import re
 
 
 class Simulator:
-    def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments):
+    def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments, order, sign):
         self.ngspice_exec = ngspice_exec
         self.train_netlist = train_netlist
         self.test_netlist = test_netlist
@@ -30,6 +30,8 @@ class Simulator:
                 "Each paramater must have a start index", arguments.keys())
 
         self.save_error_log = False
+        self.order = order
+        self.sign = sign
 
     def _updateFile(self, trainingFilePath, outputFilePath, argumentMap):
         with open(trainingFilePath, 'r') as read_file:

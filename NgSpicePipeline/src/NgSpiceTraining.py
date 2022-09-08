@@ -126,11 +126,11 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
 
         losses.append(avg_loss)
         val_losses.append(val_avg_loss)
-        if (epoch + 1) % print_every == 0:
+        if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
             print('t = %d, val loss = %.4f' % (epoch + 1, val_avg_loss))
 
-        if (epoch + 1) % print_every == 0:
+        if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
