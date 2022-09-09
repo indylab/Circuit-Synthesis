@@ -1,5 +1,6 @@
+from sklearn.model_selection import train_test_split
 from NgSpiceTraining import *
-from torch import optim, cuda
+from torch import optim
 from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from visualutils import *
