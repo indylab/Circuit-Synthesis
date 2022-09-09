@@ -103,3 +103,49 @@ def graph_margin_with_confidence(margin_errors, margins, percentage = True, std=
     else:
         plt.ylabel("Success Amount")
     plt.show()
+
+def graph_multiple_margin_with_confidence(margin_errors, margins, percentage = True, std=True):
+
+
+    #margin_errors is a nested list where outer most is different run, middle layer is subset run and lowest layer is margin accuracy
+    multi_mean = []
+    multi_lower_bound = []
+    multi_upper_bound = []
+    for index in range(len(margin_errors[0])):
+        #loop through each subset
+        temp_counts = []
+        for margin in margins:
+            temp_margin_counts = []
+            for run in margin_errors:
+                margin_err = np.array(run[index])
+                if percentage:
+                    temp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
+                else:
+                    temp_margin_counts.append((margin_err <= margin).sum())
+            temp_counts.append(temp_margin_counts)
+        count_mean = np.array([np.average(i) for i in temp_counts])
+        if std:
+            count_var = np.array([np.std(i) for i in temp_counts])
+        else:
+            count_var = np.array([np.var(i) for i in temp_counts])
+
+        lower_bound = count_mean - count_var
+        upper_bound = count_mean + count_var
+        multi_mean.append(count_mean)
+        multi_lower_bound.append(lower_bound)
+        multi_upper_bound.append(upper_bound)
+
+    for i in range(len(multi_mean)):
+        plt.plot(margins, multi_mean[i])
+        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3)
+
+    if percentage:
+        plt.ylim(0, 1.2)
+
+    plt.xlim(0, 0.5)
+    plt.xlabel("Margins")
+    if percentage:
+        plt.ylabel("Success Percentage")
+    else:
+        plt.ylabel("Success Amount")
+    plt.show()

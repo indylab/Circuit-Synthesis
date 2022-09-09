@@ -3,13 +3,12 @@ from NgSpiceTraining import *
 from torch import optim
 from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
-from visualutils import *
 from trainingUtils import *
 
 
 
 def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runtime = 1,
-                  device='cpu', plot_loss=True, generate_new_dataset=True, resplit_dataset=True):
+                  device='cpu', generate_new_dataset=True, resplit_dataset=True, subset=None):
     if rerun_training:
         x, y = simulator.run_training()
     else:
@@ -24,7 +23,8 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runti
     print(device)
     num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
 
-
+    if subset is None:
+        subset = [1]
 
     print(x.shape, y.shape)
     data = np.hstack((x, y))
@@ -45,55 +45,31 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, runti
     if not resplit_dataset:
         X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
-        train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
-        val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
-
-        train_data = DataLoader(train_dataset, batch_size=100)
-        val_data = DataLoader(val_dataset, batch_size=100)
-
     test_margins, train_margins = [],[]
 
     for run in range(runtime):
+        temp_test_margins, temp_train_margins = [], []
         if resplit_dataset:
             X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
+
+        for percentage in subset:
+            print('Run Number {} With Subset Percentage {}'.format(run, percentage))
+            model = model_template(num_perform, num_param).to(device)
+            optimizer = optim.Adam(model.parameters())
+
+            X_train,y_train = generate_subset_data(X_train, y_train, percentage)
             train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
             val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
 
             train_data = DataLoader(train_dataset, batch_size=100)
             val_data = DataLoader(val_dataset, batch_size=100)
-        model = model_template(num_perform, num_param).to(device)
-        optimizer = optim.Adam(model.parameters())
-        train_losses, val_losses, train_accs, val_accs, test_margin, train_margin = train(model, train_data, val_data, optimizer, loss, scaler_arg,
-                                                         simulator, device=device, num_epochs=epochs,
-                                                           margin=MARGINS, train_acc=False, sign=simulator.sign)
-        test_margins.append(test_margin)
-        train_margins.append(train_margin)
-        if plot_loss:
-            _, ax = plt.subplots()
-            ax.set_title("Train and Val Losses")
-            ax.set_ylabel(f'Loss')
-            ax.set_xlabel(f'Epoch')
-            ax.plot(range(len(train_losses)), train_losses)
-            ax.plot(range(len(val_losses)), val_losses)
-            ax.legend(["Train", "Validation"])
-            plt.show()
 
-            _, ax = plt.subplots()
-            ax.set_title("Validation Success Rate")
-            ax.set_ylabel(f'validation Success rate')
-            ax.set_xlabel(f'Epoch')
-            ax.plot(range(len(val_accs)), val_accs)
-            ax.legend(MARGINS)
-            plt.show()
-
-            _, ax = plt.subplots()
-            ax.set_title("Training Success Rate")
-            ax.set_ylabel(f'train Success rate')
-            ax.set_xlabel(f'Epoch')
-            ax.plot(range(len(train_accs)), train_accs)
-            ax.legend(MARGINS)
-            plt.show()
-
-
+            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin = train(model, train_data, val_data, optimizer, loss, scaler_arg,
+                                                             simulator, device=device, num_epochs=epochs,
+                                                               margin=MARGINS, train_acc=False, sign=simulator.sign)
+            temp_test_margins.append(test_margin)
+            temp_train_margins.append(train_margin)
+        test_margins.append(temp_test_margins)
+        train_margins.append(temp_train_margins)
     return test_margins, train_margins
