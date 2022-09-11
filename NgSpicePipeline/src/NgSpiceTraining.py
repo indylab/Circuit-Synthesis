@@ -68,10 +68,10 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, si
 
 
 def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, device='cpu', num_epochs=1000,
-          margin=None, train_acc=False, sign=None):
+          margin=None, train_acc=False, sign=None, print_every = 200):
     if margin is None:
         margin = [0.05]
-    print_every = 200
+
     train_accs = []
     val_accs = []
     losses = []
@@ -81,6 +81,22 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
     final_test_perform = None
     final_train_param = None
     final_train_perform = None
+
+    norm_perform, _ = val_data.dataset.getAll()
+    model.eval()
+    paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
+    acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
+    val_accs.append(acc_list)
+    print(f"Validation Accuracy Before Training")
+    if train_acc:
+        norm_perform, _ = train_data.dataset.getAll()
+        model.eval()
+        simulator.save_error_log = True
+        paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
+        acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
+        train_accs.append(acc_list)
+        print(f"Training_Accuracy at Epoch Before Training")
+
 
     for epoch in range(num_epochs):
         model.train()
