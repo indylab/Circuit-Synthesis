@@ -4,7 +4,7 @@ from torch import optim
 from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from trainingUtils import *
-
+import os
 
 
 def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check_every, runtime = 1,
@@ -43,7 +43,7 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param, order=simulator.order,
                                                                   sign=simulator.sign)
     if not resplit_dataset:
-        X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
+        Full_X_train, X_test, Full_y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
     test_margins, train_margins = [],[]
     test_accuracy, train_accuracy, = [], []
@@ -55,7 +55,7 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
         temp_test_accuracy, temp_train_accuracy = [], []
         temp_test_loss, temp_train_loss = [],[]
         if resplit_dataset:
-            X_train, X_test, y_train, y_test = train_test_split(perform, param, test_size=0.1)
+            Full_X_train, X_test, Full_y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
 
         for percentage in subset:
@@ -63,10 +63,11 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
             model = model_template(num_perform, num_param).to(device)
             optimizer = optim.Adam(model.parameters())
 
-            X_train,y_train = generate_subset_data(X_train, y_train, percentage)
+            X_train,y_train = generate_subset_data(Full_X_train, Full_y_train, percentage)
+
             train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
             val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
-
+            print('Length of new dataset is {}'.format(len(train_dataset)))
             train_data = DataLoader(train_dataset, batch_size=100)
             val_data = DataLoader(val_dataset, batch_size=100)
 

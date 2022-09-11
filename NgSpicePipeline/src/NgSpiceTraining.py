@@ -194,6 +194,7 @@ def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optim
 
 
 def generate_subset_data(Train, Test, percentage):
+
     subset_index = np.random.choice(np.arange(Train.shape[0]), int(percentage * Train.shape[0]), replace=False)
 
     return Train[subset_index,:], Test[subset_index,:]
