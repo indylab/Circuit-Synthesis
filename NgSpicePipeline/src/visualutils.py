@@ -209,3 +209,65 @@ def plot_multiple_loss_with_confidence(loss, epochs, subset, std=True):
     plt.ylabel("Loss")
     plt.xlabel("Epochs")
     plt.show()
+
+def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, epochs, subset, std=True):
+    multi_loss = []
+    multi_loss_lower_bounds = []
+    multi_loss_upper_bounds = []
+    multi_accuracy = []
+    multi_accuracy_lower_bounds = []
+    multi_accuracy_upper_bounds = []
+
+
+    for index in range(len(loss[0])):
+        subset_performance = []
+        for run in range(len(loss)):
+            subset_performance.append(loss[run][index])
+
+        subset_performance = np.array(subset_performance)
+        subset_mean = np.mean(subset_performance, axis=0)
+        if std:
+            subset_var = np.std(subset_performance, axis=0)
+        else:
+            subset_var = np.var(subset_performance, axis=0)
+
+        multi_loss.append(subset_mean)
+        multi_loss_lower_bounds.append(subset_mean - subset_var)
+        multi_loss_upper_bounds.append(subset_mean + subset_var)
+
+    for index in range(len(accuracy[0])):
+        subset_performance = []
+        for run in range(len(accuracy)):
+            subset_performance.append(accuracy[run][index])
+
+        subset_performance = np.array(subset_performance)
+        subset_mean = np.mean(subset_performance, axis=0)
+        if std:
+            subset_var = np.std(subset_performance, axis=0)
+        else:
+            subset_var = np.var(subset_performance, axis=0)
+
+        multi_accuracy.append(subset_mean)
+        multi_accuracy_lower_bounds.append(subset_mean - subset_var)
+        multi_accuracy_upper_bounds.append(subset_mean + subset_var)
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    ax2 = ax.twinx()
+
+    for i in range(len(multi_accuracy)):
+        accuracy_color = np.random.rand(3, )
+        loss_color = np.random.rand(3, )
+        ax.plot(eva_epochs, multi_accuracy[i], label="Accuracy for {} % training data".format(subset[i] * 100), color=accuracy_color)
+        ax.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3, color=accuracy_color)
+        ax2.plot(np.arange(epochs), multi_loss[i], label="Loss for {} % training data".format(subset[i] * 100), color=loss_color)
+        ax2.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3, color=loss_color)
+
+
+
+    fig.legend()
+    ax.set_xlabel("Epochs")
+    ax.set_ylabel("Accuracy")
+    ax2.set_ylabel("Loss")
+    plt.show()
+
