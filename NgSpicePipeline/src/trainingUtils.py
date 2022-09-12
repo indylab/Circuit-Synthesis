@@ -73,25 +73,21 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
             new_performance.append(temp_performance)
             new_parameter.append(new_temp_parameter[num_performance:])
 
-    # def get_similarity(new, old):
-    #     count = 0
-    #     for i in range(old.shape[0]):
-    #         if np.allclose(old[i, :], new[i, :]): count += 1
-    #     print(f"{count}/{old.shape[0]}, {count / old.shape[0]}%. {old.shape[0] - count} diff")
 
-    # print("performance")
-    # get_similarity(np.array(new_performance), performance)
-    # print("parameter")
-    # get_similarity(np.array(new_parameter), parameter)
     return np.array(new_performance), np.array(new_parameter)
 
+def get_margin_error(y_hat, y, sign=None):
+    sign = np.array(sign)
+    if sign is not None:
+        y_hat = y_hat * sign
+        y = y * sign
 
+    greater = np.all(y_hat >= y, axis=1)
 
-if __name__ == '__main__':
-    test_perform = np.array([[30, 20], [10, 100], [15, 1], [20, 10]])
-    test_parameter = np.array([[10], [30], [50], [20]])
-    new_perform, new_parameter = generate_new_dataset_maximum_performance(test_perform, test_parameter, [0, 1], [1, 1])
+    a_err = (np.abs(y_hat - y))
+    err = np.divide(a_err, y, where=y != 0)
+    max_err = np.max(err, axis=1)
+    max_err[greater] = 0
 
-    print(new_perform)
-    print('here')
-    print(new_parameter)
+    return max_err
+

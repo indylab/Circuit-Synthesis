@@ -1,8 +1,8 @@
 from torch.utils.data import DataLoader
 from Training import models, dataset
 import torch
-from visualutils import *
-
+from trainingUtils import *
+import matplotlib.pyplot as plt
 
 def check_acc(y_hat, y, margins=None):
     if margins is None:
@@ -198,3 +198,40 @@ def generate_subset_data(Train, Test, percentage):
     subset_index = np.random.choice(np.arange(Train.shape[0]), int(percentage * Train.shape[0]), replace=False)
 
     return Train[subset_index,:], Test[subset_index,:]
+
+
+def generate_baseline_performance(X_train, X_test, sign):
+    #generate result to pass into get_margin_error function
+    #get_margin_error(y_hat, y, sign=None)
+
+    #X is performance requirement and y is the design specification
+
+
+    #y_hat is from X_train, and y is X_test
+    temp_X_train = X_train * sign
+    temp_X_test = X_test * sign
+
+    temp_y_hat = []
+
+    for data in range(len(X_test)):
+        minimum_err = None
+        minimum_index = None
+        greater = False
+        for cmp_data_index in range(len(X_train)):
+            if np.all(temp_X_train[cmp_data_index] >= temp_X_test[data]):
+                temp_y_hat.append(list(X_train[cmp_data_index]))
+                greater = True
+                break
+            temp_err = (np.abs(temp_X_train[cmp_data_index] - temp_X_test[data]))
+            temp_diff = np.divide(temp_err, temp_X_test[data], where=temp_X_test[data] != 0)
+            temp_max_diff = np.max(temp_diff)
+            if minimum_err is None or temp_max_diff < minimum_err:
+                minimum_index = cmp_data_index
+                minimum_err = temp_max_diff
+        if not greater:
+            temp_y_hat.append(list(X_train[minimum_index]))
+
+    temp_y_hat = np.array(temp_y_hat)
+
+    return get_margin_error(temp_y_hat, X_test, sign)
+

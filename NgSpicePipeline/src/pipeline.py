@@ -32,7 +32,7 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
     scaler_arg.fit(data)
     data = scaler_arg.transform(data)
     param, perform = data[:, :num_param], data[:, num_param:]
-    total_train, total_test = None, None
+
 
     if MARGINS is None:
         MARGINS = [0.01, 0.05, 0.1]
@@ -49,23 +49,23 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
     test_margins, train_margins = [],[]
     test_accuracy, train_accuracy, = [], []
     test_loss, train_loss = [],[]
-
+    baseline = []
     for run in range(runtime):
         temp_test_margins, temp_train_margins = [], []
         temp_test_accuracy, temp_train_accuracy = [], []
         temp_test_loss, temp_train_loss = [],[]
+        temp_baseline = []
         if resplit_dataset:
             Full_X_train, X_test, Full_y_train, y_test = train_test_split(perform, param, test_size=0.1)
 
-        if total_train is None:
-            total_train = Full_X_train.shape[0]
-            total_test = X_test.shape[0]
+
         for percentage in subset:
             print('Run Number {} With Subset Percentage {}'.format(run, percentage))
             model = model_template(num_perform, num_param).to(device)
             optimizer = optim.Adam(model.parameters())
 
             X_train,y_train = generate_subset_data(Full_X_train, Full_y_train, percentage)
+            temp_baseline.append(generate_baseline_performance(X_train, X_test, simulator.sign))
 
             train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
             val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
@@ -99,4 +99,5 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
         train_loss.append(temp_train_loss)
         test_accuracy.append(temp_test_accuracy)
         train_accuracy.append(temp_train_accuracy)
-    return test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy, total_test, total_train
+        baseline.append(temp_baseline)
+    return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy
