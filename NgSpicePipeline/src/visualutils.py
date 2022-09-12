@@ -102,10 +102,8 @@ def graph_margin_with_confidence(margin_errors, margins, percentage = True, std=
         plt.ylabel("Success Amount")
     plt.show()
 
-def graph_multiple_margin_with_confidence(margin_errors, margins, subset, percentage = True, std=True):
+def graph_multiple_margin_with_confidence(margin_errors, margins, subset, num_data, vertical_point = 0.05, percentage = True, std=True):
 
-
-    #margin_errors is a nested list where outer most is different run, middle layer is subset run and lowest layer is margin accuracy
     multi_mean = []
     multi_lower_bound = []
     multi_upper_bound = []
@@ -134,19 +132,21 @@ def graph_multiple_margin_with_confidence(margin_errors, margins, subset, percen
         multi_upper_bound.append(upper_bound)
 
     for i in range(len(multi_mean)):
-        plt.plot(margins, multi_mean[i], label="accuracy for {} % of training data".format(subset[i] * 100))
+        plt.plot(margins, multi_mean[i], label="{} training data margin accuracy".format(int(subset[i] * num_data)))
         plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3)
 
+    if vertical_point is not None:
+        plt.axvline(x=vertical_point, linestyle='dashed')
     plt.legend()
     plt.xscale('log')
-    plt.xlabel("Margins")
+    plt.xlabel("Accuracy")
     if percentage:
         plt.ylabel("Success Percentage")
     else:
         plt.ylabel("Success Amount")
     plt.show()
 
-def plot_multiple_accuracy_with_confidence(accuracy, eva_epochs, subset, std=True):
+def plot_multiple_accuracy_with_confidence(accuracy, eva_epochs, subset, num_data, std=True):
 
 
     multi_accuracy = []
@@ -169,17 +169,21 @@ def plot_multiple_accuracy_with_confidence(accuracy, eva_epochs, subset, std=Tru
         multi_accuracy_lower_bounds.append(subset_mean - subset_var)
         multi_accuracy_upper_bounds.append(subset_mean + subset_var)
 
+    fig = plt.figure()
+    ax = fig.add_subplot()
 
     for i in range(len(multi_accuracy)):
-        plt.plot(eva_epochs, multi_accuracy[i], label="Accuracy for {} % training data".format(subset[i] * 100))
-        plt.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3)
+        ax.plot(eva_epochs, multi_accuracy[i], label="{} training data accuracy".format(int(subset[i] * num_data)))
+        ax.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3)
 
-    plt.legend()
-    plt.ylabel("Accuracy at 5 percent margin accuracy")
+    ax.set_xlim([0, None])
+    ax.set_ylim([0, None])
+    ax.legend()
+    plt.ylabel("Test Success Rate")
     plt.xlabel("Epochs")
     plt.show()
 
-def plot_multiple_loss_with_confidence(loss, epochs, subset, std=True):
+def plot_multiple_loss_with_confidence(loss, epochs, subset,num_data, loss_name, std=True):
     multi_loss = []
     multi_loss_lower_bounds = []
     multi_loss_upper_bounds = []
@@ -200,17 +204,21 @@ def plot_multiple_loss_with_confidence(loss, epochs, subset, std=True):
         multi_loss_lower_bounds.append(subset_mean - subset_var)
         multi_loss_upper_bounds.append(subset_mean + subset_var)
 
+    fig = plt.figure()
+    ax = fig.add_subplot()
 
     for i in range(len(multi_loss)):
-        plt.plot(np.arange(epochs), multi_loss[i], label="Loss for {} % training data".format(subset[i] * 100))
-        plt.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
+        ax.plot(np.arange(epochs), multi_loss[i], label="{} training data loss".format(int(subset[i] * num_data)))
+        ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
 
-    plt.legend()
-    plt.ylabel("Loss")
+    ax.set_xlim([0, None])
+    ax.set_ylim([0, None])
+    ax.legend()
+    plt.ylabel("Test {}".format(loss_name))
     plt.xlabel("Epochs")
     plt.show()
 
-def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, epochs, subset, std=True):
+def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, epochs, subset, num_data, std=True):
     multi_loss = []
     multi_loss_lower_bounds = []
     multi_loss_upper_bounds = []
@@ -258,9 +266,9 @@ def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, 
     for i in range(len(multi_accuracy)):
         accuracy_color = np.random.rand(3, )
         loss_color = np.random.rand(3, )
-        ax.plot(eva_epochs, multi_accuracy[i], label="Accuracy for {} % training data".format(subset[i] * 100), color=accuracy_color)
+        ax.plot(eva_epochs, multi_accuracy[i], label="{} training data accuracy".format(subset[i] * num_data), color=accuracy_color)
         ax.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3, color=accuracy_color)
-        ax2.plot(np.arange(epochs), multi_loss[i], label="Loss for {} % training data".format(subset[i] * 100), color=loss_color)
+        ax2.plot(np.arange(epochs), multi_loss[i], label="{} training data loss".format(subset[i] * num_data), color=loss_color)
         ax2.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3, color=loss_color)
 
 
