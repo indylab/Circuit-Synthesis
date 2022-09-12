@@ -30,13 +30,15 @@ def check_minimum_requirement_acc(y_hat, y, sign, margins=None):
     if margins is None:
         margins = [0.01, 0.05, 0.1]
     sign = np.array(sign)
+    temp_y_hat = y_hat
+    temp_y = y
     if sign is not None:
-        y_hat = y_hat * sign
-        y = y * sign
+        temp_y_hat = y_hat * sign
+        temp_y = y * sign
 
     for margin in margins:
-        #greater = np.logical_or((y_hat >= y), (np.abs(np.divide(y_hat - y, y, where=y != 0)) <= margin))
-        greater = y_hat >= y * (1-(sign*margin))
+        greater = np.logical_or((temp_y_hat >= temp_y), (np.abs(np.divide(y_hat - y, y, where=y != 0)) <= margin))
+        #greater = y_hat >= y * (1-(sign*margin))
 
         acc_at_margin = np.all(greater, axis=1).sum() / y_hat.shape[0]
         all_margins.append(acc_at_margin)

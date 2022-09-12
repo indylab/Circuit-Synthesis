@@ -78,11 +78,13 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
 def get_margin_error(y_hat, y, sign=None):
     sign = np.array(sign)
+    temp_y_hat = y_hat
+    temp_y = y
     if sign is not None:
-        y_hat = y_hat * sign
-        y = y * sign
+        temp_y_hat = y_hat * sign
+        temp_y = y * sign
 
-    greater = np.all(y_hat >= y, axis=1)
+    greater = np.all(temp_y_hat >= temp_y, axis=1)
     greater_index = np.argwhere(greater).squeeze()
     a_err = y_hat - y
     err = np.divide(a_err, y, where=y != 0)
