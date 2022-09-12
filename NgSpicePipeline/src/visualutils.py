@@ -88,7 +88,7 @@ def graph_margin_with_confidence(margin_errors, margins, percentage = True, std=
         plt.ylabel("Success Amount")
     plt.show()
 
-def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05, percentage = True, std=True):
+def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05, percentage = True, std=True, log=True):
 
     multi_mean = []
     multi_lower_bound = []
@@ -102,6 +102,7 @@ def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  basel
                 margin_err = np.array(run[index])
                 if percentage:
                     temp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
+
                 else:
                     temp_margin_counts.append((margin_err <= margin).sum())
             temp_counts.append(temp_margin_counts)
@@ -158,7 +159,8 @@ def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  basel
     if vertical_point is not None:
         plt.axvline(x=vertical_point, linestyle='dashed', color="k")
     plt.legend()
-    plt.xscale('log')
+    if log:
+        plt.xscale('log')
     plt.xlabel("Accuracy")
     if percentage:
         plt.ylabel("Success Percentage")

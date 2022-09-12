@@ -8,7 +8,7 @@ def check_acc(y_hat, y, margins=None):
     if margins is None:
         margins = [0.01, 0.05, 0.1]
     a_err = (np.abs(y_hat - y))  # get normalized error
-    err = np.divide(a_err, y, where=y != 0)
+    err = np.abs(np.divide(a_err, y, where=y != 0))
     assert (err.shape == y.shape)
 
     accs = []
@@ -35,35 +35,38 @@ def check_minimum_requirement_acc(y_hat, y, sign, margins=None):
         y = y * sign
 
     for margin in margins:
-        greater = y_hat >= y * (1-(sign*margin)) # take away or add margin% to "requested" performance to allow for margin% error
-        acc_at_margin = np.all(greater, axis=1).sum().item() / y_hat.shape[0]
+        #greater = np.logical_or((y_hat >= y), (np.abs(np.divide(y_hat - y, y, where=y != 0)) <= margin))
+        greater = y_hat >= y * (1-(sign*margin))
+
+        acc_at_margin = np.all(greater, axis=1).sum() / y_hat.shape[0]
         all_margins.append(acc_at_margin)
-    # DEBUG OUTPUT
-    # debug_y = y * (1-(sign*margin))
-    # for i in range(5):
-    #     print(f"y: {debug_y[i,:] * (1 - margin)}, yh: {y_hat[i,:]}, g: {greater[i,:]}, diff: {(debug_y[i,:] - y_hat[i,:])/debug_y[i,:]}")
+
     return all_margins
 
 
 
-def simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign, final = False):
+def simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final = False):
     num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
     data = np.hstack((paramater_preds, norm_perform))
     unnorm_param_preds, unnorm_true_perform = scaler.inverse_transform(data)[:, :num_param], scaler.inverse_transform(
-        data)[:,
-                                                                                             num_param:]
+        data)[:,num_param:]
 
     _, y_sim = simulator.runSimulation(unnorm_param_preds)
+
     if final:
+
         return get_margin_error(y_sim, unnorm_true_perform, sign)
     else:
         assert y_sim.shape == unnorm_true_perform.shape, f"simulation failed, {y_sim.shape} != {unnorm_true_perform.shape}"
         assert y_sim.shape == norm_perform.shape, f"simulation failed, {y_sim.shape} != {norm_perform.shape}"
 
 
-        check_acc(y_sim, unnorm_true_perform)
         accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform, sign)
 
+        dummy = get_margin_error(y_sim, unnorm_true_perform, sign)
+        print((dummy <= 0.05).sum()/len(dummy))
+        print(accs[1])
+        assert (dummy <= 0.05).sum()/len(dummy) == accs[1], "Implementation Error"
         return accs
 
 
@@ -132,33 +135,34 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
 
         losses.append(avg_loss)
         val_losses.append(val_avg_loss)
+
         if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
             print('t = %d, val loss = %.4f' % (epoch + 1, val_avg_loss))
-
-        if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             norm_perform, _ = val_data.dataset.getAll()
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
-            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
+            acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
             final_test_param = paramater_preds
             final_test_perform = norm_perform
             val_accs.append(acc_list)
-            print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][0]}")
+            print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][1]}")
             if train_acc:
                 norm_perform, _ = train_data.dataset.getAll()
                 model.eval()
                 simulator.save_error_log = True
                 print(norm_perform, norm_perform.shape)
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
-                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
+                acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
                 train_accs.append(acc_list)
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
                 final_train_param = paramater_preds
                 final_train_perform = norm_perform
-    test_margin = simulate_points(final_test_param, final_test_perform, scaler, simulator, margin, sign, final=True)
+    test_margin = simulate_points(final_test_param, final_test_perform, scaler, simulator, sign, final=True)
+
+
     if train_acc:
-        train_margin = simulate_points(final_train_param, final_train_perform, scaler, simulator, margin, sign, final=True)
+        train_margin = simulate_points(final_train_param, final_train_perform, scaler, simulator, sign, final=True)
     else:
         train_margin = []
     return losses, val_losses, train_accs, val_accs, test_margin, train_margin

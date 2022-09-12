@@ -3,7 +3,7 @@ import numpy as np
 import os
 import subprocess
 import re
-
+import time
 
 class Simulator:
     def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments, order, sign):
@@ -150,5 +150,8 @@ class Simulator:
                 os.remove(file)
             except FileNotFoundError:
                 continue
+            except PermissionError:
+                time.sleep(1)
+                os.remove(file)
 
 

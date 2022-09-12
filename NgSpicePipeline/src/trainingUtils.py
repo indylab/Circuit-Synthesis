@@ -83,11 +83,12 @@ def get_margin_error(y_hat, y, sign=None):
         y = y * sign
 
     greater = np.all(y_hat >= y, axis=1)
-
-    a_err = (np.abs(y_hat - y))
+    greater_index = np.argwhere(greater).squeeze()
+    a_err = y_hat - y
     err = np.divide(a_err, y, where=y != 0)
-    max_err = np.max(err, axis=1)
-    max_err[greater] = 0
+    max_err = np.max(np.abs(err), axis=1)
+
+    max_err[greater_index] = 0
 
     return max_err
 
