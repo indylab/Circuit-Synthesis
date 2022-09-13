@@ -22,17 +22,17 @@ V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 let ls_start = 58.3p
 let ls_test = 58.3p
 let ls_stop = 60.8p
-let delta_ls = 1p
+let delta_ls = 0.5p
 
 let ld_start = 4.4n
 let ld_test = 4.4n
 let ld_stop = 5.4n
-let delta_ld = 1n
+let delta_ld = 0.5n
 
 let lg_start = 14.8n
 let lg_test = 14.8n
 let lg_stop = 15.8n
-let delta_lg = 0.50n
+let delta_lg = 0.24n
 
 let r_start = 800
 let r_test = 800

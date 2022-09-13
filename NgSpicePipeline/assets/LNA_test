@@ -29,7 +29,6 @@ repeat $i
     alter Ls = $ls_array[$&index]
     alter Ld = $ld_array[$&index]
     alter Lg = $lg_array[$&index]
-    alter R0 = $r_array[$&index]
     alter @mn0[w] = $w_array[$&index]
     op
     sp lin 100 1k 100G 1
