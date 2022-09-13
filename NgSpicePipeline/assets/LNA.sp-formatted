@@ -21,28 +21,28 @@ V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 
 let ls_start = 58.3p
 let ls_test = 58.3p
-let ls_stop = 60.8p
-let delta_ls = 0.5p
+let ls_stop = 60.3p
+let delta_ls = 0.25p
 
 let ld_start = 4.4n
 let ld_test = 4.4n
-let ld_stop = 5.4n
-let delta_ld = 0.5n
+let ld_stop = 6n
+let delta_ld = 0.2n
 
 let lg_start = 14.8n
 let lg_test = 14.8n
-let lg_stop = 15.8n
-let delta_lg = 0.24n
+let lg_stop = 16.4n
+let delta_lg = 0.2n
 
-let r_start = 800
-let r_test = 800
-let r_stop = 1050
-let delta_r = 50
+let r_start = {r_start}
+let r_test = {r_start}
+let r_stop = {r_stop}
+let delta_r = {r_change}
 
 let w_start = 51u
 let w_test = 51u
-let w_stop = 53u
-let delta_w = 0.4u
+let w_stop = 52.8u
+let delta_w = 0.3u
 
 while ls_test le ls_stop
     alter Ls = ls_test
