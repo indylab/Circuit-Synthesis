@@ -65,7 +65,7 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
             optimizer = optim.Adam(model.parameters())
 
             X_train,y_train = generate_subset_data(Full_X_train, Full_y_train, percentage)
-            #temp_baseline.append(generate_baseline_performance(X_train, X_test, simulator.sign))
+            temp_baseline.append(generate_baseline_performance(X_train, X_test, simulator.sign))
 
             train_dataset = CircuitSynthesisGainAndBandwidthManually(X_train, y_train)
             val_dataset = CircuitSynthesisGainAndBandwidthManually(X_test, y_test)

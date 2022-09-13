@@ -30,15 +30,13 @@ def check_minimum_requirement_acc(y_hat, y, sign, margins=None):
     if margins is None:
         margins = [0.01, 0.05, 0.1]
     sign = np.array(sign)
-    temp_y_hat = y_hat
-    temp_y = y
+
     if sign is not None:
-        temp_y_hat = y_hat * sign
-        temp_y = y * sign
+        y_hat = y_hat * sign
+        y = y * sign
 
     for margin in margins:
-        greater = np.logical_or((temp_y_hat >= temp_y), (np.abs(np.divide(y_hat - y, y, where=y != 0)) <= margin))
-        #greater = y_hat >= y * (1-(sign*margin))
+        greater = np.logical_or((y_hat >= y), (np.abs(np.divide(y_hat - y, y, where=y != 0)) <= margin))
 
         acc_at_margin = np.all(greater, axis=1).sum() / y_hat.shape[0]
         all_margins.append(acc_at_margin)
@@ -65,10 +63,6 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, fina
 
         accs = check_minimum_requirement_acc(y_sim, unnorm_true_perform, sign)
 
-        dummy = get_margin_error(y_sim, unnorm_true_perform, sign)
-        print((dummy <= 0.05).sum()/len(dummy))
-        print(accs[1])
-        assert (dummy <= 0.05).sum()/len(dummy) == accs[1], "Implementation Error"
         return accs
 
 
