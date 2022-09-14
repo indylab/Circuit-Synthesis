@@ -168,8 +168,13 @@ def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  basel
         plt.ylabel("Success Amount")
     plt.show()
 
-def plot_multiple_accuracy_with_confidence(accuracy, eva_epochs, subset,  std=True):
+def plot_multiple_accuracy_with_confidence(accuracy, epochs, check_every, subset,  std=True, eva_zero = False):
 
+    step = epochs // check_every
+    if eva_zero:
+        eva_epochs = [i * check_every for i in range(step + 1)]
+    else:
+        eva_epochs = [(i+1) * check_every for i in range(step)]
 
     multi_accuracy = []
     multi_accuracy_lower_bounds = []
