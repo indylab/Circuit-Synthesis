@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from trainingUtils import *
 import os
-from torch.utils.data import random_split
+from torch.utils.data import random_split, ConcatDataset
 
 
 def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check_every, runtime = 1,
@@ -144,8 +144,12 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
 
 
     for i in subset:
-        if i == 1:
+        if i == 1 or i > 1:
             raise ValueError
+        if np.gcd(int(i * 100), 100) + int(i * 100) != 100 and np.gcd(int(i * 100), 100) != int(i * 100):
+            raise ValueError
+
+    baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy = [],[],[],[],[],[],[]
 
     for percentage in subset:
         # Find out how many split we have to do
@@ -162,3 +166,65 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         split_len_list.append(extra_len)
 
         SplitDataset = random_split(Full_dataset, split_len_list)
+
+        subset_baseline = []
+        subset_test_margins = []
+        subset_train_margins = []
+        subset_test_loss = []
+        subset_train_loss = []
+        subset_test_accuracy = []
+        subset_train_accuracy = []
+
+        for i in range(len(split_time)):
+            if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
+                concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
+                train_dataset = ConcatDataset(concat_list)
+                validation_dataset = SplitDataset[i]
+            else:
+                concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
+                train_dataset = SplitDataset[i]
+                validation_dataset = ConcatDataset(concat_list)
+            model = model_template(num_perform, num_param).to(device)
+            optimizer = optim.Adam(model.parameters())
+
+            train_data = DataLoader(train_dataset, batch_size=100)
+            val_data = DataLoader(validation_dataset, batch_size=100)
+
+            temp_x_train, temp_y_train = convert_dataset_to_array(train_dataset)
+            temp_x_test, temp_y_test = convert_dataset_to_array(validation_dataset)
+            subset_baseline.append(generate_baseline_performance(temp_x_train, temp_x_test, simulator.sign))
+            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin = train(model, train_data,
+                                                                                              val_data, optimizer,
+                                                                                              loss, scaler_arg,
+                                                                                              simulator,
+                                                                                              device=device,
+                                                                                              num_epochs=epochs,
+                                                                                              margin=MARGINS,
+                                                                                              train_acc=train_status,
+                                                                                              sign=simulator.sign,
+                                                                                              print_every=check_every)
+
+            subset_test_margins.append(test_margin)
+            subset_train_margins.append(train_margin)
+            subset_test_loss.append(val_losses)
+            subset_train_loss.append(train_losses)
+
+            temp_train_accuracy_list = []
+            temp_test_accuracy_list = []
+
+            for i in val_accs:
+                temp_test_accuracy_list.append(i[selectIndex])
+            if train_status:
+                for i in train_accs:
+                    temp_train_accuracy_list.append(i[selectIndex])
+            subset_test_accuracy.append(temp_test_accuracy_list)
+            subset_train_accuracy.append(temp_train_accuracy_list)
+        baseline.append(subset_baseline)
+        test_margins.append(subset_test_margins)
+        train_margins.append(subset_train_margins)
+        test_loss.append(subset_test_loss)
+        train_loss.append(subset_train_loss)
+        test_accuracy.append(subset_test_accuracy)
+        train_accuracy.append(subset_train_accuracy)
+
+    return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy

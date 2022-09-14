@@ -94,6 +94,19 @@ def get_margin_error(y_hat, y, sign=None):
 
     return max_err
 
+def convert_dataset_to_array(dataset):
+
+    x,y = [], []
+
+    for i in range(len(dataset)):
+        temp_x, temp_y = dataset[i]
+        x.append(temp_x)
+        y.append(temp_y)
+
+    return np.array(x), np.array(y)
+
+
+
 def save_output_data(baseline=None, test_margins=None, train_margins=None, test_loss=None,
                      train_loss=None, test_accuracy=None, train_accuracy=None):
     pass
