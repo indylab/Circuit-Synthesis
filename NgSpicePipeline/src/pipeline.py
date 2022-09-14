@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from trainingUtils import *
 import os
+from torch.utils.data import random_split
 
 
 def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check_every, runtime = 1,
@@ -101,3 +102,63 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
         train_accuracy.append(temp_train_accuracy)
         baseline.append(temp_baseline)
     return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy
+
+
+
+
+
+def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
+                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS = None, selectIndex = None, train_status = False):
+    if rerun_training:
+        x, y = simulator.run_training()
+    else:
+        param_outfile_names = simulator.train_param_filenames  # must be in order
+        perform_outfile_names = simulator.train_perform_filenames  # must be in order
+        curPath = os.getcwd()
+        print(curPath)
+        out = os.path.join(curPath, "../out/")
+
+        x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
+
+    print(device)
+    num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
+
+    print(x.shape, y.shape)
+    data = np.hstack((x,y))
+
+    scaler_arg = MinMaxScaler()
+    scaler_arg.fit(data)
+    data = scaler_arg.transform(data)
+
+    param, perform = data[:,:num_param], data[:,num_param:]
+
+    if MARGINS is None:
+        MARGINS = [0.01, 0.05, 0.1]
+    if selectIndex is None:
+        selectIndex = 1
+
+    if generate_new_dataset:
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
+                                                                  order=simulator.order, sign=simulator.sign)
+
+
+
+    for i in subset:
+        if i == 1:
+            raise ValueError
+
+    for percentage in subset:
+        # Find out how many split we have to do
+        split_size = np.gcd(int(percentage * 100), 100)
+        split_time = 100 / split_size
+
+        Full_dataset = CircuitSynthesisGainAndBandwidthManually(perform, param)
+
+        total_length = len(Full_dataset)
+        full_split_len = total_length // split_time
+        extra_len = full_split_len + total_length % split_time
+
+        split_len_list = [full_split_len for _ in range(split_time - 1)]
+        split_len_list.append(extra_len)
+
+        SplitDataset = random_split(Full_dataset, split_len_list)

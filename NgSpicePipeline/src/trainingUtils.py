@@ -94,3 +94,6 @@ def get_margin_error(y_hat, y, sign=None):
 
     return max_err
 
+def save_output_data(baseline=None, test_margins=None, train_margins=None, test_loss=None,
+                     train_loss=None, test_accuracy=None, train_accuracy=None):
+    pass
