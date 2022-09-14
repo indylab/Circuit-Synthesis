@@ -155,7 +155,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         # Find out how many split we have to do
         split_size = np.gcd(int(percentage * 100), 100)
         split_time = 100 / split_size
-
+        print("For percentage {}, We split the dataset {} times".format(percentage, split_time))
         Full_dataset = CircuitSynthesisGainAndBandwidthManually(perform, param)
 
         total_length = len(Full_dataset)
@@ -176,6 +176,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         subset_train_accuracy = []
 
         for i in range(len(split_time)):
+            print('Running with Percentage {} Run Number {}'.format(percentage, i))
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
                 concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
                 train_dataset = ConcatDataset(concat_list)

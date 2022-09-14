@@ -306,3 +306,89 @@ def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, 
     ax2.set_ylabel("Loss")
     plt.show()
 
+
+
+def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05,
+                                                     percentage = True, std=True, log=True):
+    multi_mean = []
+    multi_lower_bound = []
+    multi_upper_bound = []
+    #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
+    for percentage_performance in margin_errors:
+        temp_mean = []
+        temp_lower_bound = []
+        temp_upper_bound = []
+        for margin in margins:
+            temp_percentage_performance = np.array(percentage_performance)
+            if percentage:
+                success = np.sum(temp_percentage_performance <= margin, axis=1) / temp_percentage_performance.shape[1]
+            else:
+                success = np.sum(temp_percentage_performance <= margin, axis=1)
+            success_mean = np.average(success)
+            if std:
+                success_var = stats.sem(success)
+            else:
+                success_var = np.var(success)
+            temp_mean.append(success_mean)
+            temp_lower_bound.append(success_mean - success_var)
+            temp_upper_bound.append(success_mean + success_var)
+        multi_mean.append(temp_mean)
+        multi_lower_bound.append(temp_lower_bound)
+        multi_upper_bound.append(temp_upper_bound)
+
+    baseline_mean = []
+    baseline_lower_bound = []
+    baseline_upper_bound = []
+
+    if baseline is not None:
+        for percentage_performance in baseline:
+            temp_mean = []
+            temp_lower_bound = []
+            temp_upper_bound = []
+            for margin in margins:
+                temp_percentage_performance = np.array(percentage_performance)
+                if percentage:
+                    success = np.sum(temp_percentage_performance <= margin, axis=1) / temp_percentage_performance.shape[
+                        1]
+                else:
+                    success = np.sum(temp_percentage_performance <= margin, axis=1)
+                success_mean = np.average(success)
+                if std:
+                    success_var = stats.sem(success)
+                else:
+                    success_var = np.var(success)
+                temp_mean.append(success_mean)
+                temp_lower_bound.append(success_mean - success_var)
+                temp_upper_bound.append(success_mean + success_var)
+            baseline_mean.append(temp_mean)
+            baseline_lower_bound.append(temp_lower_bound)
+            baseline_upper_bound.append(temp_upper_bound)
+
+    for i in range(len(multi_mean)):
+        plt.plot(margins, multi_mean[i], label="{}% of training data".format(subset[i] * 100))
+        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3)
+
+    if baseline is not None:
+        for i in range(len(baseline_mean)):
+            plt.plot(margins, baseline_mean[i], label="{}% of training data base".format(subset[i] * 100))
+            plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3)
+
+    if vertical_point is not None:
+        plt.axvline(x=vertical_point, linestyle='dashed', color="k")
+    plt.legend()
+    if log:
+        plt.xscale('log')
+    plt.xlabel("Accuracy")
+    if percentage:
+        plt.ylabel("Success Percentage")
+    else:
+        plt.ylabel("Success Amount")
+    plt.show()
+
+    return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
+
+def plot_multiple_accuracy_with_confidence_cross_fold(test_accuracy, epochs, check_every, subset, eva_zero=True):
+    pass
+
+def plot_multiple_loss_with_confidence_cross_fold(test_loss, epochs, subset, loss_name):
+    pass
