@@ -411,11 +411,12 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
 
     return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
 
-def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset,  std=True, eva_zero = False):
+def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True, first_eval = None):
     step = epochs // check_every
 
-    if eva_zero:
+    if first_eval is not None:
         eva_epochs = [i * check_every for i in range(step + 1)]
+        eva_epochs[0] = first_eval
     else:
         eva_epochs = [(i+1) * check_every for i in range(step)]
 

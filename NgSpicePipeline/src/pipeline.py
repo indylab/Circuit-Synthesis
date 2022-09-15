@@ -108,7 +108,7 @@ def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check
 
 
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS = None, selectIndex = None, train_status = False):
+                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS = None, selectIndex = None, train_status = False, first_eval = 1):
     if rerun_training:
         x, y = simulator.run_training()
     else:
@@ -196,6 +196,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
                                                                                               val_data, optimizer,
                                                                                               loss, scaler_arg,
                                                                                               simulator,
+                                                                                              first_eval = first_eval,
                                                                                               device=device,
                                                                                               num_epochs=epochs,
                                                                                               margin=MARGINS,
