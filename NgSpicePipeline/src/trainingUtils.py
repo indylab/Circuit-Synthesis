@@ -1,7 +1,6 @@
-
 import numpy as np
 from torch.utils.data import ConcatDataset
-
+import pandas as pd
 
 def generate_duplicate_data(train, test, thresholds):
     return_train, return_test = train, test
@@ -121,6 +120,11 @@ def getDatafromDataloader(dataloader):
 
 
 
-def save_output_data(baseline=None, test_margins=None, train_margins=None, test_loss=None,
-                     train_loss=None, test_accuracy=None, train_accuracy=None):
-    pass
+def save_output_data(result_files, circuit_name):
+
+    for k,v in result_files.items():
+        save_path = "../result_out/" + circuit_name + "-" + k + ".npy"
+        np.save(save_path, v)
+
+
+
