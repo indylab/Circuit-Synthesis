@@ -1,7 +1,7 @@
 circuit: LNA
 .include ../assets/45nm_CS.pm
-.option TEMP=27C
 
+.option TEMP=27C
 R2 vdd net7 700
 R1 net2 net9 10k
 R0 vdd net2 800
@@ -21,28 +21,23 @@ V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 
 let ls_start = 58.3p
 let ls_test = 58.3p
-let ls_stop = 60.8p
-let delta_ls = 1p
+let ls_stop = 60.3p
+let delta_ls = 0.25p
 
 let ld_start = 4.4n
 let ld_test = 4.4n
-let ld_stop = 5.4n
-let delta_ld = 1n
+let ld_stop = 6n
+let delta_ld = 0.2n
 
 let lg_start = 14.8n
 let lg_test = 14.8n
-let lg_stop = 15.8n
-let delta_lg = 0.50n
-
-let r_start = 800
-let r_test = 800
-let r_stop = 1050
-let delta_r = 50
+let lg_stop = 16.4n
+let delta_lg = 0.2n
 
 let w_start = 51u
 let w_test = 51u
-let w_stop = 53u
-let delta_w = 0.4u
+let w_stop = 52.8u
+let delta_w = 0.3u
 
 while ls_test le ls_stop
     alter Ls = ls_test
@@ -50,44 +45,33 @@ while ls_test le ls_stop
         alter Ld = ld_test
         while lg_test le lg_stop
             alter Lg = lg_test
-            while r_test le r_stop
-                alter R0 = r_test
-                while w_test le w_stop
-                    alter @mn0[w] = w_test
-                    op
-                    sp lin 100 1k 100G 1
-                    let s21 = abs(S_2_1)
-                    let s12 = abs(S_1_2)
-                    let s22 = abs(S_2_2)
-                    let s11 = abs(S_1_1)
-                    let reals11 = real(minimum(S_1_1))
+            while w_test le w_stop
+                alter @mn0[w] = w_test
+                sp lin 100 1k 100G 1
+                let s21 = abs(S_2_1)
+                let s12 = abs(S_1_2)
+                let s11 = abs(S_1_1)
+                let reals11 = real(minimum(S_1_1))
 
-                    let gmax = s21/s12
-                    let Gmax = vecmax(gmax)
-                    print Gmax >> ../out/Gmax.csv
+                let gmax = s21/s12
+                let Gmax2 = vecmax(gmax)
+                print Gmax2 >> ../out/Gp.csv
 
-                    let gp = (s21*s21)/(1-s11*s11)
-                    let Gp = vecmax(gp)
-                    print Gp >> ../out/Gp.csv
+                print reals11 >> ../out/s11.csv
+                let nf = real(minimum(NF))
+                print nf >> ../out/nf.csv
 
 
-                    print reals11 >> ../out/s11.csv
-                    let nf = real(minimum(NF))
-                    print nf >> ../out/nf.csv
-                    set appendwrite
+                print ls_test >> ../out/ls.csv
+                print ld_test >> ../out/ld.csv
+                print lg_test >> ../out/lg.csv
+                print w_test  >> ../out/w.csv
+                set appendwrite
 
-                    print ls_test >> ../out/ls.csv
-                    print ld_test >> ../out/ld.csv
-                    print lg_test >> ../out/lg.csv
-                    print r_test >> ../out/r.csv
-                    print w_test >> ../out/w.csv
-                    let w_test = w_test + delta_w
-                end
-                let r_test = r_test + delta_r
-                let w_test = w_start
+                let w_test = w_test + delta_w
             end
+            let w_test = w_start
             let lg_test = lg_test + delta_lg
-            let r_test = r_start
         end
         let ld_test = ld_test + delta_ld
         let lg_test = lg_start

@@ -3,10 +3,10 @@ import numpy as np
 import os
 import subprocess
 import re
-
+import time
 
 class Simulator:
-    def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments):
+    def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments, order, sign):
         self.ngspice_exec = ngspice_exec
         self.train_netlist = train_netlist
         self.test_netlist = test_netlist
@@ -30,6 +30,8 @@ class Simulator:
                 "Each paramater must have a start index", arguments.keys())
 
         self.save_error_log = False
+        self.order = order
+        self.sign = sign
 
     def _updateFile(self, trainingFilePath, outputFilePath, argumentMap):
         with open(trainingFilePath, 'r') as read_file:
@@ -148,50 +150,8 @@ class Simulator:
                 os.remove(file)
             except FileNotFoundError:
                 continue
+            except PermissionError:
+                time.sleep(1)
+                os.remove(file)
 
 
-if __name__ == '__main__':
-    # TODO: remove print statements
-    # TODO: find work around for too many arguments crashing simulator
-    # TODO: find way to include simulator console logging for easier debugging (try -o output filename)
-    # TODO: connect with training
-    ngspice_exec = "ngspice/Spice64/bin/ngspice.exe"
-    train_netlist = "NgSpicePipeline/assets/nmos-training-2.sp"
-    test_netlist = "NgSpicePipeline/assets/nmos-testing-pro.sp"
-    param_list = ["r", "w"]
-    perform_list = ["bw", "pw", "a0"]
-
-    arguments = {
-        "model_path": "NgSpicePipeline/assets/45nm_CS.pm",
-        "start1": "2.88u",
-        "stop1": "6.63u",
-        "change1": "0.3750u",
-        "start2": 620,
-        "stop2": 1450,
-        "change2": 5.5,
-        "out": "NgSpicePipeline/out/"
-    }
-
-    simulator_nmos = Simulator(ngspice_exec, train_netlist, test_netlist, param_list, perform_list, arguments)
-    simulator = simulator_nmos
-    rerun_training = True
-    if rerun_training:
-        x, y = simulator.run_training()
-    else:
-        param_outfile_names = ["r.csv", "w.csv"]  # must be in order
-        perform_outfile_names = ["bw.csv", "pw.csv", "a0.csv"]  # must be in order
-        out = "../out/"
-        x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
-
-    data = np.hstack((x, y)).astype(float)
-
-    x1, x2 = x[:, 0], x[:, 1]
-
-    x_sim, y_sim = simulator.runSimulation(x)
-    print(x.shape, x_sim.shape)
-    print("x[0], y[0]", x[0], y[0])
-    print("x_sim[0], y_sim[0]", x_sim[0], y_sim[0])
-
-    for i in range(x.shape[0]):
-        assert np.all(x[i] == x_sim[i]), (x[i], x_sim[i])
-        assert np.all(y[i] == y_sim[i]), (y[i], y_sim[i])
