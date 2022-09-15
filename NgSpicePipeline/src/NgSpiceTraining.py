@@ -81,14 +81,14 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
     final_train_param = None
     final_train_perform = None
 
-    norm_perform, _ = val_data.dataset.getAll()
+    norm_perform, _ = getDatafromDataloader(val_data)
     model.eval()
     paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
     acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
     val_accs.append(acc_list)
     print(f"Validation Accuracy Before Training")
     if train_acc:
-        norm_perform, _ = train_data.dataset.getAll()
+        norm_perform, _ = getDatafromDataloader(train_data)
         model.eval()
         simulator.save_error_log = True
         paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
@@ -135,7 +135,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
         if (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
             print('t = %d, val loss = %.4f' % (epoch + 1, val_avg_loss))
-            norm_perform, _ = val_data.dataset.getAll()
+            norm_perform, _ = getDatafromDataloader(val_data)
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
             acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
@@ -144,7 +144,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, de
             val_accs.append(acc_list)
             print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][1]}")
             if train_acc:
-                norm_perform, _ = train_data.dataset.getAll()
+                norm_perform, _ = getDatafromDataloader(train_data)
                 model.eval()
                 simulator.save_error_log = True
                 print(norm_perform, norm_perform.shape)

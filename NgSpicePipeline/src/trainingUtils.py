@@ -1,6 +1,6 @@
 
 import numpy as np
-
+from torch.utils.data import ConcatDataset
 
 
 def generate_duplicate_data(train, test, thresholds):
@@ -104,6 +104,20 @@ def convert_dataset_to_array(dataset):
         y.append(temp_y)
 
     return np.array(x), np.array(y)
+
+
+def getDatafromDataloader(dataloader):
+    try:
+        return dataloader.dataset.getAll()
+    except:
+        perform_array, param_array = [], []
+        for i in range(len(dataloader.dataset)):
+            temp_perform, temp_param = dataloader.dataset[i]
+            perform_array.append(temp_perform)
+            param_array.append(temp_param)
+        perform_array = np.array(perform_array)
+        param_array = np.array(param_array)
+        return perform_array, param_array
 
 
 

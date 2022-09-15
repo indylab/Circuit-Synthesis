@@ -141,8 +141,6 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
                                                                   order=simulator.order, sign=simulator.sign)
 
-
-
     for i in subset:
         if i == 1 or i > 1:
             raise ValueError
@@ -154,7 +152,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
     for percentage in subset:
         # Find out how many split we have to do
         split_size = np.gcd(int(percentage * 100), 100)
-        split_time = 100 / split_size
+        split_time = int(100 / split_size)
         print("For percentage {}, We split the dataset {} times".format(percentage, split_time))
         Full_dataset = CircuitSynthesisGainAndBandwidthManually(perform, param)
 
@@ -175,7 +173,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         subset_test_accuracy = []
         subset_train_accuracy = []
 
-        for i in range(len(split_time)):
+        for i in range(split_time):
             print('Running with Percentage {} Run Number {}'.format(percentage, i))
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
                 concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
