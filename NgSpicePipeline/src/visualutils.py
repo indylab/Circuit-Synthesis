@@ -310,9 +310,18 @@ def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, 
 
 def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05,
                                                      percentage = True, std=True, log=True):
+
+
+    num_percentage = len(margin_errors)
+    color_array = []
+
+    for i in range(num_percentage):
+        color_array.append(np.random.rand(3, ))
+
     multi_mean = []
     multi_lower_bound = []
     multi_upper_bound = []
+
     #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
     for percentage_performance in margin_errors:
         temp_mean = []
@@ -379,13 +388,14 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
 
 
     for i in range(len(multi_mean)):
-        plt.plot(margins, multi_mean[i], label="{}% of training data".format(subset[i] * 100))
-        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3)
+        plt.plot(margins, multi_mean[i], label="{}% of training data".format(subset[i] * 100), color=color_array[i])
+        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color_array[i])
 
     if baseline is not None:
         for i in range(len(baseline_mean)):
-            plt.plot(margins, baseline_mean[i], label="{}% of training data base".format(subset[i] * 100))
-            plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3)
+            plt.plot(margins, baseline_mean[i], label="{}% of training data base".format(subset[i] * 100),
+                     color=color_array[i], linestyle='dashed')
+            plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3, color=color_array[i])
 
     if vertical_point is not None:
         plt.axvline(x=vertical_point, linestyle='dashed', color="k")
