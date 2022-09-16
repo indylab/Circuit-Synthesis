@@ -388,7 +388,7 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
 
 
     for i in range(len(multi_mean)):
-        if subset[i] > 0.5:
+        if subset[i] <= 0.5:
             temp_label = "{}% data threshold".format(subset[i] * 100)
         else:
             split_size = np.gcd(int(subset[i] * 100), 100)
@@ -399,7 +399,7 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
 
     if baseline is not None:
         for i in range(len(baseline_mean)):
-            if subset[i] > 0.5:
+            if subset[i] <= 0.5:
                 temp_label = "{}% data lookup".format(subset[i] * 100)
             else:
                 split_size = np.gcd(int(subset[i] * 100), 100)
@@ -450,7 +450,7 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
     ax = fig.add_subplot()
 
     for i in range(len(multi_accuracy)):
-        if subset[i] > 0.5:
+        if subset[i] <= 0.5:
             temp_label = "{}% data".format(subset[i] * 100)
         else:
             split_size = np.gcd(int(subset[i] * 100), 100)
@@ -489,7 +489,7 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
     ax = fig.add_subplot()
 
     for i in range(len(multi_loss)):
-        if subset[i] > 0.5:
+        if subset[i] <= 0.5:
             temp_label = "{}% data".format(subset[i] * 100)
         else:
             split_size = np.gcd(int(subset[i] * 100), 100)
