@@ -127,4 +127,3 @@ def save_output_data(result_files, circuit_name):
         np.save(save_path, v)
 
 
-
