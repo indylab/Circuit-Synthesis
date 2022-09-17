@@ -76,10 +76,11 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
     return np.array(new_performance), np.array(new_parameter)
 
 def get_margin_error(y_hat, y, sign=None):
-    sign = np.array(sign)
+
     temp_y_hat = y_hat
     temp_y = y
     if sign is not None:
+        sign = np.array(sign)
         temp_y_hat = y_hat * sign
         temp_y = y * sign
 
@@ -89,9 +90,11 @@ def get_margin_error(y_hat, y, sign=None):
     err = np.divide(a_err, y, where=y != 0)
 
     err = err * greater
-    max_err = np.max(np.abs(err), axis=1)
 
-    return max_err
+    return np.abs(err)
+
+
+
 
 def convert_dataset_to_array(dataset):
 

@@ -7,7 +7,7 @@ from trainingUtils import *
 import os
 from torch.utils.data import random_split, ConcatDataset
 
-
+@DeprecationWarning
 def TrainPipeline(simulator, rerun_training, model_template, loss, epochs, check_every, runtime = 1,
                   device='cpu', generate_new_dataset=True, resplit_dataset=True, subset=None, MARGINS = None, selectIndex = None, train_status=False):
     if rerun_training:
@@ -148,7 +148,14 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             raise ValueError
 
     baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy = [],[],[],[],[],[],[]
-
+    mean_err = []
+    mean_performance_err = []
+    mean_baseline_err = []
+    mean_baseline_performance_err = []
+    mean_err_std = []
+    mean_performance_err_std = []
+    mean_baseline_err_std = []
+    mean_baseline_performance_err_std = []
     for percentage in subset:
         # Find out how many split we have to do
         split_size = np.gcd(int(percentage * 100), 100)
@@ -172,7 +179,14 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         subset_train_loss = []
         subset_test_accuracy = []
         subset_train_accuracy = []
-
+        subset_baseline_average_err_mean = []
+        subset_baseline_average_err_std = []
+        subset_baseline_average_err_performance_mean = []
+        subset_baseline_average_err_performance_std = []
+        subset_err_mean = []
+        subset_err_performance_mean = []
+        subset_err_std = []
+        subset_err_performance_std = []
         for i in range(split_time):
             print('Running with Percentage {} Run Number {}'.format(percentage, i))
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
@@ -191,8 +205,15 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
 
             temp_x_train, temp_y_train = convert_dataset_to_array(train_dataset)
             temp_x_test, temp_y_test = convert_dataset_to_array(validation_dataset)
-            subset_baseline.append(generate_baseline_performance(temp_x_train, temp_x_test, simulator.sign))
-            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin = train(model, train_data,
+
+            baseline_performance_result = generate_baseline_performance(temp_x_train, temp_x_test, simulator.sign)
+            subset_baseline_average_err_mean.append(np.average(baseline_performance_result))
+            subset_baseline_average_err_std.append(stats.sem(baseline_performance_result))
+            subset_baseline_average_err_performance_mean.append(np.average(baseline_performance_result, axis=0))
+            subset_baseline_average_err_performance_std.append(stats.sem(baseline_performance_result, axis=0))
+            subset_baseline.append(np.max(np.abs(baseline_performance_result), axis=1))
+            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin,test_margin_average, \
+           test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
                                                                                               val_data, optimizer,
                                                                                               loss, scaler_arg,
                                                                                               simulator,
@@ -208,6 +229,11 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             subset_train_margins.append(train_margin)
             subset_test_loss.append(val_losses)
             subset_train_loss.append(train_losses)
+
+            subset_err_mean.append(test_margin_average)
+            subset_err_std.append(test_margin_std)
+            subset_err_performance_mean.append(test_margin_performance_average)
+            subset_err_performance_std.append(test_margin_performance_std)
 
             temp_train_accuracy_list = []
             temp_test_accuracy_list = []
@@ -227,4 +253,17 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         test_accuracy.append(subset_test_accuracy)
         train_accuracy.append(subset_train_accuracy)
 
-    return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy
+        mean_err.append(np.average(np.array(subset_err_mean)))
+        mean_err_std.append(np.average(np.array(subset_err_std)))
+        mean_baseline_err.append(np.average(np.array(subset_baseline_average_err_mean)))
+        mean_baseline_err_std.append(np.average(np.array(subset_baseline_average_err_std)))
+
+        mean_baseline_performance_err.append(np.average(np.array(subset_baseline_average_err_performance_mean), axis=0))
+        mean_baseline_performance_err_std.append(np.average(np.array(subset_baseline_average_err_performance_std), axis=0))
+        mean_performance_err.append(np.average(np.array(subset_err_performance_mean), axis=0))
+        mean_performance_err_std.append(np.average(np.array(subset_err_performance_std), axis=0))
+
+
+    return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy, mean_err, \
+           mean_performance_err, mean_baseline_err, mean_baseline_performance_err, mean_err_std, \
+           mean_performance_err_std, mean_baseline_err_std, mean_baseline_performance_err_std
