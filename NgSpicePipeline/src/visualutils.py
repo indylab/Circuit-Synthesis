@@ -388,13 +388,24 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
 
 
     for i in range(len(multi_mean)):
-        plt.plot(margins, multi_mean[i], label="{}% of training data".format(subset[i] * 100), color=color_array[i])
+        if subset[i] <= 0.5:
+            temp_label = "{}% data threshold".format(subset[i] * 100)
+        else:
+            split_size = np.gcd(int(subset[i] * 100), 100)
+            fold = int(100 / split_size)
+            temp_label = "{}-fold threshold".format(fold)
+        plt.plot(margins, multi_mean[i], label=temp_label, color=color_array[i])
         plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color_array[i])
 
     if baseline is not None:
         for i in range(len(baseline_mean)):
-            plt.plot(margins, baseline_mean[i], label="{}% of training data base".format(subset[i] * 100),
-                     color=color_array[i], linestyle='dashed')
+            if subset[i] <= 0.5:
+                temp_label = "{}% data lookup".format(subset[i] * 100)
+            else:
+                split_size = np.gcd(int(subset[i] * 100), 100)
+                fold = int(100 / split_size)
+                temp_label = "{}-fold lookup".format(fold)
+            plt.plot(margins, baseline_mean[i], label=temp_label, color=color_array[i], linestyle='dashed')
             plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3, color=color_array[i])
 
     if vertical_point is not None:
@@ -404,9 +415,9 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
         plt.xscale('log')
     plt.xlabel("Accuracy")
     if percentage:
-        plt.ylabel("Success Percentage")
+        plt.ylabel("Test Success Rate")
     else:
-        plt.ylabel("Success Amount")
+        plt.ylabel("Test Success Sum")
     plt.show()
 
     return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
@@ -439,7 +450,13 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
     ax = fig.add_subplot()
 
     for i in range(len(multi_accuracy)):
-        ax.plot(eva_epochs, multi_accuracy[i], label="{}% training data".format(subset[i] * 100))
+        if subset[i] <= 0.5:
+            temp_label = "{}% data".format(subset[i] * 100)
+        else:
+            split_size = np.gcd(int(subset[i] * 100), 100)
+            fold = int(100 / split_size)
+            temp_label = "{}-fold".format(fold)
+        ax.plot(eva_epochs, multi_accuracy[i], label=temp_label)
         ax.fill_between(eva_epochs, multi_accuracy_lower_bound[i], multi_accuracy_upper_bound[i], alpha=.3)
 
     ax.set_xlim([0, None])
@@ -472,7 +489,13 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
     ax = fig.add_subplot()
 
     for i in range(len(multi_loss)):
-        ax.plot(np.arange(epochs), multi_loss[i], label="{}% of training data".format(subset[i] * 100))
+        if subset[i] <= 0.5:
+            temp_label = "{}% data".format(subset[i] * 100)
+        else:
+            split_size = np.gcd(int(subset[i] * 100), 100)
+            fold = int(100 / split_size)
+            temp_label = "{}-fold".format(fold)
+        ax.plot(np.arange(epochs), multi_loss[i], label=temp_label)
         ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
 
     ax.set_xlim([0, None])

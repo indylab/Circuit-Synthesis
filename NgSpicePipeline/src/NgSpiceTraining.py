@@ -1,8 +1,10 @@
+import numpy as np
 from torch.utils.data import DataLoader
 from Training import models, dataset
 import torch
 from trainingUtils import *
 import matplotlib.pyplot as plt
+from scipy import stats
 
 def check_acc(y_hat, y, margins=None):
     if margins is None:
@@ -158,14 +160,21 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
                 final_train_param = paramater_preds
                 final_train_perform = norm_perform
-    test_margin = simulate_points(final_test_param, final_test_perform, scaler, simulator, sign, final=True)
+    test_margin_whole = simulate_points(final_test_param, final_test_perform, scaler, simulator, sign, final=True)
+    test_margin_average = np.average(test_margin_whole)
+    test_margin_performance_average = np.average(test_margin_whole, axis=0)
+    test_margin_std = stats.sem(test_margin_whole)
+    test_margin_performance_std = stats.sem(test_margin_whole, axis=0)
+    test_margin = np.max(test_margin_whole, axis=1)
 
 
     if train_acc:
-        train_margin = simulate_points(final_train_param, final_train_perform, scaler, simulator, sign, final=True)
+        train_margin_whole = simulate_points(final_train_param, final_train_perform, scaler, simulator, sign, final=True)
+        train_margin = np.max(train_margin_whole, axis=1)
     else:
         train_margin = []
-    return losses, val_losses, train_accs, val_accs, test_margin, train_margin
+    return losses, val_losses, train_accs, val_accs, test_margin, train_margin, test_margin_average, \
+           test_margin_performance_average, test_margin_std, test_margin_performance_std
 
 
 def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator,
@@ -205,13 +214,7 @@ def generate_subset_data(Train, Test, percentage):
 
 
 def generate_baseline_performance(X_train, X_test, sign):
-    #generate result to pass into get_margin_error function
-    #get_margin_error(y_hat, y, sign=None)
 
-    #X is performance requirement and y is the design specification
-
-
-    #y_hat is from X_train, and y is X_test
     temp_X_train = X_train * sign
     temp_X_test = X_test * sign
 
@@ -238,4 +241,6 @@ def generate_baseline_performance(X_train, X_test, sign):
     temp_y_hat = np.array(temp_y_hat)
 
     return get_margin_error(temp_y_hat, X_test, sign)
+
+
 

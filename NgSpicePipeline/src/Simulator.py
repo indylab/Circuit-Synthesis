@@ -4,6 +4,7 @@ import os
 import subprocess
 import re
 import time
+import math
 
 class Simulator:
     def __init__(self, ngspice_exec, train_netlist, test_netlist, parameter_list, performance_list, arguments, order, sign):
@@ -82,8 +83,10 @@ class Simulator:
         updated_netlist_filename = self.test_netlist + "-formatted"
         argumentMap = self.arguments
         all_x, all_y = [], []
-        for i in range(int(num_params_to_sim / MAX_SIM_SIZE) + 1):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
-            argumentMap["num_samples"] = parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, i].shape[0]
+
+        for i in range(math.ceil(num_params_to_sim / MAX_SIM_SIZE)):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
+
+            argumentMap["num_samples"] = parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, 0].shape[0]
 
             if argumentMap["num_samples"] == 0:
                 continue
@@ -110,6 +113,7 @@ class Simulator:
                    0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
         assert final_y.shape[
                    0] == num_params_to_sim, f"y has to few values. Original: {parameters.shape} Y: {final_y.shape}"
+
         return [final_x, final_y]
 
     def run_training(self):
