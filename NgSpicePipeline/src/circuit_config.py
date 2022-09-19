@@ -96,7 +96,7 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
     if order is None:
         order = [0, 2, 1]
     if sign is None:
-        sign = [1, -1, 1]
+        sign = [1, -1, -1]
 
     if arguments_lna is None:
         arguments_lna = {
