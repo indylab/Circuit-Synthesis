@@ -165,25 +165,6 @@ class Sigmoid_Net(nn.Module):
         return self.network(x)
 
 
-class WideModel(nn.Module):
-    def __init__(self, parameter_count=2, output_count=2):
-        super(WideModel, self).__init__()
-        self.network = nn.Sequential(
-            nn.Linear(parameter_count, 200),
-            nn.GELU(),
-            nn.Linear(200, 2000),
-            nn.GELU(),
-            nn.Linear(2000, 2000),
-            nn.GELU(),
-            nn.Linear(2000, 200),
-            nn.GELU(),
-            nn.Linear(200, output_count)
-        )
-
-    def forward(self, x):
-        return self.network(x)
-
-
 class DeepModel(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(DeepModel, self).__init__()
@@ -265,17 +246,17 @@ class Model500GELU(nn.Module):
         super(Model500GELU, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(parameter_count, 200),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(200, 300),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(300, 500),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(500, 500),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(500, 300),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(300, 200),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(200, output_count)
         )
 

@@ -122,21 +122,22 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
             loss.backward()
             optimizer.step()
 
-        for t, (x, y) in enumerate(val_data):
-            # Zero your gradient
+        with torch.no_grad():
+            for t, (x, y) in enumerate(val_data):
 
-            x_var = torch.autograd.Variable(x.type(torch.FloatTensor)).to(device)
-            y_var = torch.autograd.Variable(y.type(torch.FloatTensor).float()).to(device)
-            model.eval()
-            scores = model(x_var)
+                x_var = x.float().to(device)
+                y_var = y.float().to(device)
+                model.eval()
+                scores = model(x_var)
 
-            loss = loss_fn(scores.float(), y_var.float())
+                loss = loss_fn(scores.float(), y_var.float())
 
-            loss = torch.clamp(loss, max=500000, min=-500000)
-            val_avg_loss += (loss.item() - val_avg_loss) / (t + 1)
+                loss = torch.clamp(loss, max=500000, min=-500000)
+                val_avg_loss += (loss.item() - val_avg_loss) / (t + 1)
 
         losses.append(avg_loss)
         val_losses.append(val_avg_loss)
+        print("Validation Loss for {} epoch is {}, Training Loss for {} epoch is {}".format(epoch, val_avg_loss, epoch, avg_loss))
 
         if (epoch + 1) == first_eval or (epoch + 1) % print_every == 0 or (num_epochs < print_every and epoch == num_epochs - 1):
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
@@ -149,6 +150,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
             final_test_perform = norm_perform
             val_accs.append(acc_list)
             print(f"Validation Accuracy at Epoch {epoch} = {val_accs[-1][1]}")
+
             if train_acc:
                 norm_perform, _ = getDatafromDataloader(train_data)
                 model.eval()
@@ -160,6 +162,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
                 print(f"Training_Accuracy at Epoch {epoch} = {train_accs[-1][0]}")
                 final_train_param = paramater_preds
                 final_train_perform = norm_perform
+
     test_margin_whole = simulate_points(final_test_param, final_test_perform, scaler, simulator, sign, final=True)
     test_margin_average = np.average(test_margin_whole)
     test_margin_performance_average = np.average(test_margin_whole, axis=0)
@@ -176,34 +179,6 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
     return losses, val_losses, train_accs, val_accs, test_margin, train_margin, test_margin_average, \
            test_margin_performance_average, test_margin_std, test_margin_performance_std
 
-
-def get_subsetdata_accuracy(X_train, y_train, X_test, y_test, percentages, optims, loss_fn, scaler_arg, simulator,
-                            device='cpu'):
-    accuracy_list = []
-
-    for percentage in percentages:
-        model = models.Model50GELU(3, 2).to(device)
-        optimizer = optims(model.parameters(), lr=0.001)
-        subset_index = np.random.choice(np.arange(X_train.shape[0]), int(percentage * X_train.shape[0]), replace=False)
-        new_X_train = X_train[subset_index, :]
-        new_Y_train = y_train[subset_index, :]
-        train_data = dataset.CircuitSynthesisGainAndBandwidthManually(new_X_train, new_Y_train)
-        val_data = dataset.CircuitSynthesisGainAndBandwidthManually(X_test, y_test)
-        train_dataloader = DataLoader(train_data, batch_size=100)
-        val_dataloader = DataLoader(val_data, batch_size=100)
-        _, _, _, val_accs,_,_ = train(model, train_dataloader, val_dataloader, optimizer, loss_fn, scaler_arg,
-                                  simulator, device=device, num_epochs=300)
-
-        accs = []
-        for acc in val_accs:
-            accs.append(acc[-2])
-
-        accuracy_list.append(accs)
-
-    for index, acc in enumerate(accuracy_list):
-        plt.plot(range(len(acc)), acc, label=percentages[index])
-    plt.legend()
-    plt.show()
 
 
 def generate_subset_data(Train, Test, percentage):
