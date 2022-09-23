@@ -41,6 +41,8 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
                                                                   order=simulator.order, sign=simulator.sign)
 
+
+
     for i in subset:
         if i == 1 or i > 1:
             raise ValueError
