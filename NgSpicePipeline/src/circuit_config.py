@@ -121,3 +121,35 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
     simulator_lna.delete_existing_data = True
 
     return simulator_lna
+
+def VCO_circuit(arguments_vco=None, order=None, sign=None):
+    ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
+    train_netlist_vco = "../assets/VCOtraining.sp"
+    test_netlist_vco = "../assets/VCO.sp"
+    param_list_vco = ["w", "w1", "w2"]
+    perform_list_vco = ["power", "pnoise", "tuningrange"]
+
+    if order is None:
+        order = [0, 2, 1]
+    if sign is None:
+        sign = [1, -1, -1]
+
+    if arguments_vco is None:
+        arguments_vco = {
+            "model_path": "../assets/45nm_CS.pm",
+            "w_start": "4u",
+            "w_stop": "5.4u",
+            "w_change": "0.1u",
+            "w1_start": "2u",
+            "w1_stop": "10u",
+            "w1_change": "0.5u",
+            "w2_start": "15u",
+            "w2_stop": "17.8u",
+            "w2_change": "0.2u",
+            "out": "../out/"
+        }
+    simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
+                              arguments_vco,order,sign)
+    #simulator_vco.delete_existing_data = True
+
+    return simulator_vco
