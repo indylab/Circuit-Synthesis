@@ -28,8 +28,7 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
 
 def cascade_circuit(arguments_cascade = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    #train_netlist_cascade = "../assets/nmos-training-cascode.sp"
-    train_netlist_cascade = "../assets/nmos-trainning-cascodetest.sp"
+    train_netlist_cascade = "../assets/nmos-training-cascode.sp"
     test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
     param_list_cascade = ["r", "w0", "w1"]
     perform_list_cascade = ["bw", "pw", "a0"]
