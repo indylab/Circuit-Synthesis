@@ -28,7 +28,8 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
 
 def cascade_circuit(arguments_cascade = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_cascade = "../assets/nmos-training-cascode.sp"
+    #train_netlist_cascade = "../assets/nmos-training-cascode.sp"
+    train_netlist_cascade = "../assets/nmos-trainning-cascodetest.sp"
     test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
     param_list_cascade = ["r", "w0", "w1"]
     perform_list_cascade = ["bw", "pw", "a0"]
@@ -39,15 +40,15 @@ def cascade_circuit(arguments_cascade = None, order=None, sign=None):
     if arguments_cascade is None:
         arguments_cascade = {
             "model_path": "../assets/45nm_CS.pm",
-            "w0_start": 620,
-            "w0_stop": 1450,
-            "w0_change": 50,
-            "w1_start": 620,
-            "w1_stop": 1450,
-            "w1_change": 50,
-            "r_start": "2.88u",
-            "r_stop": "6.63u",
-            "r_change": "0.7500u",
+            "w0_start": "4u",
+            "w0_stop": "7.5u",
+            "w0_change": "0.25u",
+            "w1_start": "7u",
+            "w1_stop": "10u",
+            "w1_change": "0.2u",
+            "r_start": 200,
+            "r_stop": 500,
+            "r_change": 18.75,
             "out": "../out/"
         }
     return Simulator(ngspice_exec, train_netlist_cascade, test_netlist_cascade, param_list_cascade,
