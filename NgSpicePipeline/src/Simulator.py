@@ -129,6 +129,7 @@ class Simulator:
         else:
             args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', formatted_netlist]
         subprocess.run(args)
+        print("Ngspice simulation Finished")
         x, y = self._getData(self.train_param_filenames, self.train_perform_filenames, self.arguments["out"])
 
         return x, y
