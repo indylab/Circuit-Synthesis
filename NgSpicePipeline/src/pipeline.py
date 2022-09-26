@@ -115,6 +115,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             subset_baseline_average_err_performance_std.append(stats.sem(baseline_performance_result, axis=0))
             subset_baseline.append(np.max(np.abs(baseline_performance_result), axis=1))
 
+            print(np.average(baseline_performance_result, axis=0))
             train_losses, val_losses, train_accs, val_accs, test_margin, train_margin,test_margin_average, \
            test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
                                                                                               val_data, optimizer,
