@@ -12,14 +12,15 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
     if sign is None:
         sign = [1,-1,1]
     if arguments_nmos is None:
+
         arguments_nmos = {
             "model_path": "../assets/45nm_CS.pm",
-            "w_start": 620,
-            "w_stop": 1450,
-            "w_change": 5,
-            "r_start": "2.88u",
-            "r_stop": "6.63u",
-            "r_change": "0.20u",
+            "w_start": "2.88u",
+            "w_stop": "6.63u",
+            "w_change": "0.2u",
+            "r_start": 620,
+            "r_stop": 1450,
+            "r_change": 5,
             "out": "../out/"
         }
     return Simulator(ngspice_exec, train_netlist_nmos, test_netlist_nmos, param_list_nmos, perform_list_nmos,
@@ -149,6 +150,6 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)
-    #simulator_vco.delete_existing_data = True
+    simulator_vco.delete_existing_data = False
 
     return simulator_vco

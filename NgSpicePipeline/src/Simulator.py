@@ -74,7 +74,7 @@ class Simulator:
                                                                 f"as number of parameters {parameters.shape[1]} != " \
                                                                 f"{len(self.parameter_list)} "
         num_params_to_sim = parameters.shape[0]
-        MAX_SIM_SIZE = 750
+        MAX_SIM_SIZE = 50
 
         if self.delete_existing_data:
             self._delete_training_files()
