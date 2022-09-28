@@ -150,6 +150,6 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)
-    simulator_vco.delete_existing_data = False
+    simulator_vco.delete_existing_data = True
 
     return simulator_vco

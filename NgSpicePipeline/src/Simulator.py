@@ -85,7 +85,6 @@ class Simulator:
         all_x, all_y = [], []
 
         for i in range(math.ceil(num_params_to_sim / MAX_SIM_SIZE)):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
-
             argumentMap["num_samples"] = parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, 0].shape[0]
 
             if argumentMap["num_samples"] == 0:
@@ -104,6 +103,7 @@ class Simulator:
 
             x, y = self.getData(self.test_param_filenames, self.test_perform_filenames, argumentMap["out"])
             self._delete_testing_files()
+
             all_x.append(x)
             all_y.append(y)
 
@@ -133,6 +133,48 @@ class Simulator:
         x, y = self._getData(self.train_param_filenames, self.train_perform_filenames, self.arguments["out"])
 
         return x, y
+
+    def run_random_training(self, num_sample):
+        if self.delete_existing_data:
+            self._delete_training_files()
+            self._delete_testing_files()
+        temp_parameter_array = []
+        for i in self.parameter_list:
+            start_value = i + '_start'
+            end_value = i + '_stop'
+
+            temp_param_start = self.arguments[start_value]
+            temp_param_end = self.arguments[end_value]
+
+            if type(temp_param_start) == str and type(temp_param_end) == str:
+                if temp_param_start[-1] == 'u':
+                    temp_param_start = float(temp_param_start[:-1]) * 1e-6
+                    temp_param_end = float(temp_param_end[:-1]) * 1e-6
+                else:
+                    raise ValueError
+            else:
+                temp_param_start = float(temp_param_start)
+                temp_param_end = float(temp_param_end)
+
+            temp_param_sample = self._generate_train_random_data(temp_param_start, temp_param_end, num_sample)
+            temp_parameter_array.append(temp_param_sample)
+        temp_parameter_array = np.array(temp_parameter_array).transpose()
+
+        temp_train_run = self.runSimulation(temp_parameter_array)
+
+        #temp_train_run[0] should be equals to temp_parameter_array
+
+        return temp_parameter_array, temp_train_run[1]
+
+
+
+    def _generate_train_random_data(self, parameter_start, parameter_end, num):
+
+        random_point = np.random.rand(num)
+
+        range = parameter_end - parameter_start
+
+        return parameter_start + random_point * range
 
     def _delete_training_files(self):
         out = self.arguments["out"]
