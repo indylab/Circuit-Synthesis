@@ -8,8 +8,9 @@ from torch.utils.data import random_split, ConcatDataset
 
 
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS = None, selectIndex = None,
-                                train_status = False, first_eval = 1, random_sample=False, num_sample = None):
+                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
+                                selectIndex=None,
+                                train_status=False, first_eval=1, random_sample=False, num_sample=None):
     if rerun_training:
         if random_sample:
             x, y = simulator.run_random_training(num_sample)
@@ -28,13 +29,13 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
     num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
 
     print(x.shape, y.shape)
-    data = np.hstack((x,y))
+    data = np.hstack((x, y))
 
-    scaler_arg = MinMaxScaler(feature_range=(-1,1))
+    scaler_arg = MinMaxScaler(feature_range=(-1, 1))
     scaler_arg.fit(data)
     data = scaler_arg.transform(data)
 
-    param, perform = data[:,:num_param], data[:,num_param:]
+    param, perform = data[:, :num_param], data[:, num_param:]
 
     if MARGINS is None:
         MARGINS = [0.01, 0.05, 0.1]
@@ -48,14 +49,13 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
                                                                   order=simulator.order, sign=simulator.sign)
         print(np.unique(param, axis=0).shape)
 
-
     for i in subset:
         if i == 1 or i > 1:
             raise ValueError
         if np.gcd(int(i * 100), 100) + int(i * 100) != 100 and np.gcd(int(i * 100), 100) != int(i * 100):
             raise ValueError
 
-    baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy = [],[],[],[],[],[],[]
+    baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy = [], [], [], [], [], [], []
     mean_err = []
     mean_performance_err = []
     mean_baseline_err = []
@@ -123,18 +123,18 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             subset_baseline.append(np.max(np.abs(baseline_performance_result), axis=1))
 
             print(np.average(baseline_performance_result, axis=0))
-            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin,test_margin_average, \
-           test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
-                                                                                              val_data, optimizer,
-                                                                                              loss, scaler_arg,
-                                                                                              simulator,
-                                                                                              first_eval = first_eval,
-                                                                                              device=device,
-                                                                                              num_epochs=epochs,
-                                                                                              margin=MARGINS,
-                                                                                              train_acc=train_status,
-                                                                                              sign=simulator.sign,
-                                                                                              print_every=check_every)
+            train_losses, val_losses, train_accs, val_accs, test_margin, train_margin, test_margin_average, \
+            test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
+                                                                                                  val_data, optimizer,
+                                                                                                  loss, scaler_arg,
+                                                                                                  simulator,
+                                                                                                  first_eval=first_eval,
+                                                                                                  device=device,
+                                                                                                  num_epochs=epochs,
+                                                                                                  margin=MARGINS,
+                                                                                                  train_acc=train_status,
+                                                                                                  sign=simulator.sign,
+                                                                                                  print_every=check_every)
 
             subset_test_margins.append(test_margin)
             subset_train_margins.append(train_margin)
@@ -171,27 +171,25 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
 
         mean_err.append(np.average(np.array(subset_err_mean)))
         mean_err_std.append(np.average(np.array(subset_err_std)))
-        
 
         mean_baseline_err.append(np.average(np.array(subset_baseline_average_err_mean)))
         mean_baseline_err_std.append(np.average(np.array(subset_baseline_average_err_std)))
 
         mean_baseline_performance_err.append(np.average(np.array(subset_baseline_average_err_performance_mean), axis=0))
-        mean_baseline_performance_err_std.append(np.average(np.array(subset_baseline_average_err_performance_std), axis=0))
+        mean_baseline_performance_err_std.append(
+            np.average(np.array(subset_baseline_average_err_performance_std), axis=0))
         mean_performance_err.append(np.average(np.array(subset_err_performance_mean), axis=0))
         mean_performance_err_std.append(np.average(np.array(subset_err_performance_std), axis=0))
-
 
     return baseline, test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy, mean_err, \
            mean_performance_err, mean_baseline_err, mean_baseline_performance_err, mean_err_std, \
            mean_performance_err_std, mean_baseline_err_std, mean_baseline_performance_err_std
 
 
-
 def Baseline_comparison(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
-                                selectIndex=None,
-                                train_status=False, first_eval=1, random_sample=False):
+                        check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
+                        selectIndex=None,
+                        train_status=False, first_eval=1, random_sample=False):
     if rerun_training:
         if random_sample:
             x, y = simulator.run_random_training()
