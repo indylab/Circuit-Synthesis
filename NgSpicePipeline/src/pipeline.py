@@ -123,6 +123,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             subset_baseline.append(np.max(np.abs(baseline_performance_result), axis=1))
 
             print(np.average(baseline_performance_result, axis=0))
+
             train_losses, val_losses, train_accs, val_accs, test_margin, train_margin, test_margin_average, \
             test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
                                                                                                   val_data, optimizer,
@@ -273,8 +274,6 @@ def Baseline_comparison(simulator, rerun_training, model_template, loss, epochs,
         subset_err_performance_std = []
         for i in range(split_time):
 
-            if i > 5:
-                break
             print('Running with Percentage {} Run Number {}'.format(percentage, i))
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
                 concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
