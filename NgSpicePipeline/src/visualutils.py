@@ -37,279 +37,8 @@ def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
     plt.show()
 
 
-def graph_margin(margin_error, margins, percentage = False):
-    counts = []
-    margin_error = np.array(margin_error)
-    for margin in margins:
-        if percentage:
-            counts.append((margin_error <= margin).sum() / len(margin_error))
-        else:
-            counts.append((margin_error <= margin).sum())
-
-    sns.lineplot(x = margins, y = counts)
-
-
-    plt.xlim(0.5, 0)
-    plt.show()
-
-def graph_margin_with_confidence(margin_errors, margins, percentage = True, std=True):
-    counts = []
-
-    for margin in margins:
-        tmp_margin_counts = []
-
-        for margin_err in margin_errors:
-            margin_err = np.array(margin_err)
-            if percentage:
-                tmp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
-            else:
-                tmp_margin_counts.append((margin_err <= margin).sum())
-        counts.append(tmp_margin_counts)
-
-    counts_mean = np.array([np.average(i) for i in counts])
-    if std:
-        counts_var = np.array([np.std(i) for i in counts])
-    else:
-        counts_var = np.array([np.var(i) for i in counts])
-
-    lower_bound = counts_mean - counts_var
-    upper_bound = counts_mean + counts_var
-
-
-    plt.plot(margins, counts_mean, label="Accuacy at different margin")
-    plt.fill_between(margins, lower_bound, upper_bound, alpha=.3)
-
-    plt.legend()
-    plt.xscale('log')
-    plt.xlabel("Margins")
-    if percentage:
-        plt.ylabel("Success Percentage")
-    else:
-        plt.ylabel("Success Amount")
-    plt.show()
-
-def graph_multiple_margin_with_confidence(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05, percentage = True, std=True, log=True):
-
-    multi_mean = []
-    multi_lower_bound = []
-    multi_upper_bound = []
-    for index in range(len(margin_errors[0])):
-        #loop through each subset
-        temp_counts = []
-        for margin in margins:
-            temp_margin_counts = []
-            for run in margin_errors:
-                margin_err = np.array(run[index])
-                if percentage:
-                    temp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
-
-                else:
-                    temp_margin_counts.append((margin_err <= margin).sum())
-            temp_counts.append(temp_margin_counts)
-        count_mean = np.array([np.average(i) for i in temp_counts])
-        if std:
-            count_var = np.array([stats.sem(i) for i in temp_counts])
-        else:
-            count_var = np.array([np.var(i) for i in temp_counts])
-
-        lower_bound = count_mean - count_var
-        upper_bound = count_mean + count_var
-        multi_mean.append(count_mean)
-        multi_lower_bound.append(lower_bound)
-        multi_upper_bound.append(upper_bound)
-
-    baseline_mean = []
-    baseline_lower_bound = []
-    baseline_upper_bound = []
-
-    if baseline is not None:
-        for index in range(len(baseline[0])):
-            # loop through each subset
-            temp_counts = []
-            for margin in margins:
-                temp_margin_counts = []
-                for run in baseline:
-                    margin_err = np.array(run[index])
-                    if percentage:
-                        temp_margin_counts.append((margin_err <= margin).sum() / len(margin_err))
-                    else:
-                        temp_margin_counts.append((margin_err <= margin).sum())
-                temp_counts.append(temp_margin_counts)
-            count_mean = np.array([np.average(i) for i in temp_counts])
-            if std:
-                count_var = np.array([stats.sem(i) for i in temp_counts])
-            else:
-                count_var = np.array([np.var(i) for i in temp_counts])
-
-            lower_bound = count_mean - count_var
-            upper_bound = count_mean + count_var
-            baseline_mean.append(count_mean)
-            baseline_lower_bound.append(lower_bound)
-            baseline_upper_bound.append(upper_bound)
-
-    for i in range(len(multi_mean)):
-        plt.plot(margins, multi_mean[i], label="{}% of training data".format(subset[i] * 100))
-        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3)
-
-    if baseline is not None:
-        for i in range(len(baseline_mean)):
-            plt.plot(margins, baseline_mean[i], label="{}% of training data base".format(subset[i] * 100))
-            plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3)
-
-    if vertical_point is not None:
-        plt.axvline(x=vertical_point, linestyle='dashed', color="k")
-    plt.legend()
-    if log:
-        plt.xscale('log')
-    plt.xlabel("Accuracy")
-    if percentage:
-        plt.ylabel("Success Percentage")
-    else:
-        plt.ylabel("Success Amount")
-    plt.show()
-
-def plot_multiple_accuracy_with_confidence(accuracy, epochs, check_every, subset,  std=True, eva_zero = False):
-
-    step = epochs // check_every
-    if eva_zero:
-        eva_epochs = [i * check_every for i in range(step + 1)]
-    else:
-        eva_epochs = [(i+1) * check_every for i in range(step)]
-
-    multi_accuracy = []
-    multi_accuracy_lower_bounds = []
-    multi_accuracy_upper_bounds = []
-
-    for index in range(len(accuracy[0])):
-        subset_performance = []
-        for run in range(len(accuracy)):
-            subset_performance.append(accuracy[run][index])
-
-        subset_performance = np.array(subset_performance)
-        subset_mean = np.mean(subset_performance, axis=0)
-        if std:
-            subset_var = stats.sem(subset_performance, axis=0)
-        else:
-            subset_var = np.var(subset_performance, axis=0)
-
-        multi_accuracy.append(subset_mean)
-        multi_accuracy_lower_bounds.append(subset_mean - subset_var)
-        multi_accuracy_upper_bounds.append(subset_mean + subset_var)
-
-    fig = plt.figure()
-    ax = fig.add_subplot()
-
-    for i in range(len(multi_accuracy)):
-        ax.plot(eva_epochs, multi_accuracy[i], label="{}% training data".format(subset[i] * 100))
-        ax.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3)
-
-    ax.set_xlim([0, None])
-    ax.set_ylim([0, None])
-    ax.legend()
-    plt.ylabel("Test Success Rate")
-    plt.xlabel("Epochs")
-    plt.show()
-
-def plot_multiple_loss_with_confidence(loss, epochs, subset,loss_name, std=True):
-    multi_loss = []
-    multi_loss_lower_bounds = []
-    multi_loss_upper_bounds = []
-
-    for index in range(len(loss[0])):
-        subset_performance = []
-        for run in range(len(loss)):
-            subset_performance.append(loss[run][index])
-
-        subset_performance = np.array(subset_performance)
-        subset_mean = np.mean(subset_performance, axis=0)
-        if std:
-            subset_var = stats.sem(subset_performance, axis=0)
-        else:
-            subset_var = np.var(subset_performance, axis=0)
-
-        multi_loss.append(subset_mean)
-        multi_loss_lower_bounds.append(subset_mean - subset_var)
-        multi_loss_upper_bounds.append(subset_mean + subset_var)
-
-    fig = plt.figure()
-    ax = fig.add_subplot()
-
-    for i in range(len(multi_loss)):
-        ax.plot(np.arange(epochs), multi_loss[i], label="{}% of training data".format(subset[i] * 100))
-        ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
-
-    ax.set_xlim([0, None])
-    ax.set_ylim([0, None])
-    ax.legend()
-    plt.ylabel("Test {} Loss".format(loss_name))
-    plt.xlabel("Epochs")
-    plt.show()
-
-def plot_multiple_loss_and_accuracy_with_confidence(loss, accuracy, eva_epochs, epochs, subset, std=True):
-    multi_loss = []
-    multi_loss_lower_bounds = []
-    multi_loss_upper_bounds = []
-    multi_accuracy = []
-    multi_accuracy_lower_bounds = []
-    multi_accuracy_upper_bounds = []
-
-
-    for index in range(len(loss[0])):
-        subset_performance = []
-        for run in range(len(loss)):
-            subset_performance.append(loss[run][index])
-
-        subset_performance = np.array(subset_performance)
-        subset_mean = np.mean(subset_performance, axis=0)
-        if std:
-            subset_var = stats.sem(subset_performance, axis=0)
-        else:
-            subset_var = np.var(subset_performance, axis=0)
-
-        multi_loss.append(subset_mean)
-        multi_loss_lower_bounds.append(subset_mean - subset_var)
-        multi_loss_upper_bounds.append(subset_mean + subset_var)
-
-    for index in range(len(accuracy[0])):
-        subset_performance = []
-        for run in range(len(accuracy)):
-            subset_performance.append(accuracy[run][index])
-
-        subset_performance = np.array(subset_performance)
-        subset_mean = np.mean(subset_performance, axis=0)
-        if std:
-            subset_var = stats.sem(subset_performance, axis=0)
-        else:
-            subset_var = np.var(subset_performance, axis=0)
-
-        multi_accuracy.append(subset_mean)
-        multi_accuracy_lower_bounds.append(subset_mean - subset_var)
-        multi_accuracy_upper_bounds.append(subset_mean + subset_var)
-
-    fig = plt.figure()
-    ax = fig.add_subplot()
-    ax2 = ax.twinx()
-
-    for i in range(len(multi_accuracy)):
-        accuracy_color = np.random.rand(3, )
-        loss_color = np.random.rand(3, )
-        ax.plot(eva_epochs, multi_accuracy[i], label="{}% of training data".format(subset[i] * 100), color=accuracy_color)
-        ax.fill_between(eva_epochs, multi_accuracy_lower_bounds[i], multi_accuracy_upper_bounds[i], alpha=.3, color=accuracy_color)
-        ax2.plot(np.arange(epochs), multi_loss[i], label="{}% of training data".format(subset[i] * 100), color=loss_color)
-        ax2.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3, color=loss_color)
-
-
-
-    fig.legend()
-    ax.set_xlabel("Epochs")
-    ax.set_ylabel("Accuracy")
-    ax2.set_ylabel("Loss")
-    plt.show()
-
-
-
 def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05,
-                                                     percentage = True, std=True, log=True):
+                                                     percentage = True, std=True, log=True, graph=True):
 
 
     num_percentage = len(margin_errors)
@@ -394,8 +123,9 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold threshold".format(fold)
-        plt.plot(margins, multi_mean[i], label=temp_label, color=color_array[i])
-        plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color_array[i])
+        if graph:
+            plt.plot(margins, multi_mean[i], label=temp_label, color=color_array[i])
+            plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color_array[i])
 
     if baseline is not None:
         for i in range(len(baseline_mean)):
@@ -405,24 +135,25 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
                 split_size = np.gcd(int(subset[i] * 100), 100)
                 fold = int(100 / split_size)
                 temp_label = "{}-fold lookup".format(fold)
-            plt.plot(margins, baseline_mean[i], label=temp_label, color=color_array[i], linestyle='dashed')
-            plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3, color=color_array[i])
-
-    if vertical_point is not None:
-        plt.axvline(x=vertical_point, linestyle='dashed', color="k")
-    plt.legend()
-    if log:
-        plt.xscale('log')
-    plt.xlabel("Accuracy")
-    if percentage:
-        plt.ylabel("Test Success Rate")
-    else:
-        plt.ylabel("Test Success Sum")
-    plt.show()
+            if graph:
+                plt.plot(margins, baseline_mean[i], label=temp_label, color=color_array[i], linestyle='dashed')
+                plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3, color=color_array[i])
+    if graph:
+        if vertical_point is not None:
+            plt.axvline(x=vertical_point, linestyle='dashed', color="k")
+        plt.legend()
+        if log:
+            plt.xscale('log')
+        plt.xlabel("Accuracy")
+        if percentage:
+            plt.ylabel("Test Success Rate")
+        else:
+            plt.ylabel("Test Success Sum")
+        plt.show()
 
     return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
 
-def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True, first_eval = None):
+def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True, first_eval = None, graph=True):
     step = epochs // check_every
 
     if first_eval is not None:
@@ -446,8 +177,9 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
         multi_accuracy_lower_bound.append(temp_performance_mean - temp_performance_var)
         multi_accuracy_upper_bound.append(temp_performance_mean + temp_performance_var)
 
-    fig = plt.figure()
-    ax = fig.add_subplot()
+    if graph:
+        fig = plt.figure()
+        ax = fig.add_subplot()
 
     for i in range(len(multi_accuracy)):
         if subset[i] <= 0.5:
@@ -456,20 +188,22 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold".format(fold)
-        ax.plot(eva_epochs, multi_accuracy[i], label=temp_label)
-        ax.fill_between(eva_epochs, multi_accuracy_lower_bound[i], multi_accuracy_upper_bound[i], alpha=.3)
+        if graph:
+            ax.plot(eva_epochs, multi_accuracy[i], label=temp_label)
+            ax.fill_between(eva_epochs, multi_accuracy_lower_bound[i], multi_accuracy_upper_bound[i], alpha=.3)
 
-    ax.set_xlim([0, None])
-    ax.set_ylim([0, None])
-    ax.legend()
-    plt.ylabel("Test Success Rate")
-    plt.xlabel("Epochs")
-    plt.show()
+    if graph:
+        ax.set_xlim([0, None])
+        ax.set_ylim([0, None])
+        ax.legend()
+        plt.ylabel("Test Success Rate")
+        plt.xlabel("Epochs")
+        plt.show()
 
     return multi_accuracy, multi_accuracy_lower_bound, multi_accuracy_upper_bound
 
 
-def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True):
+def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True, graph=True):
     multi_loss = []
     multi_loss_lower_bounds = []
     multi_loss_upper_bounds = []
@@ -485,8 +219,9 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
         multi_loss_lower_bounds.append(temp_loss_mean - temp_loss_var)
         multi_loss_upper_bounds.append(temp_loss_mean + temp_loss_var)
 
-    fig = plt.figure()
-    ax = fig.add_subplot()
+    if graph:
+        fig = plt.figure()
+        ax = fig.add_subplot()
 
     for i in range(len(multi_loss)):
         if subset[i] <= 0.5:
@@ -495,14 +230,16 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold".format(fold)
-        ax.plot(np.arange(epochs), multi_loss[i], label=temp_label)
-        ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
+        if graph:
+            ax.plot(np.arange(epochs), multi_loss[i], label=temp_label)
+            ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
 
-    ax.set_xlim([0, None])
-    ax.set_ylim([0, None])
-    ax.legend()
-    plt.ylabel("Test {} Loss".format(loss_name))
-    plt.xlabel("Epochs")
-    plt.show()
+    if graph:
+        ax.set_xlim([0, None])
+        ax.set_ylim([0, None])
+        ax.legend()
+        plt.ylabel("Test {} Loss".format(loss_name))
+        plt.xlabel("Epochs")
+        plt.show()
 
     return multi_loss, multi_loss_lower_bounds, multi_loss_upper_bounds
