@@ -206,6 +206,7 @@ def generate_baseline_performance(X_train, X_test, sign):
                 break
             temp_err = (np.abs(temp_X_train[cmp_data_index] - temp_X_test[data]))
             temp_diff = np.divide(temp_err, temp_X_test[data], where=temp_X_test[data] != 0)
+
             temp_max_diff = np.max(temp_diff)
             if minimum_err is None or temp_max_diff < minimum_err:
                 minimum_index = cmp_data_index
