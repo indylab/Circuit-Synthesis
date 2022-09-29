@@ -87,6 +87,7 @@ def get_margin_error(y_hat, y, sign=None):
     greater = np.array((temp_y_hat <= temp_y), dtype=int)
 
     a_err = y_hat - y
+
     err = np.divide(a_err, y, where=y != 0)
 
     err = err * greater
