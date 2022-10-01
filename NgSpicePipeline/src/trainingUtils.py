@@ -131,7 +131,22 @@ def save_output_data(result_files, circuit_name):
         np.save(save_path, v)
 
 
+def Lourenco_method(param, perform, sign, n=0.15, K = 40):
 
+    new_param = []
+    new_perform = []
 
+    for index in range(len(param)):
+        new_param.append(param[index])
+        new_perform.append(perform[index])
+        for k in range(K):
+            average_perform = np.average(perform, axis=0)
+            random_sample = np.random.rand(average_perform.shape)
+            average_perform = average_perform * sign
+
+            new_param.append(param[index])
+            new_perform.append(perform[index] - (n * random_sample) / average_perform)
+
+    return np.array(new_param), np.array(new_perform)
 
 

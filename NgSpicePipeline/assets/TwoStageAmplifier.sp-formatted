@@ -42,15 +42,15 @@ C0 out1 0 5p
 
 let w_start = 25u
 let w_stop = 30u
-let delta_w = 0.5u
+let delta_w = 2u
 let w_test = w_start
 let w2_start = 52u
 let w2_stop = 55.5u
-let delta_w2 = 0.5u
+let delta_w2 = 2u
 let w2_test = w2_start
 let w1_start = 6u
 let w1_stop = 9u
-let delta_w1 = 0.5u
+let delta_w1 = 1.5u
 let w1_test = w1_start
 
 while w_test le w_stop
