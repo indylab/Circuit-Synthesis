@@ -38,8 +38,10 @@ def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
 
 
 def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05,
-                                                     percentage = True, std=True, log=True, graph=True, color=None, save_path = None):
+                                                     percentage = True, std=True, log=True, graph=True, color=None, save_path = None, font_size = None):
 
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
 
     num_percentage = len(margin_errors)
     if color is None:
@@ -160,7 +162,7 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
     return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
 
 def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True,
-                                                      first_eval = None, graph=True, color=None, save_path = None):
+                                                      first_eval = None, graph=True, color=None, save_path = None, font_size = None):
     if color is None:
         color_array = []
 
@@ -168,7 +170,8 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
             color_array.append(np.random.rand(3, ))
     else:
         color_array = color
-
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
 
     step = epochs // check_every
 
@@ -223,7 +226,11 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
     return multi_accuracy, multi_accuracy_lower_bound, multi_accuracy_upper_bound
 
 
-def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True, graph=True, color=None, save_path = None):
+def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True, graph=True, color=None, save_path = None, font_size = None):
+
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
+
     multi_loss = []
     multi_loss_lower_bounds = []
     multi_loss_upper_bounds = []
