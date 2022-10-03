@@ -141,7 +141,7 @@ def Lourenco_method(param, perform, sign, n=0.15, K = 40):
         new_perform.append(perform[index])
         for k in range(K):
             average_perform = np.average(perform, axis=0)
-            random_sample = np.random.rand(average_perform.shape)
+            random_sample = np.random.rand(*average_perform.shape)
             average_perform = average_perform * sign
 
             new_param.append(param[index])

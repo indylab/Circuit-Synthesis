@@ -187,7 +187,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
 
 
 def Lourenco_Baseline_comparison(simulator, rerun_training, model_template, loss, epochs,
-                        check_every, device='cpu', MARGINS=None,
+                        check_every, n, K, device='cpu', MARGINS=None,
                         selectIndex=None,
                         train_status=False, first_eval=1, random_sample=False):
     if rerun_training:
@@ -253,8 +253,8 @@ def Lourenco_Baseline_comparison(simulator, rerun_training, model_template, loss
         temp_train_perform, temp_train_param = convert_dataset_to_array(train_dataset)
         temp_test_perform, temp_test_param = convert_dataset_to_array(validation_dataset)
 
-        new_train_perform, new_train_param = Lourenco_method(temp_train_param, temp_train_perform, simulator.sign)
-        new_test_perform, new_test_param = Lourenco_method(temp_test_param, temp_test_perform, simulator.sign)
+        new_train_perform, new_train_param = Lourenco_method(temp_train_param, temp_train_perform, simulator.sign, n, K)
+        new_test_perform, new_test_param = Lourenco_method(temp_test_param, temp_test_perform, simulator.sign, n, K)
 
         new_train_dataset = CircuitSynthesisGainAndBandwidthManually(new_train_perform, new_train_param)
         new_test_dataset = CircuitSynthesisGainAndBandwidthManually(new_test_perform, new_test_param)
