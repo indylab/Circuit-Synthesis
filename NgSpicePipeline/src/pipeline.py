@@ -187,7 +187,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
 
 
 def Lourenco_Baseline_comparison(simulator, rerun_training, model_template, loss, epochs,
-                        check_every, subset, device='cpu', MARGINS=None,
+                        check_every, device='cpu', MARGINS=None,
                         selectIndex=None,
                         train_status=False, first_eval=1, random_sample=False):
     if rerun_training:
@@ -233,17 +233,12 @@ def Lourenco_Baseline_comparison(simulator, rerun_training, model_template, loss
 
     SplitDataset = random_split(Full_dataset, split_len_list)
 
-    baseline = []
     test_margins = []
     train_margins = []
     test_loss = []
     train_loss = []
     test_accuracy = []
     train_accuracy = []
-    baseline_average_err_mean = []
-    baseline_average_err_std = []
-    baseline_average_err_performance_mean = []
-    baseline_average_err_performance_std = []
     err_mean = []
     err_performance_mean = []
     err_std = []
@@ -282,3 +277,32 @@ def Lourenco_Baseline_comparison(simulator, rerun_training, model_template, loss
                                                                                               train_acc=train_status,
                                                                                               sign=simulator.sign,
                                                                                               print_every=check_every)
+
+        train_loss.append(train_losses)
+        test_loss.append(val_losses)
+        train_margins.append(train_margin)
+        test_margins.append(test_margin)
+        temp_train_accuracy_list = []
+        temp_test_accuracy_list = []
+        for i in val_accs:
+            temp_test_accuracy_list.append(i[selectIndex])
+
+        if train_status:
+            for i in train_accs:
+                temp_train_accuracy_list.append(i[selectIndex])
+
+        test_accuracy.append(temp_test_accuracy_list)
+        train_accuracy.append(temp_train_accuracy_list)
+        err_mean.append(test_margin_average)
+        err_std.append(test_margin_std)
+        err_performance_mean.append(test_margin_performance_average)
+        err_performance_std.append(test_margin_performance_std)
+
+
+    final_err_mean = np.average(err_mean)
+    final_std_mean = np.average(err_std)
+    final_performance_err_mean = np.average(err_performance_mean, axis=0)
+    final_performance_std_mean = np.average(err_performance_std, axis=0)
+
+    return test_margins, train_margins, test_loss, train_loss, test_accuracy, train_accuracy, \
+           final_err_mean, final_std_mean, final_performance_err_mean, final_performance_std_mean
