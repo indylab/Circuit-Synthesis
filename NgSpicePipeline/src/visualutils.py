@@ -38,14 +38,19 @@ def plot_parameter(X, Y, reduce_dim_x = True, reduce_dim_y = True):
 
 
 def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, subset,  baseline = None, vertical_point = 0.05,
-                                                     percentage = True, std=True, log=True, graph=True):
+                                                     percentage = True, std=True, log=True, graph=True, color=None, save_path = None, font_size = None):
 
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
 
     num_percentage = len(margin_errors)
-    color_array = []
+    if color is None:
+        color_array = []
 
-    for i in range(num_percentage):
-        color_array.append(np.random.rand(3, ))
+        for i in range(num_percentage):
+            color_array.append(np.random.rand(3, ))
+    else:
+        color_array = color
 
     multi_mean = []
     multi_lower_bound = []
@@ -123,7 +128,7 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold threshold".format(fold)
-        if graph:
+        if graph or save_path is not None:
             plt.plot(margins, multi_mean[i], label=temp_label, color=color_array[i])
             plt.fill_between(margins, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color_array[i])
 
@@ -135,10 +140,10 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
                 split_size = np.gcd(int(subset[i] * 100), 100)
                 fold = int(100 / split_size)
                 temp_label = "{}-fold lookup".format(fold)
-            if graph:
+            if graph or save_path is not None:
                 plt.plot(margins, baseline_mean[i], label=temp_label, color=color_array[i], linestyle='dashed')
                 plt.fill_between(margins, baseline_lower_bound[i], baseline_upper_bound[i], alpha=.3, color=color_array[i])
-    if graph:
+    if graph or save_path is not None:
         if vertical_point is not None:
             plt.axvline(x=vertical_point, linestyle='dashed', color="k")
         plt.legend()
@@ -149,11 +154,25 @@ def graph_multiple_margin_with_confidence_cross_fold(margin_errors, margins, sub
             plt.ylabel("Test Success Rate")
         else:
             plt.ylabel("Test Success Sum")
-        plt.show()
+        if save_path is not None:
+            plt.savefig(save_path, dpi=250)
+        if graph:
+            plt.show()
 
     return multi_mean, multi_upper_bound, multi_lower_bound, baseline_mean, baseline_upper_bound, baseline_lower_bound
 
-def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True, first_eval = None, graph=True):
+def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_every, subset, std=True,
+                                                      first_eval = None, graph=True, color=None, save_path = None, font_size = None):
+    if color is None:
+        color_array = []
+
+        for i in range(len(accuracy)):
+            color_array.append(np.random.rand(3, ))
+    else:
+        color_array = color
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
+
     step = epochs // check_every
 
     if first_eval is not None:
@@ -177,7 +196,7 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
         multi_accuracy_lower_bound.append(temp_performance_mean - temp_performance_var)
         multi_accuracy_upper_bound.append(temp_performance_mean + temp_performance_var)
 
-    if graph:
+    if graph or save_path is not None:
         fig = plt.figure()
         ax = fig.add_subplot()
 
@@ -188,25 +207,42 @@ def plot_multiple_accuracy_with_confidence_cross_fold(accuracy, epochs, check_ev
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold".format(fold)
-        if graph:
-            ax.plot(eva_epochs, multi_accuracy[i], label=temp_label)
-            ax.fill_between(eva_epochs, multi_accuracy_lower_bound[i], multi_accuracy_upper_bound[i], alpha=.3)
+        if graph or save_path is not None:
+            ax.plot(eva_epochs, multi_accuracy[i], label=temp_label, color=color_array[i])
+            ax.fill_between(eva_epochs, multi_accuracy_lower_bound[i],
+                            multi_accuracy_upper_bound[i], alpha=.3, color=color_array[i])
 
-    if graph:
+    if graph or save_path is not None:
         ax.set_xlim([0, None])
         ax.set_ylim([0, None])
         ax.legend()
         plt.ylabel("Test Success Rate")
         plt.xlabel("Epochs")
-        plt.show()
+        if save_path is not None:
+            plt.savefig(save_path, dpi=250)
+        if graph:
+            plt.show()
 
     return multi_accuracy, multi_accuracy_lower_bound, multi_accuracy_upper_bound
 
 
-def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True, graph=True):
+def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name, std=True, graph=True, color=None, save_path = None, font_size = None):
+
+    if font_size is not None and (graph or save_path is not None):
+        plt.rcParams.update({'font.size': font_size})
+
     multi_loss = []
     multi_loss_lower_bounds = []
     multi_loss_upper_bounds = []
+
+    if color is None:
+        color_array = []
+
+        for i in range(len(loss)):
+            color_array.append(np.random.rand(3, ))
+    else:
+        color_array = color
+
 
     for percentage_loss in loss:
         temp_loss_mean = np.average(percentage_loss, axis=0)
@@ -219,7 +255,7 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
         multi_loss_lower_bounds.append(temp_loss_mean - temp_loss_var)
         multi_loss_upper_bounds.append(temp_loss_mean + temp_loss_var)
 
-    if graph:
+    if graph or save_path is not None:
         fig = plt.figure()
         ax = fig.add_subplot()
 
@@ -230,16 +266,21 @@ def plot_multiple_loss_with_confidence_cross_fold(loss, epochs, subset,loss_name
             split_size = np.gcd(int(subset[i] * 100), 100)
             fold = int(100 / split_size)
             temp_label = "{}-fold".format(fold)
-        if graph:
-            ax.plot(np.arange(epochs), multi_loss[i], label=temp_label)
-            ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3)
+        if graph or save_path is not None:
+            ax.plot(np.arange(epochs), multi_loss[i], label=temp_label, color=color_array[i])
+            ax.fill_between(np.arange(epochs), multi_loss_lower_bounds[i], multi_loss_upper_bounds[i], alpha=.3, color=color_array[i])
 
-    if graph:
+    if graph or save_path is not None:
         ax.set_xlim([0, None])
         ax.set_ylim([0, None])
         ax.legend()
         plt.ylabel("Test {} Loss".format(loss_name))
         plt.xlabel("Epochs")
-        plt.show()
+        if save_path is not None:
+            plt.savefig(save_path, dpi=250)
+        if graph:
+            plt.show()
+
+
 
     return multi_loss, multi_loss_lower_bounds, multi_loss_upper_bounds

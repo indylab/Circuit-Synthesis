@@ -15,15 +15,15 @@ mn1 out net2 net1 0 NMOS W=3u L=45n
 
 let w_start = 4u
 let w_stop = 7.5u
-let delta_w = 0.25u
+let delta_w = 1u
 let w_test = w_start
 let r_start = 200
 let r_stop = 500
-let delta_r = 18.75
+let delta_r = 200
 let w1_test = r1_start
 let w1_start = 7u
 let w1_stop = 10u
-let delta_w1 = 0.2u
+let delta_w1 = 1u
 let w1_test = w1_start
 
 while w_test le w_stop

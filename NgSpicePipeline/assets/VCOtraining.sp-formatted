@@ -24,15 +24,15 @@ mp5 ouputp vctrl ouputp ouputp PMOS w=15u l=65n
 
 let w_start = 4u
 let w_stop = 5.4u
-let delta_w = 0.1u
+let delta_w = 0.7u
 let w_test = w_start
 let w2_start = 15u
 let w2_stop = 17.8u
-let delta_w2 = 0.2u
+let delta_w2 = 1u
 let w2_test = w2_start
 let w1_start = 2u
 let w1_stop = 10u
-let delta_w1 = 0.5u
+let delta_w1 = 5u
 let w1_test = w1_start
 
 while w_test le w_stop
