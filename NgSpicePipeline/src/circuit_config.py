@@ -3,8 +3,8 @@ from Simulator import *
 def nmos_circuit(arguments_nmos = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
 
-    train_netlist_nmos = "../assets/template/nmos-training.sp"
-    test_netlist_nmos = "../assets/template/nmos-testing-pro.sp"
+    train_netlist_nmos = "../assets/template/nmos/nmos-training.sp"
+    test_netlist_nmos = "../assets/template/nmos/nmos-testing-pro.sp"
     param_list_nmos = ["nmos-r", "nmos-w"]
     perform_list_nmos = ["nmos-bw", "nmos-pw", "nmos-a0"]
     if order is None:
@@ -29,8 +29,8 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
 
 def cascode_circuit(arguments_cascode = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_cascade = "../assets/template/nmos-training-cascode.sp"
-    test_netlist_cascade = "../assets/template/nmos-testing-cascode.sp"
+    train_netlist_cascade = "../assets/template/cascode/nmos-training-cascode.sp"
+    test_netlist_cascade = "../assets/template/cascode/nmos-testing-cascode.sp"
     param_list_cascade = ["cascode-r", "cascode-w0", "cascode-w1"]
     perform_list_cascade = ["cascode-bw", "cascode-pw", "cascode-a0"]
     if order is None:
@@ -57,8 +57,8 @@ def cascode_circuit(arguments_cascode = None, order=None, sign=None):
 
 def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_two_stage = "../assets/template/TwoStageAmplifier.sp"
-    test_netlist_two_stage = "../assets/template/TwoStageAmplifier-Test.sp"
+    train_netlist_two_stage = "../assets/template/two-stage/TwoStageAmplifier.sp"
+    test_netlist_two_stage = "../assets/template/two-stage/TwoStageAmplifier-Test.sp"
     param_list_two_stage = ["ts-w0", "ts-w1", "ts-w2"]
     perform_list_two_stage = ["ts-bw", "ts-pw", "ts-a0"]
     if order is None:
@@ -89,8 +89,8 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
 
 def LNA_circuit(arguments_lna=None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_lna = "../assets/template/LNA.sp"
-    test_netlist_lna = "../assets/template/LNA_test.sp"
+    train_netlist_lna = "../assets/template/LNA/LNA.sp"
+    test_netlist_lna = "../assets/template/LNA/LNA_test.sp"
     param_list_lna = ["lna-ls", "lna-ld", "lna-lg", "lna-w"]
     perform_list_lna = ["lna-Gp", "lna-s11", "lna-nf"]
 
@@ -124,8 +124,8 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
 
 def VCO_circuit(arguments_vco=None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_vco = "../assets/template/VCOtraining.sp"
-    test_netlist_vco = "../assets/template/VCO.sp"
+    train_netlist_vco = "../assets/template/vco/VCOtraining.sp"
+    test_netlist_vco = "../assets/template/vco/VCO.sp"
     param_list_vco = ["vco-w", "vco-w1", "vco-w2"]
     perform_list_vco = ["vco-power", "vco-pnoise", "vco-tuningrange"]
 
