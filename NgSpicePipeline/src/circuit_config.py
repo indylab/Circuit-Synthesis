@@ -15,13 +15,13 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
 
         arguments_nmos = {
             "model_path": "../assets/model/45nm_CS.pm",
-            "w_start": "2.88u",
-            "w_stop": "6.63u",
-            "w_change": "0.2u",
-            "r_start": 620,
-            "r_stop": 1450,
-            "r_change": 5,
-            "out": "../out/nmos-"
+            "nmos-w_start": "2.88u",
+            "nmos-w_stop": "6.63u",
+            "nmos-w_change": "0.2u",
+            "nmos-r_start": 620,
+            "nmos-r_stop": 1450,
+            "nmos-r_change": 5,
+            "out": "../out/"
         }
     return Simulator(ngspice_exec, train_netlist_nmos, test_netlist_nmos, param_list_nmos, perform_list_nmos,
                                arguments_nmos, order, sign)
@@ -40,16 +40,16 @@ def cascode_circuit(arguments_cascode = None, order=None, sign=None):
     if arguments_cascode is None:
         arguments_cascode = {
             "model_path": "../assets/model/45nm_CS.pm",
-            "w0_start": "4u",
-            "w0_stop": "7.5u",
-            "w0_change": "0.25u",
-            "w1_start": "7u",
-            "w1_stop": "10u",
-            "w1_change": "0.2u",
-            "r_start": 200,
-            "r_stop": 500,
-            "r_change": 18.75,
-            "out": "../out/cascode-"
+            "cascode-w0_start": "4u",
+            "cascode-w0_stop": "7.5u",
+            "cascode-w0_change": "0.25u",
+            "cascode-w1_start": "7u",
+            "cascode-w1_stop": "10u",
+            "cascode-w1_change": "0.2u",
+            "cascode-r_start": 200,
+            "cascode-r_stop": 500,
+            "cascode-r_change": 18.75,
+            "out": "../out/"
         }
     return Simulator(ngspice_exec, train_netlist_cascade, test_netlist_cascade, param_list_cascade,
                                   perform_list_cascade,
@@ -69,16 +69,16 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
     if arguments_two_stage is None:
         arguments_two_stage = {
             "model_path": "../assets/model/45nm_CS.pm",
-            "w0_start": "25u",
-            "w0_stop": "30u",
-            "w0_change": "0.5u",
-            "w2_start": "52u",
-            "w2_stop": "55.5u",
-            "w2_change": "0.5u",
-            "w1_start": "6u",
-            "w1_stop": "9u",
-            "w1_change": "0.5u",
-            "out": "../out/ts-"
+            "ts-w0_start": "25u",
+            "ts-w0_stop": "30u",
+            "ts-w0_change": "0.5u",
+            "ts-w2_start": "52u",
+            "ts-w2_stop": "55.5u",
+            "ts-w2_change": "0.5u",
+            "ts-w1_start": "6u",
+            "ts-w1_stop": "9u",
+            "ts-w1_change": "0.5u",
+            "out": "../out/"
         }
     simulator_two_stage = Simulator(ngspice_exec, train_netlist_two_stage, test_netlist_two_stage, param_list_two_stage,
                                     perform_list_two_stage,
@@ -102,19 +102,19 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
     if arguments_lna is None:
         arguments_lna = {
             "model_path": "../assets/model/45nm_CS.pm",
-            "ls_start": "58.3p",
-            "ls_stop": "60.3p",
-            "ls_change": "0.25p",
-            "ld_start": "4.4n",
-            "ld_stop": "6n",
-            "ld_change": "0.2n",
-            "lg_start": "14.8n",
-            "lg_stop": "16.4n",
-            "lg_change": "0.2n",
-            "w_start": "51u",
-            "w_stop": "52.8u",
-            "w_change": "0.3u",
-            "out": "../out/lna-"
+            "lna-ls_start": "58.3p",
+            "lna-ls_stop": "60.3p",
+            "lna-ls_change": "0.25p",
+            "lna-ld_start": "4.4n",
+            "lna-ld_stop": "6n",
+            "lna-ld_change": "0.2n",
+            "lna-lg_start": "14.8n",
+            "lna-lg_stop": "16.4n",
+            "lna-lg_change": "0.2n",
+            "lna-w_start": "51u",
+            "lna-w_stop": "52.8u",
+            "lna-w_change": "0.3u",
+            "out": "../out/"
         }
     simulator_lna = Simulator(ngspice_exec, train_netlist_lna, test_netlist_lna, param_list_lna, perform_list_lna,
                               arguments_lna,order,sign)
@@ -137,16 +137,16 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
     if arguments_vco is None:
         arguments_vco = {
             "model_path": "../assets/model/45nm_CS.pm",
-            "w_start": "4u",
-            "w_stop": "5.4u",
-            "w_change": "0.1u",
-            "w1_start": "2u",
-            "w1_stop": "10u",
-            "w1_change": "0.5u",
-            "w2_start": "15u",
-            "w2_stop": "17.8u",
-            "w2_change": "0.2u",
-            "out": "../out/vco-"
+            "vco-w_start": "4u",
+            "vco-w_stop": "5.4u",
+            "vco-w_change": "0.1u",
+            "vco-w1_start": "2u",
+            "vco-w1_stop": "10u",
+            "vco-w1_change": "0.5u",
+            "vco-w2_start": "15u",
+            "vco-w2_stop": "17.8u",
+            "vco-w2_change": "0.2u",
+            "out": "../out/"
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)

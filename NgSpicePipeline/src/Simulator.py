@@ -80,7 +80,7 @@ class Simulator:
             self._delete_training_files()
             self._delete_testing_files()
 
-        updated_netlist_filename = "../tmp_out/" + self.test_netlist.split("/")[-1] + "-formatted"
+        updated_netlist_filename = "../assets/tmp_out/" + self.test_netlist.split("/")[-1] + "-formatted"
 
         argumentMap = self.arguments
         all_x, all_y = [], []
@@ -122,7 +122,7 @@ class Simulator:
             self._delete_training_files()
             self._delete_testing_files()
 
-        formatted_netlist = "../tmp_out/" + self.train_netlist.split("/")[-1] + "-formatted"
+        formatted_netlist = "../assets/tmp_out/" + self.train_netlist.split("/")[-1] + "-formatted"
 
         self._updateFile(self.train_netlist, formatted_netlist, self.arguments)
         if self.save_error_log:
