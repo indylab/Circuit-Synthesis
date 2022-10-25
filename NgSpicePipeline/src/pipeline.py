@@ -8,7 +8,7 @@ from torch.utils.data import random_split, ConcatDataset
 
 
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
+                                check_every, subset, duplication, device='cpu', generate_new_dataset=True, MARGINS=None,
                                 selectIndex=None,
                                 train_status=False, first_eval=1, random_sample=False, num_sample=None):
     if rerun_training:
@@ -47,8 +47,9 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         print("Leftover Param size")
         print(param.shape)
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
-                                                                  order=simulator.order, sign=simulator.sign)
+                                                                  order=simulator.order, sign=simulator.sign, duplication=duplication)
         print(np.unique(param, axis=0).shape)
+        raise ValueError
 
     for i in subset:
         if i == 1 or i > 1:
