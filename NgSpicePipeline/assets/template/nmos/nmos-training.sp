@@ -11,13 +11,13 @@ mn0 out net2 0 0 NMOS W=5u L=45n
 
 .control
 
-let w_start = {w_start}
-let w_stop = {w_stop}
-let delta_w = {w_change}
+let w_start = {nmos-w_start}
+let w_stop = {nmos-w_stop}
+let delta_w = {nmos-w_change}
 let w_test = w_start
-let r_start = {r_start}
-let r_stop = {r_stop}
-let delta_r = {r_change}
+let r_start = {nmos-r_start}
+let r_stop = {nmos-r_stop}
+let delta_r = {nmos-r_change}
 let r_test = r_start
 
 while w_test le w_stop
@@ -34,11 +34,11 @@ while w_test le w_stop
 		let cdb = abs(@mn0[cdb])
 		let cp = (1+a0)*cgd+cdb
 		let bw = 1/(2*pi*r_test*cp)
-		wrdata {out}w.csv w_test
-		wrdata {out}r.csv r_test
-		wrdata {out}bw.csv bw
-		wrdata {out}pw.csv pw
-		wrdata {out}a0.csv a0
+		wrdata {out}/nmos-w.csv w_test
+		wrdata {out}/nmos-r.csv r_test
+		wrdata {out}/nmos-bw.csv bw
+		wrdata {out}/nmos-pw.csv pw
+		wrdata {out}/nmos-a0.csv a0
 		set appendwrite
 		let r_test = r_test + delta_r	
 	end

@@ -1,5 +1,5 @@
 circuit: LNA
-.include ../assets/45nm_CS.pm
+.include {model_path}
 
 .option TEMP=27C
 R2 vdd net7 700
@@ -18,10 +18,10 @@ V1 net9 0 dc 0 sin(0 100m 2.4G) portnum 1 z0 50
 V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 
 .control
-set ls_array = ( {ls_array} )
-set ld_array = ( {ld_array} )
-set lg_array = ( {lg_array} )
-set w_array = ( {w_array} )
+set ls_array = ( {lna-ls_array} )
+set ld_array = ( {lna-ld_array} )
+set lg_array = ( {lna-lg_array} )
+set w_array = ( {lna-w_array} )
 set i = {num_samples}
 let index = 1
 repeat $i
@@ -40,18 +40,18 @@ repeat $i
 
     let gmax = s21/s12
     let Gmax2 = vecmax(gmax)
-    print Gmax2 >> {out}Gp-test.csv
+    print Gmax2 >> {out}/lna-Gp-test.csv
 
 
-    print reals11 >> {out}s11-test.csv
+    print reals11 >> {out}/lna-s11-test.csv
     let nf = real(minimum(NF))
-    print nf >> {out}nf-test.csv
+    print nf >> {out}/lna-nf-test.csv
 
     print $ls_array[$&index]
-    print $ls_array[$&index] >> {out}ls-test.csv
-    print $ld_array[$&index] >> {out}ld-test.csv
-    print $lg_array[$&index] >> {out}lg-test.csv
-    print $w_array[$&index] >> {out}w-test.csv
+    print $ls_array[$&index] >> {out}/lna-ls-test.csv
+    print $ld_array[$&index] >> {out}/lna-ld-test.csv
+    print $lg_array[$&index] >> {out}/lna-lg-test.csv
+    print $w_array[$&index] >> {out}/lna-w-test.csv
 
     let index = index + 1
 end

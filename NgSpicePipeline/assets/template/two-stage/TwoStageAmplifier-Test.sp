@@ -39,9 +39,9 @@ C1 out2 0 5p
 C0 out1 0 5p
 
 .control
-set w0_array = ( {w0_array} )
-set w1_array = ( {w1_array} )
-set w2_array = ( {w2_array} )
+set w0_array = ( {ts-w0_array} )
+set w1_array = ( {ts-w1_array} )
+set w2_array = ( {ts-w2_array} )
 set i = {num_samples}
 let index = 1
 repeat $i
@@ -55,17 +55,17 @@ repeat $i
     let id1 = @mn8[id]
     let pw = (id1+id2)*3.3
     let av = v(out2)/v(net1)
-    wrdata {out}w0-test.csv $w0_array[$&index]
-    wrdata {out}w1-test.csv $w1_array[$&index]
-    wrdata {out}w2-test.csv $w2_array[$&index]
-    wrdata {out}pw-test.csv pw
-    wrdata {out}a0-test.csv av
+    wrdata {out}/ts-w0-test.csv $w0_array[$&index]
+    wrdata {out}/ts-w1-test.csv $w1_array[$&index]
+    wrdata {out}/ts-w2-test.csv $w2_array[$&index]
+    wrdata {out}/ts-pw-test.csv pw
+    wrdata {out}/ts-a0-test.csv av
 
     ac dec 1000 1G 100G
     let resp = db(v(out2)/v(net1))
     let measurement_point = vecmax (resp) - 3.0
     meas AC upper_3dB WHEN resp = measurement_point
-    print upper_3dB >> {out}bw-test.csv
+    print upper_3dB >> {out}/ts-bw-test.csv
     set appendwrite
     let index = index + 1
 

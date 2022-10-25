@@ -1,4 +1,8 @@
 from Simulator import *
+import os
+
+
+out_path = os.path.abspath("../out")
 
 def nmos_circuit(arguments_nmos = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
@@ -21,7 +25,7 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
             "nmos-r_start": 620,
             "nmos-r_stop": 1450,
             "nmos-r_change": 5,
-            "out": "../out/"
+            "out": out_path
         }
     return Simulator(ngspice_exec, train_netlist_nmos, test_netlist_nmos, param_list_nmos, perform_list_nmos,
                                arguments_nmos, order, sign)
@@ -49,7 +53,7 @@ def cascode_circuit(arguments_cascode = None, order=None, sign=None):
             "cascode-r_start": 200,
             "cascode-r_stop": 500,
             "cascode-r_change": 18.75,
-            "out": "../out/"
+            "out": out_path
         }
     return Simulator(ngspice_exec, train_netlist_cascade, test_netlist_cascade, param_list_cascade,
                                   perform_list_cascade,
@@ -78,7 +82,7 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
             "ts-w1_start": "6u",
             "ts-w1_stop": "9u",
             "ts-w1_change": "0.5u",
-            "out": "../out/"
+            "out": out_path
         }
     simulator_two_stage = Simulator(ngspice_exec, train_netlist_two_stage, test_netlist_two_stage, param_list_two_stage,
                                     perform_list_two_stage,
@@ -114,7 +118,7 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
             "lna-w_start": "51u",
             "lna-w_stop": "52.8u",
             "lna-w_change": "0.3u",
-            "out": "../out/"
+            "out": out_path
         }
     simulator_lna = Simulator(ngspice_exec, train_netlist_lna, test_netlist_lna, param_list_lna, perform_list_lna,
                               arguments_lna,order,sign)
@@ -146,7 +150,7 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
             "vco-w2_start": "15u",
             "vco-w2_stop": "17.8u",
             "vco-w2_change": "0.2u",
-            "out": "../out/"
+            "out": out_path
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)

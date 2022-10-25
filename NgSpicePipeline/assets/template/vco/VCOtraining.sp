@@ -22,17 +22,17 @@ mp5 ouputp vctrl ouputp ouputp PMOS w=15u l=65n
 
 .control
 
-let w_start = {w_start}
-let w_stop = {w_stop}
-let delta_w = {w_change}
+let w_start = {vco-w_start}
+let w_stop = {vco-w_stop}
+let delta_w = {vco-w_change}
 let w_test = w_start
-let w2_start = {w2_start}
-let w2_stop = {w2_stop}
-let delta_w2 = {w2_change}
+let w2_start = {vco-w2_start}
+let w2_stop = {vco-w2_stop}
+let delta_w2 = {vco-w2_change}
 let w2_test = w2_start
-let w1_start = {w1_start}
-let w1_stop = {w1_stop}
-let delta_w1 = {w1_change}
+let w1_start = {vco-w1_start}
+let w1_stop = {vco-w1_stop}
+let delta_w1 = {vco-w1_change}
 let w1_test = w1_start
 
 while w_test le w_stop
@@ -52,8 +52,8 @@ while w_test le w_stop
         	let Pnoise = (8*vn)/(Va*Va)
         	let dbpn = db(Pnoise)
         	let pw = ib*1.2
-        	print pw >> {out}power.csv
-        	print dbpn >> {out}pnoise.csv
+        	print pw >> {out}/vco-power.csv
+        	print dbpn >> {out}/vco-pnoise.csv
 
             tran 1ns 100ns
             meas tran tdiff1 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
@@ -63,11 +63,11 @@ while w_test le w_stop
             meas tran tdiff2 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
             let f2 = 1/tdiff2
             let ft = abs(tran1.f1-f2)
-            print ft >> {out}tuningrange.csv
+            print ft >> {out}/vco-tuningrange.csv
 
-            print w_test >> {out}w.csv
-            print w1_test >> {out}w1.csv
-            print w2_test >> {out}w2.csv
+            print w_test >> {out}/vco-w.csv
+            print w1_test >> {out}/vco-w1.csv
+            print w2_test >> {out}/vco-w2.csv
 
             let w1_test = w1_test + delta_w1
         end

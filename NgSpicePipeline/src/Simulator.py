@@ -91,8 +91,10 @@ class Simulator:
             if argumentMap["num_samples"] == 0:
                 continue
             for param_index, p in enumerate(self.parameter_list):
+
                 argumentMap[f"{p}_array"] = " ".join(
                     list(parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, param_index].astype(str)))
+
             self._updateFile(self.test_netlist, updated_netlist_filename, argumentMap)
             if self.save_error_log:
                 args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",

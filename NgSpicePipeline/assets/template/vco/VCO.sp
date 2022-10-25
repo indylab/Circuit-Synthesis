@@ -21,9 +21,9 @@ mp4 ouputn vctrl ouputn ouputn PMOS w=15u l=65n
 mp5 ouputp vctrl ouputp ouputp PMOS w=15u l=65n
 
 .control
-set w_array = ( {w_array} )
-set w1_array = ( {w1_array} )
-set w2_array = ( {w2_array} )
+set w_array = ( {vco-w_array} )
+set w1_array = ( {vco-w1_array} )
+set w2_array = ( {vco-w2_array} )
 
 set i = {num_samples}
 let index = 1
@@ -43,8 +43,8 @@ repeat $i
     let Pnoise = (8*vn)/(Va*Va)
     let dbpn = db(Pnoise)
     let pw = ib*1.2
-    print pw >> {out}power-test.csv
-    print dbpn >> {out}pnoise-test.csv
+    print pw >> {out}/vco-power-test.csv
+    print dbpn >> {out}/vco-pnoise-test.csv
 
     tran 1ns 100ns
     meas tran tdiff1 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
@@ -54,11 +54,11 @@ repeat $i
     meas tran tdiff2 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
     let f2 = 1/tdiff2
     let ft = abs(tran1.f1-f2)
-    print ft >> {out}tuningrange-test.csv
+    print ft >> {out}/vco-tuningrange-test.csv
 
-    print $w_array[$&index] >> {out}w-test.csv
-    print $w1_array[$&index] >> {out}w1-test.csv
-    print $w2_array[$&index] >> {out}w2-test.csv
+    print $w_array[$&index] >> {out}/vco-w-test.csv
+    print $w1_array[$&index] >> {out}/vco-w1-test.csv
+    print $w2_array[$&index] >> {out}/vco-w2-test.csv
 
 end
 .endc
