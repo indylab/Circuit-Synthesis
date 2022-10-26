@@ -22,7 +22,7 @@ class Simulator:
         self.test_param_filenames = [str(x) + "-test.csv" for x in parameter_list]
         self.test_perform_filenames = [str(x) + "-test.csv" for x in performance_list]
 
-        self.delete_existing_data = False
+
         # validate arguments
         for p in parameter_list:
             assert (str(p) + "_start" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
@@ -33,6 +33,10 @@ class Simulator:
         self.save_error_log = False
         self.order = order
         self.sign = sign
+
+    def delete_history_file(self):
+        self._delete_training_files()
+        self._delete_testing_files()
 
     def _updateFile(self, trainingFilePath, outputFilePath, argumentMap):
         with open(trainingFilePath, 'r') as read_file:
@@ -76,9 +80,7 @@ class Simulator:
         num_params_to_sim = parameters.shape[0]
         MAX_SIM_SIZE = 50
 
-        if self.delete_existing_data:
-            self._delete_training_files()
-            self._delete_testing_files()
+        self._delete_testing_files()
 
         updated_netlist_filename = "../assets/tmp_out/" + self.test_netlist.split("/")[-1] + "-formatted"
 
@@ -120,9 +122,8 @@ class Simulator:
         return [final_x, final_y]
 
     def run_training(self):
-        if self.delete_existing_data:
-            self._delete_training_files()
-            self._delete_testing_files()
+
+        self._delete_testing_files()
 
         formatted_netlist = "../assets/tmp_out/" + self.train_netlist.split("/")[-1] + "-formatted"
 
@@ -139,9 +140,8 @@ class Simulator:
         return x, y
 
     def run_random_training(self, num_sample):
-        if self.delete_existing_data:
-            self._delete_training_files()
-            self._delete_testing_files()
+
+        self._delete_testing_files()
         temp_parameter_array = []
         for i in self.parameter_list:
             start_value = i + '_start'

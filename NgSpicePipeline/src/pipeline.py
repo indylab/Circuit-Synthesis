@@ -12,6 +12,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
                                 selectIndex=None,
                                 train_status=False, first_eval=1, random_sample=False, num_sample=None):
     if rerun_training:
+        simulator.delete_history_file()
         if random_sample:
             x, y = simulator.run_random_training(num_sample)
         else:
