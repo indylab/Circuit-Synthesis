@@ -21,6 +21,7 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     graph = train_config['graph'] if 'graph' in train_config else False
     save_data = train_config['save_data'] if 'save_data' in train_config else True
     duplication = train_config['duplication'] if 'duplication' in train_config else 0
+    subfeasible = train_config['subfeasible'] if 'subfeasible' in train_config else False
 
 
     assert len(color) == len(subset)
@@ -29,7 +30,7 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     _, mean_err, mean_perform_err, mean_baseline_err, mean_baseline_performance_err, mean_err_std, \
     mean_performance_err_std, mean_baseline_err_std, \
     mean_baseline_performance_err_std = CrossFoldValidationPipeline(pipeline_simulator, rerun_training, model, loss,
-                                                                    epochs, check_every, subset, duplication,
+                                                                    epochs, check_every, subset, duplication, subfeasible,
                                                                     generate_new_dataset=generate_new_dataset, device=device,
                                                                     first_eval=first_eval)
 
