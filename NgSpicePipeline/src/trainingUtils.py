@@ -1,5 +1,5 @@
 import numpy as np
-
+import random
 
 def generate_duplicate_data(train, test, thresholds):
     return_train, return_test = train, test
@@ -30,7 +30,7 @@ def baseline_testing(X_train, X_test, thresholds=None):
     return [i / total for i in correct]
 
 
-def generate_new_dataset_maximum_performance(performance, parameter, order, sign, duplication, greater=False):
+def generate_new_dataset_maximum_performance(performance, parameter, order, sign, duplication, subfeasible, greater=False):
     # parameter x -> performance y using simulator
     # Go through original Dataset D where D consists of pairs of (x,y)
     # For each pair of (x,y)
@@ -57,19 +57,43 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
     new_performance = []
     new_parameter = []
 
-    for i in range(len(performance)):
+    if subfeasible:
+        eva_performance = []
+        eva_parameter = []
 
-        temp_performance = performance[i, :]
+        for i in range(len(performance)):
+
+            temp_performance = performance[i]
+
+            eva_performance.append(temp_performance)
+            eva_parameter.append(parameter[i])
+
+            random_scale_down = random.uniform(0, 0.2)
+            new_temp_performance = [(1 - random_scale_down) * temp_performance[j] if sign[j] == 1 else
+                                    (1 + random_scale_down) * temp_performance[j] for j in range(len(temp_performance))]
+
+            eva_performance.append(new_temp_performance)
+            eva_parameter.append(parameter[i])
+        eva_performance = np.array(eva_performance)
+        eva_parameter = np.array(eva_parameter)
+
+    else:
+        eva_performance = performance
+        eva_parameter = parameter
+
+    for i in range(len(eva_performance)):
+
+        temp_performance = eva_performance[i, :]
         temp_new_training_list = []
         best_temp_sample = None
 
-        for x in range(len(performance)):
+        for x in range(len(eva_performance)):
             order_temp_performance = (temp_performance * sign)[np.array(order)]
-            order_compare_performance = (performance[x, :] * sign)[np.array(order)]
+            order_compare_performance = (eva_performance[x, :] * sign)[np.array(order)]
 
             if (greater and np.all(order_compare_performance > order_temp_performance)) or \
                     (not greater and np.all(order_compare_performance >= order_temp_performance)):
-                new_temp_training_val = list(order_compare_performance) + list(parameter[x, :])
+                new_temp_training_val = list(order_compare_performance) + list(eva_parameter[x, :])
                 temp_new_training_list.append(new_temp_training_val)
                 if best_temp_sample is None or cmp_helper(order_compare_performance, best_temp_sample):
                     best_temp_sample = new_temp_training_val
