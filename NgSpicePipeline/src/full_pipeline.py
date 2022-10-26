@@ -1,3 +1,4 @@
+from Training import models
 from pipeline import *
 import torch
 from visualutils import *
@@ -7,6 +8,7 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     pipeline_simulator = simulator
 
     rerun_training = train_config['rerun_training'] if 'rerun_training' in train_config else True
+    generate_new_dataset = train_config['generate_new_dataset'] if 'generate_new_dataset' in train_config else True
     font_size = train_config['font_size'] if 'font_size' in train_config else 12
     model = train_config['model'] if 'model' in train_config else models.Model500GELU
     loss = train_config['loss'] if 'loss' in train_config else torch.nn.L1Loss()
@@ -18,6 +20,7 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     first_eval = train_config['first_eval'] if 'first_eval' in train_config else 1
     graph = train_config['graph'] if 'graph' in train_config else False
     save_data = train_config['save_data'] if 'save_data' in train_config else True
+    duplication = train_config['duplication'] if 'duplication' in train_config else 0
 
 
     assert len(color) == len(subset)
@@ -26,8 +29,8 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     _, mean_err, mean_perform_err, mean_baseline_err, mean_baseline_performance_err, mean_err_std, \
     mean_performance_err_std, mean_baseline_err_std, \
     mean_baseline_performance_err_std = CrossFoldValidationPipeline(pipeline_simulator, rerun_training, model, loss,
-                                                                    epochs, check_every, subset,
-                                                                    generate_new_dataset=False, device=device,
+                                                                    epochs, check_every, subset, duplication,
+                                                                    generate_new_dataset=generate_new_dataset, device=device,
                                                                     first_eval=first_eval)
 
     margins = [0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5]

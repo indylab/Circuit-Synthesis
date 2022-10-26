@@ -1,6 +1,5 @@
 import numpy as np
-from torch.utils.data import ConcatDataset
-import pandas as pd
+
 
 def generate_duplicate_data(train, test, thresholds):
     return_train, return_test = train, test
@@ -31,7 +30,7 @@ def baseline_testing(X_train, X_test, thresholds=None):
     return [i / total for i in correct]
 
 
-def generate_new_dataset_maximum_performance(performance, parameter, order, sign, greater=False):
+def generate_new_dataset_maximum_performance(performance, parameter, order, sign, duplication, greater=False):
     # parameter x -> performance y using simulator
     # Go through original Dataset D where D consists of pairs of (x,y)
     # For each pair of (x,y)
@@ -41,39 +40,61 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
     num_performance = performance.shape[1]
 
-    def cmp_helper(val1, val2, order):
+    def cmp_helper(val1, val2):
+        # order will be grabbed from parent function argument
+
+
+        cmp_val1 = val1[:num_performance]
+        cmp_val2 = val2[:num_performance]
+
 
         for x in order:
-            if val1[x] != val2[x]:
-                return val1[x] > val2[x]
+            if cmp_val1[x] != cmp_val2[x]:
+                return cmp_val1[x] > cmp_val2[x]
+
         return True
 
     new_performance = []
     new_parameter = []
 
     for i in range(len(performance)):
-        temp_performance = performance[i, :]
 
-        new_temp_parameter = None
+        temp_performance = performance[i, :]
+        temp_new_training_list = []
+        best_temp_sample = None
+
         for x in range(len(performance)):
             order_temp_performance = (temp_performance * sign)[np.array(order)]
             order_compare_performance = (performance[x, :] * sign)[np.array(order)]
 
-            if greater:
-                if np.all(order_compare_performance > order_temp_performance):
-                    if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
-                        new_temp_parameter = list(order_compare_performance) + list(parameter[x, :])
-            else:
-                if np.all(order_compare_performance >= order_temp_performance):
-                    if new_temp_parameter is None or cmp_helper(order_compare_performance, new_temp_parameter, order):
-                        new_temp_parameter = list(order_compare_performance) + list(parameter[x, :])
+            if (greater and np.all(order_compare_performance > order_temp_performance)) or \
+                    (not greater and np.all(order_compare_performance >= order_temp_performance)):
+                new_temp_training_val = list(order_compare_performance) + list(parameter[x, :])
+                temp_new_training_list.append(new_temp_training_val)
+                if best_temp_sample is None or cmp_helper(order_compare_performance, best_temp_sample):
+                    best_temp_sample = new_temp_training_val
 
-        if new_temp_parameter is not None:
-            new_performance.append(temp_performance)
-            new_parameter.append(new_temp_parameter[num_performance:])
+
+
+        if best_temp_sample is not None:
+            if duplication == 0:
+                new_performance.append(temp_performance)
+                new_parameter.append(best_temp_sample[num_performance:])
+            else:
+                sorted_new_sample = np.array(sort_nested_list_helper(temp_new_training_list, order)[:duplication+1])
+
+
+                new_performance = new_performance + [temp_performance for _ in range(len(sorted_new_sample))]
+                new_parameter = new_parameter + list(sorted_new_sample[:,num_performance:])
 
 
     return np.array(new_performance), np.array(new_parameter)
+
+def sort_nested_list_helper(val_list, order):
+
+    for i in range(len(order)-1, -1, -1):
+        val_list = sorted(val_list, key = lambda x: x[order[i]], reverse=True)
+    return val_list
 
 def get_margin_error(y_hat, y, sign=None):
 

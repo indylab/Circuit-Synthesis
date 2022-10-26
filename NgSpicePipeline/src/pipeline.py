@@ -4,11 +4,11 @@ from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from trainingUtils import *
 import os
-from torch.utils.data import random_split, ConcatDataset
+from torch.utils.data import random_split, ConcatDataset, DataLoader
 
 
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
+                                check_every, subset, duplication, device='cpu', generate_new_dataset=True, MARGINS=None,
                                 selectIndex=None,
                                 train_status=False, first_eval=1, random_sample=False, num_sample=None):
     if rerun_training:
@@ -44,11 +44,18 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         selectIndex = 1
 
     if generate_new_dataset:
+
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
+                                                                  order=simulator.order, sign=simulator.sign, duplication=duplication)
         print("Leftover Param size")
         print(param.shape)
-        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
-                                                                  order=simulator.order, sign=simulator.sign)
+        print("Leftover Perform Size")
+        print(perform.shape)
+        print("Unique Param size")
         print(np.unique(param, axis=0).shape)
+        print("Unique Perform size")
+        print(np.unique(perform, axis=0).shape)
+
 
     for i in subset:
         if i == 1 or i > 1:

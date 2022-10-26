@@ -1,9 +1,5 @@
-import numpy as np
-from torch.utils.data import DataLoader
-from Training import models, dataset
 import torch
 from trainingUtils import *
-import matplotlib.pyplot as plt
 from scipy import stats
 
 def check_acc(y_hat, y, margins=None):
@@ -88,7 +84,9 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
 
     if first_eval == 0:
         norm_perform, _ = getDatafromDataloader(val_data)
+        norm_perform = np.unique(norm_perform, axis=0)
         model.eval()
+
         paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
         acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
         val_accs.append(acc_list)
@@ -143,6 +141,8 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
             print('t = %d, loss = %.4f' % (epoch + 1, avg_loss))
             print('t = %d, val loss = %.4f' % (epoch + 1, val_avg_loss))
             norm_perform, _ = getDatafromDataloader(val_data)
+            norm_perform = np.unique(norm_perform, axis=0)
+
             model.eval()
             paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
             acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
@@ -153,9 +153,10 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
 
             if train_acc:
                 norm_perform, _ = getDatafromDataloader(train_data)
+                norm_perform = np.unique(norm_perform, axis=0)
                 model.eval()
                 simulator.save_error_log = True
-                print(norm_perform, norm_perform.shape)
+
                 paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
                 acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
                 train_accs.append(acc_list)
@@ -190,18 +191,22 @@ def generate_subset_data(Train, Test, percentage):
 
 def generate_baseline_performance(X_train, X_test, sign):
 
-    temp_X_train = X_train * sign
-    temp_X_test = X_test * sign
+    unique_X_train = np.unique(X_train, axis=0)
+    unique_X_test = np.unique(X_test, axis=0)
+
+    temp_X_train = unique_X_train * sign
+    temp_X_test = unique_X_test * sign
+
 
     temp_y_hat = []
 
-    for data in range(len(X_test)):
+    for data in range(len(unique_X_test)):
         minimum_err = None
         minimum_index = None
         greater = False
-        for cmp_data_index in range(len(X_train)):
+        for cmp_data_index in range(len(unique_X_train)):
             if np.all(temp_X_train[cmp_data_index] >= temp_X_test[data]):
-                temp_y_hat.append(list(X_train[cmp_data_index]))
+                temp_y_hat.append(list(unique_X_train[cmp_data_index]))
                 greater = True
                 break
             temp_err = (np.abs(temp_X_train[cmp_data_index] - temp_X_test[data]))
@@ -212,11 +217,11 @@ def generate_baseline_performance(X_train, X_test, sign):
                 minimum_index = cmp_data_index
                 minimum_err = temp_max_diff
         if not greater:
-            temp_y_hat.append(list(X_train[minimum_index]))
+            temp_y_hat.append(list(unique_X_train[minimum_index]))
 
     temp_y_hat = np.array(temp_y_hat)
 
-    return get_margin_error(temp_y_hat, X_test, sign)
+    return get_margin_error(temp_y_hat, unique_X_test, sign)
 
 
 
