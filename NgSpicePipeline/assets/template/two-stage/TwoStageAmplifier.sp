@@ -1,5 +1,5 @@
 circuit: TwoStageAmplifier
-.include ../assets/45nm_CS.pm
+.include {model_path}
 .option TEMP=27C
 
 V1 net14 0 dc 1
@@ -40,17 +40,17 @@ C0 out1 0 5p
 
 .control
 
-let w_start = 25u
-let w_stop = 30u
-let delta_w = 0.5u
+let w_start = {ts-w0_start}
+let w_stop = {ts-w0_stop}
+let delta_w = {ts-w0_change}
 let w_test = w_start
-let w2_start = 52u
-let w2_stop = 55.5u
-let delta_w2 = 0.5u
+let w2_start = {ts-w2_start}
+let w2_stop = {ts-w2_stop}
+let delta_w2 = {ts-w2_change}
 let w2_test = w2_start
-let w1_start = 6u
-let w1_stop = 9u
-let delta_w1 = 0.5u
+let w1_start = {ts-w1_start}
+let w1_stop = {ts-w1_stop}
+let delta_w1 = {ts-w1_change}
 let w1_test = w1_start
 
 while w_test le w_stop
@@ -66,17 +66,17 @@ while w_test le w_stop
 			let id1 = @mn8[id]
 			let pw = (id1+id2)*3.3
 			let av = v(out2)/v(net1)
-			wrdata ../out/w0.csv w_test
-			wrdata ../out/w1.csv w1_test
-			wrdata ../out/w2.csv w2_test
-			wrdata ../out/pw.csv pw
-			wrdata ../out/a0.csv av
+			wrdata {out}/ts-w0.csv w_test
+			wrdata {out}/ts-w1.csv w1_test
+			wrdata {out}/ts-w2.csv w2_test
+			wrdata {out}/ts-pw.csv pw
+			wrdata {out}/ts-a0.csv av
 
 			ac dec 1000 1G 100G
 			let resp = db(v(out2)/v(net1)) 
 			let measurement_point = vecmax (resp) - 3.0
 			meas AC upper_3dB WHEN resp = measurement_point 
-			print upper_3dB >> ../out/bw.csv
+			print upper_3dB >> {out}/ts-bw.csv
 			
 			set appendwrite
 			let w1_test = w1_test + delta_w1

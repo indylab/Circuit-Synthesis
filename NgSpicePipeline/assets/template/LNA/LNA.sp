@@ -19,25 +19,25 @@ V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 
 .control
 
-let ls_start = {ls_start}
-let ls_test = {ls_start}
-let ls_stop = {ls_stop}
-let delta_ls = {ls_change}
+let ls_start = {lna-ls_start}
+let ls_test = {lna-ls_start}
+let ls_stop = {lna-ls_stop}
+let delta_ls = {lna-ls_change}
 
-let ld_start = {ld_start}
-let ld_test = {ld_start}
-let ld_stop = {ld_stop}
-let delta_ld = {ld_change}
+let ld_start = {lna-ld_start}
+let ld_test = {lna-ld_start}
+let ld_stop = {lna-ld_stop}
+let delta_ld = {lna-ld_change}
 
-let lg_start = {lg_start}
-let lg_test = {lg_start}
-let lg_stop = {lg_stop}
-let delta_lg = {lg_change}
+let lg_start = {lna-lg_start}
+let lg_test = {lna-lg_start}
+let lg_stop = {lna-lg_stop}
+let delta_lg = {lna-lg_change}
 
-let w_start = {w_start}
-let w_test = {w_start}
-let w_stop = {w_stop}
-let delta_w = {w_change}
+let w_start = {lna-w_start}
+let w_test = {lna-w_start}
+let w_stop = {lna-w_stop}
+let delta_w = {lna-w_change}
 
 while ls_test le ls_stop
     alter Ls = ls_test
@@ -55,17 +55,17 @@ while ls_test le ls_stop
 
                 let gmax = s21/s12
                 let Gmax2 = vecmax(gmax)
-                print Gmax2 >> {out}Gp.csv
+                print Gmax2 >> {out}/lna-Gp.csv
 
-                print reals11 >> {out}s11.csv
+                print reals11 >> {out}/lna-s11.csv
                 let nf = real(minimum(NF))
-                print nf >> {out}nf.csv
+                print nf >> {out}/lna-nf.csv
 
 
-                print ls_test >> {out}ls.csv
-                print ld_test >> {out}ld.csv
-                print lg_test >> {out}lg.csv
-                print w_test  >> {out}w.csv
+                print ls_test >> {out}/lna-ls.csv
+                print ld_test >> {out}/lna-ld.csv
+                print lg_test >> {out}/lna-lg.csv
+                print w_test  >> {out}/lna-w.csv
                 set appendwrite
 
                 let w_test = w_test + delta_w

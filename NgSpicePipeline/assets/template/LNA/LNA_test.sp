@@ -1,7 +1,7 @@
- circuit: LNA
+circuit: LNA
 .include {model_path}
-.option TEMP=27C
 
+.option TEMP=27C
 R2 vdd net7 700
 R1 net2 net9 10k
 R0 vdd net2 800
@@ -18,11 +18,10 @@ V1 net9 0 dc 0 sin(0 100m 2.4G) portnum 1 z0 50
 V2 net6 0 dc 0 ac 0 portnum 2 z0 50
 
 .control
-set ls_array = ( {ls_array} )
-set ld_array = ( {ld_array} )
-set lg_array = ( {lg_array} )
-set r_array = ( {r_array} )
-set w_array = ( {w_array} )
+set ls_array = ( {lna-ls_array} )
+set ld_array = ( {lna-ld_array} )
+set lg_array = ( {lna-lg_array} )
+set w_array = ( {lna-w_array} )
 set i = {num_samples}
 let index = 1
 repeat $i
@@ -30,35 +29,32 @@ repeat $i
     alter Ld = $ld_array[$&index]
     alter Lg = $lg_array[$&index]
     alter @mn0[w] = $w_array[$&index]
-    op
+
     sp lin 100 1k 100G 1
     let s21 = abs(S_2_1)
     let s12 = abs(S_1_2)
-    let s22 = abs(S_2_2)
     let s11 = abs(S_1_1)
     let reals11 = real(minimum(S_1_1))
 
+
+
     let gmax = s21/s12
-    let Gmax = vecmax(gmax)
-    print Gmax >> {out}Gmax-test.csv
-
-    let gp = (s21*s21)/(1-s11*s11)
-    let Gp = vecmax(gp)
-    print Gp >> {out}Gp-test.csv
+    let Gmax2 = vecmax(gmax)
+    print Gmax2 >> {out}/lna-Gp-test.csv
 
 
-    print reals11 >> {out}s11-test.csv
+    print reals11 >> {out}/lna-s11-test.csv
     let nf = real(minimum(NF))
-    print nf >> {out}nf-test.csv
-    set appendwrite
+    print nf >> {out}/lna-nf-test.csv
 
-    print $ls_array[$&index] >> {out}ls-test.csv
-    print $ld_array[$&index] >> {out}ld-test.csv
-    print $lg_array[$&index] >> {out}lg-test.csv
-    print $r_array[$&index] >> {out}r-test.csv
-    print $w_array[$&index] >> {out}w-test.csv
+    print $ls_array[$&index]
+    print $ls_array[$&index] >> {out}/lna-ls-test.csv
+    print $ld_array[$&index] >> {out}/lna-ld-test.csv
+    print $lg_array[$&index] >> {out}/lna-lg-test.csv
+    print $w_array[$&index] >> {out}/lna-w-test.csv
 
     let index = index + 1
 end
+
 .endc
 .end

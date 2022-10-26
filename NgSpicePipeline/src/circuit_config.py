@@ -1,12 +1,16 @@
 from Simulator import *
+import os
+
+
+out_path = os.path.abspath("../out")
 
 def nmos_circuit(arguments_nmos = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
 
-    train_netlist_nmos = "../assets/nmos-training.sp"
-    test_netlist_nmos = "../assets/nmos-testing-pro.sp"
-    param_list_nmos = ["r", "w"]
-    perform_list_nmos = ["bw", "pw", "a0"]
+    train_netlist_nmos = "../assets/template/nmos/nmos-training.sp"
+    test_netlist_nmos = "../assets/template/nmos/nmos-testing-pro.sp"
+    param_list_nmos = ["nmos-r", "nmos-w"]
+    perform_list_nmos = ["nmos-bw", "nmos-pw", "nmos-a0"]
     if order is None:
         order = [0,2,1]
     if sign is None:
@@ -14,53 +18,53 @@ def nmos_circuit(arguments_nmos = None, order=None, sign=None):
     if arguments_nmos is None:
 
         arguments_nmos = {
-            "model_path": "../assets/45nm_CS.pm",
-            "w_start": "2.88u",
-            "w_stop": "6.63u",
-            "w_change": "0.2u",
-            "r_start": 620,
-            "r_stop": 1450,
-            "r_change": 5,
-            "out": "../out/"
+            "model_path": "../assets/model/45nm_CS.pm",
+            "nmos-w_start": "2.88u",
+            "nmos-w_stop": "6.63u",
+            "nmos-w_change": "0.2u",
+            "nmos-r_start": 620,
+            "nmos-r_stop": 1450,
+            "nmos-r_change": 5,
+            "out": out_path
         }
     return Simulator(ngspice_exec, train_netlist_nmos, test_netlist_nmos, param_list_nmos, perform_list_nmos,
                                arguments_nmos, order, sign)
 
 
-def cascade_circuit(arguments_cascade = None, order=None, sign=None):
+def cascode_circuit(arguments_cascode = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_cascade = "../assets/nmos-training-cascode.sp"
-    test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
-    param_list_cascade = ["r", "w0", "w1"]
-    perform_list_cascade = ["bw", "pw", "a0"]
+    train_netlist_cascade = "../assets/template/cascode/nmos-training-cascode.sp"
+    test_netlist_cascade = "../assets/template/cascode/nmos-testing-cascode.sp"
+    param_list_cascade = ["cascode-r", "cascode-w0", "cascode-w1"]
+    perform_list_cascade = ["cascode-bw", "cascode-pw", "cascode-a0"]
     if order is None:
         order = [0,2,1]
     if sign is None:
         sign = [1,-1,1]
-    if arguments_cascade is None:
-        arguments_cascade = {
-            "model_path": "../assets/45nm_CS.pm",
-            "w0_start": "4u",
-            "w0_stop": "7.5u",
-            "w0_change": "0.25u",
-            "w1_start": "7u",
-            "w1_stop": "10u",
-            "w1_change": "0.2u",
-            "r_start": 200,
-            "r_stop": 500,
-            "r_change": 18.75,
-            "out": "../out/"
+    if arguments_cascode is None:
+        arguments_cascode = {
+            "model_path": "../assets/model/45nm_CS.pm",
+            "cascode-w0_start": "4u",
+            "cascode-w0_stop": "7.5u",
+            "cascode-w0_change": "0.25u",
+            "cascode-w1_start": "7u",
+            "cascode-w1_stop": "10u",
+            "cascode-w1_change": "0.2u",
+            "cascode-r_start": 200,
+            "cascode-r_stop": 500,
+            "cascode-r_change": 18.75,
+            "out": out_path
         }
     return Simulator(ngspice_exec, train_netlist_cascade, test_netlist_cascade, param_list_cascade,
                                   perform_list_cascade,
-                                  arguments_cascade, order, sign)
+                                  arguments_cascode, order, sign)
 
 def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_two_stage = "../assets/TwoStageAmplifier.sp"
-    test_netlist_two_stage = "../assets/TwoStageAmplifier-Test.sp"
-    param_list_two_stage = ["w0", "w1", "w2"]
-    perform_list_two_stage = ["bw", "pw", "a0"]
+    train_netlist_two_stage = "../assets/template/two-stage/TwoStageAmplifier.sp"
+    test_netlist_two_stage = "../assets/template/two-stage/TwoStageAmplifier-Test.sp"
+    param_list_two_stage = ["ts-w0", "ts-w1", "ts-w2"]
+    perform_list_two_stage = ["ts-bw", "ts-pw", "ts-a0"]
     if order is None:
         order = [0,2,1]
     if sign is None:
@@ -68,31 +72,31 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
 
     if arguments_two_stage is None:
         arguments_two_stage = {
-            "model_path": "../assets/45nm_CS.pm",
-            "w0_start": "25u",
-            "w0_stop": "30u",
-            "w0_change": "0.5u",
-            "w2_start": "52u",
-            "w2_stop": "55.5u",
-            "w2_change": "0.5u",
-            "w1_start": "6u",
-            "w1_stop": "9u",
-            "w1_change": "0.5u",
-            "out": "../out/"
+            "model_path": "../assets/model/45nm_CS.pm",
+            "ts-w0_start": "25u",
+            "ts-w0_stop": "30u",
+            "ts-w0_change": "0.5u",
+            "ts-w2_start": "52u",
+            "ts-w2_stop": "55.5u",
+            "ts-w2_change": "0.5u",
+            "ts-w1_start": "6u",
+            "ts-w1_stop": "9u",
+            "ts-w1_change": "0.5u",
+            "out": out_path
         }
     simulator_two_stage = Simulator(ngspice_exec, train_netlist_two_stage, test_netlist_two_stage, param_list_two_stage,
                                     perform_list_two_stage,
                                     arguments_two_stage, order, sign)
-    simulator_two_stage.delete_existing_data = True
+    simulator_two_stage.delete_existing_data = False
     return simulator_two_stage
 
 
 def LNA_circuit(arguments_lna=None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_lna = "../assets/LNA.sp"
-    test_netlist_lna = "../assets/LNA_test.sp"
-    param_list_lna = ["ls", "ld", "lg", "w"]
-    perform_list_lna = ["Gp", "s11", "nf"]
+    train_netlist_lna = "../assets/template/LNA/LNA.sp"
+    test_netlist_lna = "../assets/template/LNA/LNA_test.sp"
+    param_list_lna = ["lna-ls", "lna-ld", "lna-lg", "lna-w"]
+    perform_list_lna = ["lna-Gp", "lna-s11", "lna-nf"]
 
     if order is None:
         order = [0, 2, 1]
@@ -101,33 +105,33 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
 
     if arguments_lna is None:
         arguments_lna = {
-            "model_path": "../assets/45nm_CS.pm",
-            "ls_start": "58.3p",
-            "ls_stop": "60.3p",
-            "ls_change": "0.25p",
-            "ld_start": "4.4n",
-            "ld_stop": "6n",
-            "ld_change": "0.2n",
-            "lg_start": "14.8n",
-            "lg_stop": "16.4n",
-            "lg_change": "0.2n",
-            "w_start": "51u",
-            "w_stop": "52.8u",
-            "w_change": "0.3u",
-            "out": "../out/"
+            "model_path": "../assets/model/45nm_CS.pm",
+            "lna-ls_start": "58.3p",
+            "lna-ls_stop": "60.3p",
+            "lna-ls_change": "0.25p",
+            "lna-ld_start": "4.4n",
+            "lna-ld_stop": "6n",
+            "lna-ld_change": "0.2n",
+            "lna-lg_start": "14.8n",
+            "lna-lg_stop": "16.4n",
+            "lna-lg_change": "0.2n",
+            "lna-w_start": "51u",
+            "lna-w_stop": "52.8u",
+            "lna-w_change": "0.3u",
+            "out": out_path
         }
     simulator_lna = Simulator(ngspice_exec, train_netlist_lna, test_netlist_lna, param_list_lna, perform_list_lna,
                               arguments_lna,order,sign)
-    simulator_lna.delete_existing_data = True
+    simulator_lna.delete_existing_data = False
 
     return simulator_lna
 
 def VCO_circuit(arguments_vco=None, order=None, sign=None):
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
-    train_netlist_vco = "../assets/VCOtraining.sp"
-    test_netlist_vco = "../assets/VCO.sp"
-    param_list_vco = ["w", "w1", "w2"]
-    perform_list_vco = ["power", "pnoise", "tuningrange"]
+    train_netlist_vco = "../assets/template/vco/VCOtraining.sp"
+    test_netlist_vco = "../assets/template/vco/VCO.sp"
+    param_list_vco = ["vco-w", "vco-w1", "vco-w2"]
+    perform_list_vco = ["vco-power", "vco-pnoise", "vco-tuningrange"]
 
     if order is None:
         order = [0, 2, 1]
@@ -136,20 +140,20 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
 
     if arguments_vco is None:
         arguments_vco = {
-            "model_path": "../assets/45nm_CS.pm",
-            "w_start": "4u",
-            "w_stop": "5.4u",
-            "w_change": "0.1u",
-            "w1_start": "2u",
-            "w1_stop": "10u",
-            "w1_change": "0.5u",
-            "w2_start": "15u",
-            "w2_stop": "17.8u",
-            "w2_change": "0.2u",
-            "out": "../out/"
+            "model_path": "../assets/model/45nm_CS.pm",
+            "vco-w_start": "4u",
+            "vco-w_stop": "5.4u",
+            "vco-w_change": "0.1u",
+            "vco-w1_start": "2u",
+            "vco-w1_stop": "10u",
+            "vco-w1_change": "0.5u",
+            "vco-w2_start": "15u",
+            "vco-w2_stop": "17.8u",
+            "vco-w2_change": "0.2u",
+            "out": out_path
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)
-    simulator_vco.delete_existing_data = True
+    simulator_vco.delete_existing_data = False
 
     return simulator_vco

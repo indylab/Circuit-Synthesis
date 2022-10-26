@@ -10,8 +10,8 @@ R0 net1 out 500
 mn0 out net2 0 0 NMOS W=5u L=45n
 
 .control
-set w_array = ( {w_array} )
-set r_array = ( {r_array} )
+set w_array = ( {nmos-w_array} )
+set r_array = ( {nmos-r_array} )
 set i = {num_samples}
 let index = 1
 repeat $i
@@ -28,11 +28,11 @@ repeat $i
     let cdb = abs(@mn0[cdb])
     let cp = (1+a0)*cgd+cdb
     let bw = 1/(2*pi*r_test*cp)
-    wrdata {out}r-test.csv $r_array[$&index]
-    wrdata {out}w-test.csv $w_array[$&index]
-    wrdata {out}bw-test.csv bw
-    wrdata {out}pw-test.csv pw
-    wrdata {out}a0-test.csv a0
+    wrdata {out}/nmos-r-test.csv $r_array[$&index]
+    wrdata {out}/nmos-w-test.csv $w_array[$&index]
+    wrdata {out}/nmos-bw-test.csv bw
+    wrdata {out}/nmos-pw-test.csv pw
+    wrdata {out}/nmos-a0-test.csv a0
     set appendwrite
     let index = index + 1
 end
