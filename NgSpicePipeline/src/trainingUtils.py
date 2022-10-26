@@ -69,7 +69,7 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
             eva_parameter.append(parameter[i])
 
             random_scale_down = random.uniform(0.8, 1)
-            new_temp_performance = [random_scale_down * i for i in temp_performance]
+            new_temp_performance = [random_scale_down * j for j in temp_performance]
 
             eva_performance.append(new_temp_performance)
             eva_parameter.append(parameter[i])
