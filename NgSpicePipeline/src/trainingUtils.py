@@ -47,8 +47,6 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
         cmp_val1 = val1[:num_performance]
         cmp_val2 = val2[:num_performance]
 
-        cmp_val1 = np.array(cmp_val1) * np.array(sign)
-        cmp_val2 = np.array(cmp_val2) * np.array(sign)
 
         for x in order:
             if cmp_val1[x] != cmp_val2[x]:
@@ -69,7 +67,8 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
             order_temp_performance = (temp_performance * sign)[np.array(order)]
             order_compare_performance = (performance[x, :] * sign)[np.array(order)]
 
-            if (greater and np.all(order_compare_performance > order_temp_performance)) or (not greater and np.all(order_compare_performance >= order_temp_performance)):
+            if (greater and np.all(order_compare_performance > order_temp_performance)) or \
+                    (not greater and np.all(order_compare_performance >= order_temp_performance)):
                 new_temp_training_val = list(order_compare_performance) + list(parameter[x, :])
                 temp_new_training_list.append(new_temp_training_val)
                 if best_temp_sample is None or cmp_helper(order_compare_performance, best_temp_sample):
