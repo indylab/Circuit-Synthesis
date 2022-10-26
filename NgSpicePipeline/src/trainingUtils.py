@@ -81,7 +81,8 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
                 new_performance.append(temp_performance)
                 new_parameter.append(best_temp_sample[num_performance:])
             else:
-                sorted_new_sample = np.array(sort_nested_list_helper(temp_new_training_list, order, sign)[:duplication+1])
+                sorted_new_sample = np.array(sort_nested_list_helper(temp_new_training_list, order)[:duplication+1])
+
 
                 new_performance = new_performance + [temp_performance for _ in range(len(sorted_new_sample))]
                 new_parameter = new_parameter + list(sorted_new_sample[:,num_performance:])
@@ -89,10 +90,10 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
 
     return np.array(new_performance), np.array(new_parameter)
 
-def sort_nested_list_helper(val_list, order, sign):
+def sort_nested_list_helper(val_list, order):
 
     for i in range(len(order)-1, -1, -1):
-        val_list = sorted(val_list, key = lambda x: x[order[i]] * sign[i], reverse=True)
+        val_list = sorted(val_list, key = lambda x: x[order[i]], reverse=True)
     return val_list
 
 def get_margin_error(y_hat, y, sign=None):
