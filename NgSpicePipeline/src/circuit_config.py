@@ -87,7 +87,7 @@ def two_stage_circuit(arguments_two_stage = None, order=None, sign=None):
     simulator_two_stage = Simulator(ngspice_exec, train_netlist_two_stage, test_netlist_two_stage, param_list_two_stage,
                                     perform_list_two_stage,
                                     arguments_two_stage, order, sign)
-    simulator_two_stage.delete_existing_data = False
+
     return simulator_two_stage
 
 
@@ -122,7 +122,7 @@ def LNA_circuit(arguments_lna=None, order=None, sign=None):
         }
     simulator_lna = Simulator(ngspice_exec, train_netlist_lna, test_netlist_lna, param_list_lna, perform_list_lna,
                               arguments_lna,order,sign)
-    simulator_lna.delete_existing_data = False
+
 
     return simulator_lna
 
@@ -154,6 +154,6 @@ def VCO_circuit(arguments_vco=None, order=None, sign=None):
         }
     simulator_vco = Simulator(ngspice_exec, train_netlist_vco, test_netlist_vco, param_list_vco, perform_list_vco,
                               arguments_vco,order,sign)
-    simulator_vco.delete_existing_data = False
+
 
     return simulator_vco
