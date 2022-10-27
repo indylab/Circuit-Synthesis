@@ -102,19 +102,53 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
 
 def SklearnModelFullPipeline(simulator, simulator_name, model, train_config):
 
-    pipeline_simulator = simulator
-    pipeline_model = model
+
     rerun_training = train_config['rerun_training'] if 'rerun_training' in train_config else True
     generate_new_dataset = train_config['generate_new_dataset'] if 'generate_new_dataset' in train_config else True
     font_size = train_config['font_size'] if 'font_size' in train_config else 12
     subset = train_config['subset'] if 'subset' in train_config else [0.05, 0.1, 0.2, 0.5, 0.9]
+    color = train_config['color'] if 'color' in train_config else ['r', 'b', 'c', 'y', 'k']
     graph = train_config['graph'] if 'graph' in train_config else False
     save_data = train_config['save_data'] if 'save_data' in train_config else True
     duplication = train_config['duplication'] if 'duplication' in train_config else 0
     subfeasible = train_config['subfeasible'] if 'subfeasible' in train_config else False
 
+    assert len(color) == len(subset)
 
+    test_margins,  mean_err, mean_performance_err, mean_err_std, mean_performance_err_std = SklearnModelPipeline(simulator,
+                                    rerun_training, model, subset, duplication, subfeasible, generate_new_dataset=generate_new_dataset)
 
+    margins = [0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5]
+
+    np.set_printoptions(formatter={'float': lambda x: "{0:0.4f}".format(x)})
+
+    print("FINAL RESULT")
+    print("Mean error for each subset and it's std")
+    print(mean_err)
+    print(mean_err_std)
+
+    print("Mean error for each subset performance metrics and it's std")
+    print(mean_performance_err)
+    print(mean_performance_err_std)
+
+    multi_test_mean_margin, multi_test_upper_bound_margin, multi_test_lower_bound_margin, _, \
+    _, _ = graph_multiple_margin_with_confidence_cross_fold(
+        test_margins,
+        margins, subset, baseline = None, color=color, graph=graph,
+        save_path="../out_plot/{}-margin-accuracy.png".format(simulator_name), font_size=font_size)
+
+    if save_data:
+        save_info_dict = {
+            "multi_test_mean_margin": multi_test_mean_margin,
+            "multi_test_upper_bound_margin": multi_test_upper_bound_margin,
+            "multi_test_lower_bound_margin": multi_test_lower_bound_margin,
+            "mean_err": mean_err,
+            "mean_performance_err": mean_performance_err,
+            "mean_err_std": mean_err_std,
+            "mean_performance_err_std": mean_performance_err_std,
+        }
+
+        save_output_data(save_info_dict, simulator_name)
 
 
 def LorencoMethodFullPipeline(simulator, simulator_name, train_config, device='cpu'):
