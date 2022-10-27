@@ -7,6 +7,58 @@ import os
 from torch.utils.data import random_split, ConcatDataset, DataLoader
 
 
+def SklearnModelPipeline(simulator, rerun_training, model, subset, duplication, subfeasible, generate_new_dataset=True,
+                         MARGINS=None, selectIndex=None, train_status = False):
+    if rerun_training:
+        simulator.delete_history_file()
+
+        x, y = simulator.run_training()
+    else:
+        param_outfile_names = simulator.train_param_filenames  # must be in order
+        perform_outfile_names = simulator.train_perform_filenames  # must be in order
+        curPath = os.getcwd()
+        print(curPath)
+        out = os.path.join(curPath, "../out/")
+
+        x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
+
+
+    num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
+
+    print(x.shape, y.shape)
+    data = np.hstack((x, y))
+
+    scaler_arg = MinMaxScaler(feature_range=(-1, 1))
+    scaler_arg.fit(data)
+    data = scaler_arg.transform(data)
+
+    param, perform = data[:, :num_param], data[:, num_param:]
+
+    if MARGINS is None:
+        MARGINS = [0.01, 0.05, 0.1]
+    if selectIndex is None:
+        selectIndex = 1
+
+    if generate_new_dataset:
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
+                                                                  order=simulator.order, sign=simulator.sign,
+                                                                  duplication=duplication, subfeasible=subfeasible)
+        print("Leftover Param size")
+        print(param.shape)
+        print("Leftover Perform Size")
+        print(perform.shape)
+        print("Unique Param size")
+        print(np.unique(param, axis=0).shape)
+        print("Unique Perform size")
+        print(np.unique(perform, axis=0).shape)
+
+    for i in subset:
+        if i == 1 or i > 1:
+            raise ValueError
+        if np.gcd(int(i * 100), 100) + int(i * 100) != 100 and np.gcd(int(i * 100), 100) != int(i * 100):
+            raise ValueError
+
+
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
                                 check_every, subset, duplication, subfeasible, device='cpu', generate_new_dataset=True, MARGINS=None,
                                 selectIndex=None,

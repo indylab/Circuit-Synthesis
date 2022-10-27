@@ -64,6 +64,23 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, fina
         return accs
 
 
+def sklearn_train(model, train_data, val_data, scaler, simulator, sign=None):
+
+
+    X_train, y_train = getDatafromDataloader(train_data)
+    X_test, y_test = getDatafromDataloader(val_data)
+
+    model.fit(X_train, y_train)
+    predict_param = model.predict(X_test)
+    test_margin_whole = simulate_points(predict_param, X_test, scaler, simulator, sign, final=True)
+    test_margin_average = np.average(test_margin_whole)
+    test_margin_performance_average = np.average(test_margin_whole, axis=0)
+    test_margin_std = stats.sem(test_margin_whole)
+    test_margin_performance_std = stats.sem(test_margin_whole, axis=0)
+    test_margin = np.max(test_margin_whole, axis=1)
+    return test_margin_average, test_margin_performance_average, test_margin_std, test_margin_performance_std, test_margin
+
+
 def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, first_eval=0, device='cpu', num_epochs=1000,
           margin=None, train_acc=False, sign=None, print_every = 200):
     if margin is None:

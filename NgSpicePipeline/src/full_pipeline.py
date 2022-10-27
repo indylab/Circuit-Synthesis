@@ -100,6 +100,20 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
         save_output_data(save_info_dict, simulator_name)
 
 
+def SklearnModelFullPipeline(simulator, simulator_name, model, train_config):
+
+    pipeline_simulator = simulator
+    pipeline_model = model
+    rerun_training = train_config['rerun_training'] if 'rerun_training' in train_config else True
+    generate_new_dataset = train_config['generate_new_dataset'] if 'generate_new_dataset' in train_config else True
+    font_size = train_config['font_size'] if 'font_size' in train_config else 12
+    subset = train_config['subset'] if 'subset' in train_config else [0.05, 0.1, 0.2, 0.5, 0.9]
+    graph = train_config['graph'] if 'graph' in train_config else False
+    save_data = train_config['save_data'] if 'save_data' in train_config else True
+    duplication = train_config['duplication'] if 'duplication' in train_config else 0
+    subfeasible = train_config['subfeasible'] if 'subfeasible' in train_config else False
+
+
 
 
 
