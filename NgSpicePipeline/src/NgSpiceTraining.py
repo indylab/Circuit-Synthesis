@@ -64,11 +64,13 @@ def simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, fina
         return accs
 
 
-def sklearn_train(model, train_data, val_data, scaler, simulator, sign=None):
+def sklearn_train(model, train_data, val_data, scaler, simulator, subfeasible, sign=None):
 
 
     X_train, y_train = getDatafromDataloader(train_data)
     X_test, y_test = getDatafromDataloader(val_data)
+
+    X_test = generate_subfeasible_data(X_test, subfeasible, sign)
 
     model.fit(X_train, y_train)
     predict_param = model.predict(X_test)
@@ -81,7 +83,7 @@ def sklearn_train(model, train_data, val_data, scaler, simulator, sign=None):
     return test_margin_average, test_margin_performance_average, test_margin_std, test_margin_performance_std, test_margin
 
 
-def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, first_eval=0, device='cpu', num_epochs=1000,
+def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, subfeasible, first_eval=0, device='cpu', num_epochs=1000,
           margin=None, train_acc=False, sign=None, print_every = 200):
     if margin is None:
         margin = [0.05]
@@ -103,13 +105,14 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
         norm_perform, _ = getDatafromDataloader(val_data)
         norm_perform = np.unique(norm_perform, axis=0)
         model.eval()
-
+        norm_perform = generate_subfeasible_data(norm_perform, subfeasible, sign)
         paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
         acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, margin, sign)
         val_accs.append(acc_list)
         print(f"Validation Accuracy Before Training")
         if train_acc:
             norm_perform, _ = getDatafromDataloader(train_data)
+            norm_perform = np.unique(norm_perform, axis=0)
             model.eval()
             simulator.save_error_log = True
             paramater_preds = model(torch.Tensor(norm_perform)).detach().numpy()
@@ -161,6 +164,7 @@ def train(model, train_data, val_data, optimizer, loss_fn, scaler, simulator, fi
             norm_perform = np.unique(norm_perform, axis=0)
 
             model.eval()
+            norm_perform = generate_subfeasible_data(norm_perform, subfeasible, sign)
             paramater_preds = model(torch.Tensor(norm_perform).to(device)).to('cpu').detach().numpy()
             acc_list = simulate_points(paramater_preds, norm_perform, scaler, simulator, sign, final=False)
             final_test_param = paramater_preds
