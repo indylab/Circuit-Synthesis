@@ -30,7 +30,7 @@ def baseline_testing(X_train, X_test, thresholds=None):
     return [i / total for i in correct]
 
 
-def generate_new_dataset_maximum_performance(performance, parameter, order, sign, duplication, subfeasible, greater=False):
+def generate_new_dataset_maximum_performance(performance, parameter, order, sign, duplication, greater=False):
     # parameter x -> performance y using simulator
     # Go through original Dataset D where D consists of pairs of (x,y)
     # For each pair of (x,y)
@@ -57,29 +57,9 @@ def generate_new_dataset_maximum_performance(performance, parameter, order, sign
     new_performance = []
     new_parameter = []
 
-    if subfeasible:
-        eva_performance = []
-        eva_parameter = []
 
-        for i in range(len(performance)):
-
-            temp_performance = performance[i]
-
-            eva_performance.append(temp_performance)
-            eva_parameter.append(parameter[i])
-
-            random_scale_down = random.uniform(0, 0.2)
-            new_temp_performance = [(1 - random_scale_down) * temp_performance[j] if sign[j] == 1 else
-                                    (1 + random_scale_down) * temp_performance[j] for j in range(len(temp_performance))]
-
-            eva_performance.append(new_temp_performance)
-            eva_parameter.append(parameter[i])
-        eva_performance = np.array(eva_performance)
-        eva_parameter = np.array(eva_parameter)
-
-    else:
-        eva_performance = performance
-        eva_parameter = parameter
+    eva_performance = performance
+    eva_parameter = parameter
 
     for i in range(len(eva_performance)):
 
@@ -195,3 +175,30 @@ def Lourenco_method(param, perform, sign, n=0.15, K = 40):
     return np.array(new_param), np.array(new_perform)
 
 
+def generate_subfeasible_data(performance, subfeasible, sign, subfeasible_range = 0.3):
+    random_scale = random.uniform(0, subfeasible_range)
+    if subfeasible == 1:
+
+        # Only add performance that can be reach
+        new_performance = []
+        for i in range(len(performance)):
+            temp_performance = performance[i]
+            new_performance.append([temp_performance[j] - abs(temp_performance[j]) * random_scale if sign[j] == 1 else
+                                    temp_performance[j] + abs(temp_performance[j]) * random_scale for j in range(len(temp_performance))])
+        return np.array(new_performance)
+    elif subfeasible == 2:
+
+        # Add some performance that may not able to reach
+        new_performance = []
+        for i in range(len(performance)):
+            greater = random.uniform(0, 1)
+            temp_performance = performance[i]
+            if greater > 0.5:
+                new_performance.append([temp_performance[j] + abs(temp_performance[j]) * random_scale if sign[j] == 1 else
+                                        temp_performance[j] - abs(temp_performance[j]) * random_scale for j in range(len(temp_performance))])
+            else:
+                new_performance.append([temp_performance[j] - abs(temp_performance[j]) * random_scale if sign[j] == 1 else
+                                        temp_performance[j] + abs(temp_performance[j]) * random_scale for j in range(len(temp_performance))])
+        return np.array(new_performance)
+    else:
+        return performance

@@ -39,7 +39,7 @@ def SklearnModelPipeline(simulator, rerun_training, model, subset, duplication, 
     if generate_new_dataset:
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
                                                                   order=simulator.order, sign=simulator.sign,
-                                                                  duplication=duplication, subfeasible=subfeasible)
+                                                                  duplication=duplication)
         print("Leftover Param size")
         print(param.shape)
         print("Leftover Perform Size")
@@ -103,7 +103,8 @@ def SklearnModelPipeline(simulator, rerun_training, model, subset, duplication, 
             copy_model = clone(model)
 
             test_margin_average, test_margin_performance_average, \
-            test_margin_std, test_margin_performance_std, test_margin = sklearn_train(copy_model, train_data, val_data, scaler_arg, simulator, simulator.sign)
+            test_margin_std, test_margin_performance_std, test_margin = sklearn_train(copy_model
+            , val_data, scaler_arg, simulator, subfeasible, simulator.sign)
 
             subset_test_margins.append(test_margin)
 
@@ -172,7 +173,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
     if generate_new_dataset:
 
         perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
-                                                                  order=simulator.order, sign=simulator.sign, duplication=duplication, subfeasible=subfeasible)
+                                                                  order=simulator.order, sign=simulator.sign, duplication=duplication)
         print("Leftover Param size")
         print(param.shape)
         print("Leftover Perform Size")
@@ -259,7 +260,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
                                                                                                   val_data, optimizer,
                                                                                                   loss, scaler_arg,
-                                                                                                  simulator,
+                                                                                                  simulator, subfeasible,
                                                                                                   first_eval=first_eval,
                                                                                                   device=device,
                                                                                                   num_epochs=epochs,
