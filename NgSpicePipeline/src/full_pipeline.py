@@ -27,7 +27,7 @@ def CrossFoldValidationFullPipeline(simulator, simulator_name, train_config, dev
     mean_performance_err_std, mean_baseline_err_std, \
     mean_baseline_performance_err_std = CrossFoldValidationPipeline(pipeline_simulator, rerun_training, model, loss,
                                                                     epochs, check_every, subset,
-                                                                    generate_new_dataset=False, device=device,
+                                                                    generate_new_dataset=True, device=device,
                                                                     first_eval=first_eval)
 
     margins = [0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5]

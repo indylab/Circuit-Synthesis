@@ -1,7 +1,7 @@
 from NgSpicePipeline.src.Simulator import Simulator
 import numpy as np
 
-from NgSpicePipeline.src.circuit_config import PA_circuit, LNA_circuit, Mixer_circuit
+from NgSpicePipeline.src.circuit_config import LNA_circuit, Mixer_circuit
 
 if __name__ == '__main__':
     ngspice_exec = "../../ngspice/Spice64/bin/ngspice.exe"
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         "out": "../out/"
     }
     arguments_mixer = {
-        "model_path": "../assets/45nm_CS.pm",
+        "model_path": "../assets/model/45nm_CS.pm",
         "Vbrf_start": "600m",
         "Vbrf_stop": "810m",
         "Vbrf_change": "100m",
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     #simulator_lna.delete_existing_data = True
 
     arguments_PA = {
-        "model_path": "../assets/45nm_CS.pm",
+        "model_path": "../assets/model/45nm_CS.pm",
         "Vinb_start": "700m",
         "Vinb_stop": "900m",
         "Vinb_change": "100m",
@@ -87,7 +87,7 @@ if __name__ == '__main__':
         "out": "../out/"
     }
 
-    simulator_lna = Mixer_circuit(arguments_mixer=arguments_mixer) #PA_circuit(arguments_PA=arguments_PA) #PA_circuit(arguments_PA=arguments_PA)
+    simulator_lna = Mixer_circuit() #PA_circuit(arguments_PA=arguments_PA) #PA_circuit(arguments_PA=arguments_PA)
     # train_netlist_cascade = "../assets/nmos-training-cascode.sp"
     # test_netlist_cascade = "../assets/nmos-testing-cascode.sp"
     # param_list_cascade = ["r", "w0", "w1"]
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     #                               arguments_cascade)
     simulator_lna.save_error_log = True
     simulator_lna.delete_existing_data = True
-    param, perform = simulator_lna.run_quick_training()
+    param, perform = simulator_lna.run_training()
     print(param.shape, perform.shape)
     param_sim, perform_sim = simulator_lna.runSimulation(parameters=np.array(param))
     perform_sim = np.array(perform_sim)
