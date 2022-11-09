@@ -4,14 +4,141 @@ from sklearn.preprocessing import MinMaxScaler
 from Training.dataset import CircuitSynthesisGainAndBandwidthManually
 from trainingUtils import *
 import os
-from torch.utils.data import random_split, ConcatDataset
+from torch.utils.data import random_split, ConcatDataset, DataLoader
+from sklearn.base import clone
+
+
+def SklearnModelPipeline(simulator, rerun_training, model, subset, duplication, subfeasible, generate_new_dataset=True):
+    if rerun_training:
+        simulator.delete_history_file()
+
+        x, y = simulator.run_training()
+    else:
+        param_outfile_names = simulator.train_param_filenames  # must be in order
+        perform_outfile_names = simulator.train_perform_filenames  # must be in order
+        curPath = os.getcwd()
+        print(curPath)
+        out = os.path.join(curPath, "../out/")
+
+        x, y = simulator.getData(param_outfile_names, perform_outfile_names, out)
+
+
+    num_param, num_perform = len(simulator.parameter_list), len(simulator.performance_list)
+
+    print(x.shape, y.shape)
+    data = np.hstack((x, y))
+
+    scaler_arg = MinMaxScaler(feature_range=(-1, 1))
+    scaler_arg.fit(data)
+    data = scaler_arg.transform(data)
+
+    param, perform = data[:, :num_param], data[:, num_param:]
+
+
+
+    if generate_new_dataset:
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
+                                                                  order=simulator.order, sign=simulator.sign,
+                                                                  duplication=duplication)
+        print("Leftover Param size")
+        print(param.shape)
+        print("Leftover Perform Size")
+        print(perform.shape)
+        print("Unique Param size")
+        print(np.unique(param, axis=0).shape)
+        print("Unique Perform size")
+        print(np.unique(perform, axis=0).shape)
+
+    for i in subset:
+        if i == 1 or i > 1:
+            raise ValueError
+        if np.gcd(int(i * 100), 100) + int(i * 100) != 100 and np.gcd(int(i * 100), 100) != int(i * 100):
+            raise ValueError
+
+    test_margins = []
+    mean_err = []
+    mean_performance_err = []
+
+    mean_err_std = []
+    mean_performance_err_std = []
+
+    for percentage in subset:
+        # Find out how many split we have to do
+        split_size = np.gcd(int(percentage * 100), 100)
+        split_time = int(100 / split_size)
+        print("For percentage {}, We split the dataset {} times".format(percentage, split_time))
+        Full_dataset = CircuitSynthesisGainAndBandwidthManually(perform, param)
+
+        total_length = len(Full_dataset)
+        full_split_len = total_length // split_time
+        extra_len = full_split_len + total_length % split_time
+
+        split_len_list = [full_split_len for _ in range(split_time - 1)]
+        split_len_list.append(extra_len)
+
+        SplitDataset = random_split(Full_dataset, split_len_list)
+
+
+        subset_test_margins = []
+        subset_err_mean = []
+        subset_err_performance_mean = []
+        subset_err_std = []
+        subset_err_performance_std = []
+
+        for i in range(split_time):
+
+            print('Running with Percentage {} Run Number {}'.format(percentage, i))
+            if np.gcd(int(percentage * 100), 100) + int(percentage * 100) == 100:
+                concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
+                train_dataset = ConcatDataset(concat_list)
+                validation_dataset = SplitDataset[i]
+            else:
+                concat_list = [SplitDataset[k] for k in range(len(SplitDataset)) if k != i]
+                train_dataset = SplitDataset[i]
+                validation_dataset = ConcatDataset(concat_list)
+
+            train_data = DataLoader(train_dataset, batch_size=100)
+            val_data = DataLoader(validation_dataset, batch_size=100)
+
+            copy_model = clone(model)
+
+            test_margin_average, test_margin_performance_average, \
+            test_margin_std, test_margin_performance_std, test_margin = sklearn_train(copy_model
+            , val_data, scaler_arg, simulator, subfeasible, simulator.sign)
+
+            subset_test_margins.append(test_margin)
+
+
+            subset_err_mean.append(test_margin_average)
+            subset_err_std.append(test_margin_std)
+            subset_err_performance_mean.append(test_margin_performance_average)
+            subset_err_performance_std.append(test_margin_performance_std)
+
+
+
+            print(test_margin_average)
+            print(test_margin_performance_average)
+
+
+
+        test_margins.append(subset_test_margins)
+
+
+        mean_err.append(np.average(np.array(subset_err_mean)))
+        mean_err_std.append(np.average(np.array(subset_err_std)))
+
+        mean_performance_err.append(np.average(np.array(subset_err_performance_mean), axis=0))
+        mean_performance_err_std.append(np.average(np.array(subset_err_performance_std), axis=0))
+
+    return test_margins,  mean_err, mean_performance_err, mean_err_std, mean_performance_err_std
 
 
 def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss, epochs,
-                                check_every, subset, device='cpu', generate_new_dataset=True, MARGINS=None,
+                                check_every, subset, duplication, subfeasible, device='cpu', generate_new_dataset=True, MARGINS=None,
                                 selectIndex=None,
                                 train_status=False, first_eval=1, random_sample=False, num_sample=None):
     if rerun_training:
+        simulator.delete_history_file()
         if random_sample:
             x, y = simulator.run_random_training(num_sample)
         else:
@@ -44,11 +171,17 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
         selectIndex = 1
 
     if generate_new_dataset:
+
+        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
+                                                                  order=simulator.order, sign=simulator.sign, duplication=duplication)
         print("Leftover Param size")
         print(param.shape)
-        perform, param = generate_new_dataset_maximum_performance(performance=perform, parameter=param,
-                                                                  order=simulator.order, sign=simulator.sign)
+        print("Leftover Perform Size")
+        print(perform.shape)
+        print("Unique Param size")
         print(np.unique(param, axis=0).shape)
+        print("Unique Perform size")
+        print(np.unique(perform, axis=0).shape)
 
     for i in subset:
         if i == 1 or i > 1:
@@ -127,7 +260,7 @@ def CrossFoldValidationPipeline(simulator, rerun_training, model_template, loss,
             test_margin_performance_average, test_margin_std, test_margin_performance_std = train(model, train_data,
                                                                                                   val_data, optimizer,
                                                                                                   loss, scaler_arg,
-                                                                                                  simulator,
+                                                                                                  simulator, subfeasible,
                                                                                                   first_eval=first_eval,
                                                                                                   device=device,
                                                                                                   num_epochs=epochs,
