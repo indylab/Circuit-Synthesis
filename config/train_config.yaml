@@ -1,0 +1,3 @@
+pipeline: SklearnPipeline
+circuit: Nmos
+rerun_training: False

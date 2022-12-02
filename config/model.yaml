@@ -1,0 +1,2 @@
+model: RandomForestRegressor
+n_estimators: 300

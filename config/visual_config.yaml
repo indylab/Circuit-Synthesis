@@ -1,0 +1,8 @@
+font_size: 12
+color:
+  - r
+  - b
+  - c
+  - y
+  - k
+graph: True

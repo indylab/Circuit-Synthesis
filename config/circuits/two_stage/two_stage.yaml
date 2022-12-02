@@ -1,0 +1,29 @@
+test_netlist: two_stage/TwoStageAmplifier-Test.sp
+parameter_list:
+  - ts-w0
+  - ts-w1
+  - tw-w2
+performance_list:
+  - ts-bw
+  - ts-pw
+  - ts-a0
+order:
+  - 0
+  - 2
+  - 1
+sign:
+  - 1
+  - -1
+  - 1
+arguments:
+  model_path: config/model/45nm_CS.pm
+  ts-w0_start": 25u
+  ts-w0_stop": 30u
+  ts-w0_change": 0.5u
+  ts-w2_start": 52u
+  ts-w2_stop": 55.5u
+  ts-w2_change": 0.5u
+  ts-w1_start": 6u
+  ts-w1_stop": 9u
+  ts-w1_change": 0.5u
+  out: data/two_stage

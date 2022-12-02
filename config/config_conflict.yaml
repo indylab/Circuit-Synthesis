@@ -1,0 +1,13 @@
+conflict_rule:
+  - type: Boolean
+    pipeline: SklearnPipeline
+    key: accuracy_per_epoch
+    value: False
+  - type: Boolean
+    pipeline: SklearnPipeline
+    key: loss_per_epoch
+    value: False
+  - type: Boolean
+    pipeline: LourencoPipeline
+    key: lookup
+    value: False

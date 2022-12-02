@@ -1,0 +1,29 @@
+test_netlist: VCO/VCO.sp
+parameter_list:
+  - vco-w
+  - vco-w1
+  - vco-w2
+performance_list:
+  - vco-power
+  - vco-pnoise
+  - vco-tuningrange
+order:
+  - 0
+  - 2
+  - 1
+sign:
+  - 1
+  - -1
+  - 1
+arguments:
+  model_path: config/model/45nm_CS.pm
+  vco-w_start: 4u
+  vco-w_stop: 5.4u
+  vco-w_change: 0.1u
+  vco-w1_start: 2u
+  vco-w1_stop: 10u
+  vco-w1_change: 0.5u
+  vco-w2_start: 15u
+  vco-w2_stop: 17.8u
+  vco-w2_change: 0.2u
+  out: data/VCO

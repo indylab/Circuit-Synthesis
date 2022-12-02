@@ -11,3 +11,8 @@ NgSpicePipeline/out/
 NgSpicePipeline/result_out/
 NgSpicePipeline/out_plot/
 NgSpicePipeline/assets/tmp_out/
+data/
+tmp_out/
+out_plot/
+out/
+result_out/

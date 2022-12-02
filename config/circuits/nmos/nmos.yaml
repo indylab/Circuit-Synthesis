@@ -1,0 +1,25 @@
+test_netlist: nmos/nmos-testing-pro.sp
+parameter_list:
+  - nmos-r
+  - nmos-w
+performance_list:
+  - nmos-bw
+  - nmos-pw
+  - nmos-a0
+order:
+  - 0
+  - 2
+  - 1
+sign:
+  - 1
+  - -1
+  - 1
+arguments:
+  model_path: config/model/45nm_CS.pm
+  nmos-w_start: 2.88u
+  nmos-w_stop: 6.63u
+  nmos-w_change: 0.2u
+  nmos-r_start: 620
+  nmos-r_stop: 1450
+  nmos-r_change: 5
+  out: data/nmos

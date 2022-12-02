@@ -1,0 +1,15 @@
+process_dataset: LourencoDataset
+model: 500GELU
+loss: L1Loss
+subset:
+  - 0.9
+n: 0.15
+K: 40
+epochs: 100
+check_every: 20
+first_eval: 1
+save_data: True
+margin_accuracy: True
+loss_per_epoch: True
+accuracy_per_epoch: True
+lookup: False
