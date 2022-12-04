@@ -116,7 +116,8 @@ class ArgMaxDataset(BaseDataset):
     def find_feasible(self,parameter, performance, temp_performance):
 
         fit_parameter, fit_performance = self.fit(parameter, performance)
-        fit_temp_performance = (temp_performance*self.sign)[:,self.order]
+
+        fit_temp_performance = (temp_performance*self.sign)[self.order]
 
         comparison_matrix = (fit_temp_performance <= fit_performance).all(axis=1)
 

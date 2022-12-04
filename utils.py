@@ -3,9 +3,12 @@ import os
 from os.path import join
 import pandas as pd
 import numpy as np
-from time import time, sleep
+from time import sleep
 import itertools
 import re
+from metrics import get_margin_error
+from scipy import stats
+from torch.cuda import is_available
 
 CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 
@@ -50,6 +53,11 @@ def load_train_config(configpath=DEFAULT_TRAIN_CONFIG_PATH):
                 train_config[k] = default_config[k]
     else:
         raise KeyError("The Pipeline you specify is not defined")
+    if train_config["device"] == "cuda":
+        if is_available():
+            train_config["device"] = "cuda:0"
+        else:
+            train_config["device"] = "cpu"
 
     return train_config
 
@@ -132,17 +140,19 @@ def generate_metrics_given_config(train_config):
         metrics_dict["test_margins"] = []
     if train_config["train_margin_accuracy"]:
         metrics_dict["train_margins"] = []
+    '''
     if train_config["lookup"]:
         metrics_dict["lookup_accuracy"] = []
         metrics_dict["lookup_circuit_error_average"] = []
         metrics_dict["lookup_performance_error_average"] = []
         metrics_dict["lookup_circuit_error_std"] = []
         metrics_dict["lookup_performance_error_std"] = []
+    '''
     metrics_dict["circuit_error_average"] = []
     metrics_dict["performance_error_average"] = []
     metrics_dict["circuit_error_std"] = []
     metrics_dict["performance_error_std"] = []
-    metrics_dict["circuit_max_error"] = []
+
 
     return metrics_dict
 
@@ -152,3 +162,19 @@ def merge_metrics(parent_metrics, child_metrics):
         parent_metrics[k].append(child_metrics[k])
 
 
+def run_simulation_given_parameter(simulator, parameter_preds, train=False):
+    return simulator.runSimulation(parameter_preds, train=train)
+
+def generate_performance_diff_metrics(performance_prediction, test_performance, simulator, train=False):
+    margin_error = get_margin_error(performance_prediction, test_performance, simulator.sign)
+    metrics_dict = dict()
+    if train:
+        metrics_dict["train_margins"] = np.max(margin_error, axis=1)
+    else:
+        metrics_dict["test_margins"] = np.max(margin_error, axis=1)
+        metrics_dict["circuit_error_average"] = np.average(margin_error)
+        metrics_dict["performance_error_average"] = np.average(margin_error, axis=0)
+        metrics_dict["circuit_error_std"] = stats.sem(margin_error)
+        metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=1)
+
+    return metrics_dict

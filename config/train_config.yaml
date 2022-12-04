@@ -1,3 +1,7 @@
-pipeline: SklearnPipeline
+pipeline: CrossFoldValidationPipeline
 circuit: Nmos
 rerun_training: False
+device: cpu
+subset:
+  - 0.5
+  - 0.9

@@ -1,7 +1,9 @@
 import numpy as np
-from metrics import get_margin_error
-from scipy import stats
-from utils import generate_metrics_given_config, merge_metrics
+from dataset import BaseDataset
+
+from utils import generate_metrics_given_config, merge_metrics, run_simulation_given_parameter, \
+    generate_performance_diff_metrics
+from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
 
 def subset_split(X,y,train_percentage):
     split_size = np.gcd(int(train_percentage * 100), 100)
@@ -22,7 +24,7 @@ def subset_split(X,y,train_percentage):
         yield train_data[:,:X_size], validate_data[:,:X_size], train_data[:,X_size:], validate_data[:,X_size:]
 
 class EvalModel:
-    def __init__(self, train_config, model, train_parameter, train_performance, test_parameter, test_performance, simulator):
+    def __init__(self, train_config, model, train_parameter, train_performance, test_parameter, test_performance, simulator, scaler):
         self.train_config = train_config
         self.model = model
         self.train_parameter = train_parameter
@@ -30,26 +32,26 @@ class EvalModel:
         self.test_parameter = test_parameter
         self.test_performance = test_performance
         self.simulator = simulator
+        self.scaler = scaler
 
     def eval(self):
-        train_result = self.model.fit(self.train_performance, self.train_parameter)
-        parameter_prediction = self.model.predict(self.test_performance)
-        _, mapping_performance_prediction = self.simulator.runSimulation(parameter_prediction, train=False)
-        validate_result = self.generate_performance_diff_metrics(mapping_performance_prediction)
-        validate_result.update(train_result)
 
-        return validate_result
+        train_result = self.model.fit(self.train_performance, self.train_parameter, self.test_performance, self.test_parameter, self.scaler)
+        if self.train_config["test_margin_accuracy"]:
+            parameter_prediction = self.model.predict(self.test_performance)
+            inverse_transform_parameter, inverse_transform_performance = BaseDataset.inverse_transform(parameter_prediction, self.test_performance, self.scaler)
+            _, mapping_performance_prediction = run_simulation_given_parameter(self.simulator, inverse_transform_parameter, train=False)
+            validate_test_result = generate_performance_diff_metrics(mapping_performance_prediction, inverse_transform_performance, self.simulator, train=False)
+            train_result.update(validate_test_result)
+        if self.train_config["train_margin_accuracy"]:
+            parameter_prediction = self.model.predict(self.train_performance)
+            inverse_transform_parameter, inverse_transform_performance = BaseDataset.inverse_transform(parameter_prediction, self.train_performance, self.scaler)
+            _, mapping_performance_prediction = run_simulation_given_parameter(self.simulator, inverse_transform_parameter, train=False)
+            validate_train_result = generate_performance_diff_metrics(mapping_performance_prediction, inverse_transform_performance, self.simulator, train=True)
+            train_result.update(validate_train_result)
+        return train_result
 
-    def generate_performance_diff_metrics(self, performance_prediction):
-        margin_error = get_margin_error(performance_prediction, self.test_performance, self.simulator.sign)
-        metrics_dict = dict()
-        metrics_dict["circuit_error_average"] = np.average(margin_error)
-        metrics_dict["performance_error_average"] = np.average(margin_error, axis=0)
-        metrics_dict["circuit_error_std"] = stats.sem(margin_error)
-        metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=1)
-        metrics_dict["circuit_max_error"] = np.max(margin_error, axis=1)
 
-        return metrics_dict
 
 
 class ModelEvaluator:
@@ -57,31 +59,15 @@ class ModelEvaluator:
         new_parameter, new_performance, data_scaler = dataset.transform_data(parameter, performance)
         self.parameter = new_parameter
         self.performance = new_performance
-        self.model = model
         self.simulator = simulator
         self.dataset = dataset
         self.metric = metric
         self.train_config = train_config
         self.scaler = data_scaler
-        self.model_wrapper = None
-
-    def get_prediction(self, data):
-        return self.model.predict(data)
-
-    def inverse_data(self, params_predicted, perfomance):
-        """reversing back to the original scale"""
-
-        # params_predicted, perfomance = self.dataset.inverse_transform(params_predicted,perfomance) #inverse of scaling
-        perfomance = self.dataset.inverse_fit(perfomance)  # change order and sign back
-        return params_predicted, perfomance
-
-    def predict(self, params):
-        """Predict performance of params"""
-        params_scaled = self.dataset.transform_params(params)
-        perfomance = self.model.predict(params_scaled)
-        perfomance = self.dataset.inverse_fit(perfomance)
-        return perfomance
-
+        if train_config["pipeline"] == "SklearnPipeline":
+            self.model_wrapper = SklearnModelWrapper(model)
+        else:
+            self.model_wrapper = PytorchModelWrapper(model, train_config, simulator)
 
     def eval(self):
 
@@ -101,8 +87,10 @@ class ModelEvaluator:
                                                                                       performance_test, train=False)
 
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
-                                              new_train_parameter, new_train_performance, new_test_parameter, new_test_performance, self.simulator)
+                                              new_train_parameter, new_train_performance,
+                                              new_test_parameter, new_test_performance, self.simulator, self.scaler)
                 kfold_metrics_dict = result_eval_model.eval()
+
                 merge_metrics(subset_metrics_dict, kfold_metrics_dict)
             merge_metrics(metrics_dict, subset_metrics_dict)
         return metrics_dict

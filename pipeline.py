@@ -7,18 +7,19 @@ from simulator import load_simulator
 from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, validate_config
 from metrics import get_margin_error
 from eval_model import *
+from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
 
-def generate_dataset_given_config(train_config):
+def generate_dataset_given_config(train_config, circuit_config):
     if train_config["pipeline"] == "LourencoPipeline":
-        return LorencoDataset
+        return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"])
     else:
         if train_config["subfeasible"]:
             if train_config["duplication"] == 0:
-                return SoftArgMaxDataset
+                return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"])
             else:
-                return AblationDuplicateDataset
+                return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"])
         else:
-            return ArgMaxDataset
+            return ArgMaxDataset(circuit_config["order"], circuit_config["sign"])
 
 
 def generate_circuit_given_config(train_config):
@@ -42,7 +43,8 @@ def generate_circuit_given_config(train_config):
 
 def generate_model_given_config(model_config):
     model_mapping = {
-        "RandomForestRegressor": RandomForestRegressor
+        "RandomForestRegressor": RandomForestRegressor,
+        "Model500GELU": Model500GELU,
     }
 
     if model_config["model"] in model_mapping.keys():
@@ -61,12 +63,11 @@ def generate_model_given_config(model_config):
 def pipeline():
 
     train_config = load_train_config()
-
     validate_config(train_config)
     visual_config = load_visual_config()
     model_config = load_model_config()
     circuit_config = generate_circuit_given_config(train_config)
-    dataset = generate_dataset_given_config(train_config)
+    dataset = generate_dataset_given_config(train_config, circuit_config)
     simulator = load_simulator(circuit_config)
     model = generate_model_given_config(model_config)
 
@@ -84,3 +85,5 @@ def pipeline():
 
     result = pipeline.eval()
 
+if __name__ == '__main__':
+    pipeline()

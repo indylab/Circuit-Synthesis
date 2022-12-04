@@ -1,6 +1,4 @@
 process_dataset: LourencoDataset
-model: 500GELU
-loss: L1Loss
 subset:
   - 0.9
 n: 0.15

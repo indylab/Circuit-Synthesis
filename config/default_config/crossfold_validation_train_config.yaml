@@ -1,6 +1,4 @@
 process_dataset: ArgmaxDataset
-model: 500GELU
-loss: L1Loss
 epochs: 100
 subset:
   - 0.05
