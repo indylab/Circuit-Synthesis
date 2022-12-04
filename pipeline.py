@@ -8,19 +8,17 @@ from utils import load_circuit, load_train_config, load_visual_config, load_mode
 from metrics import get_margin_error
 from eval_model import *
 
-def generate_dataset_given_config(train_config, circuit_config):
-    order = circuit_config["order"]
-    sign = circuit_config["sign"]
+def generate_dataset_given_config(train_config):
     if train_config["pipeline"] == "LourencoPipeline":
-        n = train_config["n"]
-        K = train_config["K"]
-
-        return LorencoDataset(order, sign, n, K)
+        return LorencoDataset
     else:
         if train_config["subfeasible"]:
-            return SoftArgMaxDataset(order, sign)
+            if train_config["duplication"] == 0:
+                return SoftArgMaxDataset
+            else:
+                return AblationDuplicateDataset
         else:
-            return ArgMaxDataset(order, sign)
+            return ArgMaxDataset
 
 
 def generate_circuit_given_config(train_config):
@@ -68,7 +66,7 @@ def pipeline():
     visual_config = load_visual_config()
     model_config = load_model_config()
     circuit_config = generate_circuit_given_config(train_config)
-    dataset = generate_dataset_given_config(train_config, circuit_config)
+    dataset = generate_dataset_given_config(train_config)
     simulator = load_simulator(circuit_config)
     model = generate_model_given_config(model_config)
 
@@ -85,5 +83,4 @@ def pipeline():
                               train_config=train_config, model=model)
 
     result = pipeline.eval()
-if __name__ == '__main__':
-    pipeline()
+

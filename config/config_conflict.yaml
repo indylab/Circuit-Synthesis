@@ -1,7 +1,11 @@
 conflict_rule:
   - type: Boolean
     pipeline: SklearnPipeline
-    key: accuracy_per_epoch
+    key: train_accuracy_per_epoch
+    value: False
+  - type: Boolean
+    pipeline: SklearnPipeline
+    key: test_accuracy_per_epoch
     value: False
   - type: Boolean
     pipeline: SklearnPipeline

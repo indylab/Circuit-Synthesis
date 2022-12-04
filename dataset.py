@@ -1,150 +1,198 @@
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+from torch.utils.data import Dataset
 
 
-class Dummy():
-    def __init__(self, order=None, sign=None, debug=False) -> None:
+class BasePytorchModelDataset(Dataset):
+    def __init__(self, performance, parameters):
+        self.parameters = np.array(parameters)
+        self.performance = np.array(performance)
+
+    def __len__(self):
+        return len(self.parameters)
+
+    def __getitem__(self, index):
+        return self.performance[index], self.parameters[index]
+
+    def getAll(self):
+        return self.performance, self.parameters
+
+
+class BaseDataset:
+    def __init__(self, order,sign) -> None:
         self.order = order
         self.sign = np.array(sign)
-        self.debug = debug
 
-    def preproc_y_prime(self, y_prime):
-        epsilon = np.random.uniform(0, self.epsilon)
-        if self.debug == True:
-            epsilon = 0
-        return y_prime * (1 - epsilon * self.sign[self.order])
-
-    def transform_data(self, x, y):
+    @staticmethod
+    def transform_data(parameter, performance):
         """
         Preprocess data to be used in the model
         """
-        data = np.hstack((x, y))
+        data = np.hstack((parameter, performance))
         scaler = MinMaxScaler(feature_range=(-1, 1))
         scaler.fit(data)
         data = scaler.transform(data)
-        self.scaler = scaler
-        return data[:, :x.shape[1]], data[:, x.shape[1]:], scaler
+        return data[:, :parameter.shape[1]], data[:, parameter.shape[1]:], scaler
 
-    def inverse_transform(self, x, y):
+    @staticmethod
+    def inverse_transform(parameter, performance, scaler):
         """
         Inverse transform the data to the original scale
         """
-        data = np.hstack((x, y))
-        data = self.scaler.inverse_transform(data)
-        return data[:, :x.shape[1]], data[:, x.shape[1]:]
+        data = np.hstack((parameter, performance))
+        data = scaler.inverse_transform(data)
+        return data[:, :parameter.shape[1]], data[:, parameter.shape[1]:]
 
-    def sort_vectors(self, vectors, candidates_vectors_x):
+
+    def fit(self, parameter, performance):
+        # make permutation of y according to order and sign
+
+        fit_performance = np.copy(performance) * self.sign
+        fit_performance = fit_performance[:, self.order]
+
+        return parameter,fit_performance
+
+    def inverse_fit(self, parameter,performance):
+        reverse_order = [0 for _ in range(len(self.order))]
+        for index in range(len(self.order)):
+            reverse_order[self.order[index]] = index
+        inverse_fit_performance = np.copy(performance)[:, reverse_order]
+        inverse_fit_performance = inverse_fit_performance * self.sign
+        return parameter,inverse_fit_performance
+
+    def modify_data(self, parameter, performance, train=True):
+        return parameter, performance
+
+
+class LorencoDataset(BaseDataset):
+    def __init__(self, order, sign, n, K) -> None:
+        super().__init__(order,sign)
+        self.n = n
+        self.K = K
+
+    def modify_data(self, parameter, performance, train=True):
+        new_param = []
+        new_perform = []
+        average_perform = np.average(performance, axis=0)
+        for index in range(len(parameter)):
+            new_param.append(parameter[index])
+            new_perform.append(performance[index])
+            for k in range(self.K):
+                random_sample = np.random.rand(*average_perform.shape)
+                average_perform = average_perform
+
+                new_param.append(parameter[index])
+                new_perform.append(performance[index] - (self.n * random_sample) / average_perform)
+
+        return np.array(new_param), np.array(new_perform)
+
+
+class ArgMaxDataset(BaseDataset):
+    def __init__(self, order, sign) -> None:
+        super().__init__(order, sign)
+
+    def find_best_performance(self, parameter, performance):
         """
         Sorts the vectors according to the best perfomance from left to right
         """
-        vec = np.copy(vectors)  # perfomance
-        x_vecs = np.copy(candidates_vectors_x)  # params
-        for idx_axis in range(
-                vectors.shape[1]):  # [[perf_11 perf_12 perf_13] [perf_21 perf_22 perf_23] [perf_31 perf_32 perf_33]]
-            res = np.argwhere(vec[:, idx_axis] == np.amax(vec[:, idx_axis])).reshape(-1)
-            vec = vec[res]
-            x_vecs = x_vecs[res]
+
+        fit_parameter, fit_performance = self.fit(parameter, performance)
+
+        for idx_axis in range(performance.shape[1]):
+            res = np.argwhere(fit_performance[:,idx_axis] == np.amax(fit_performance[:,idx_axis])).reshape(-1)
+            fit_performance = fit_performance[res]
+            fit_parameter = fit_parameter[res]
             if len(res) == 1:
-                return x_vecs.reshape(-1), vec.reshape(-1)
+                return fit_parameter.reshape(-1), fit_performance.reshape(-1)
 
-    def fit(self, X, y):
-        # make permutation of y according to order and sign
-
-        y = y * self.sign
-        y = y[:, self.order]
-        self.X = X
-        self.Y = y
-        return self.prepare_partial()
-
-    def inverse_fit(self, y):
-        y = y[:, self.order]
-        y = y * self.sign
-        return y
-
-    def find_max(self, y):
+    def find_max(self, parameter, performance, temp_performance):
         # find x' =  argmax (y) from pairs of (x,y)
         # Generate New pair of (x',y) and put them into new dataset
-        candidates_vectors_x, candidates_vectors_y = self.find_feasible(y)
-        x, y_perfomance_max = self.sort_vectors(candidates_vectors_y,
-                                                candidates_vectors_x)  # sort_vectors(canditates_vectors_y) -> y
-        return x, y_perfomance_max
+        candidates_vector_parameter, candidates_vector_performance = self.find_feasible(parameter, performance, temp_performance)
+        sort_vector_parameter, sort_vector_performance = self.find_best_performance(candidates_vector_parameter,
+                                                                           candidates_vector_performance)
+        return sort_vector_parameter, sort_vector_performance
 
-    def find_feasible(self, y):
-        comparison_matrix = y <= self.Y  # [True, False, True]
-        comparison_matrix = comparison_matrix.all(axis=1)  # [True True True ] - > True
-        candidates_vectors_y = self.Y[comparison_matrix]
-        candidates_vectors_x = self.X[comparison_matrix]
-        return candidates_vectors_x, candidates_vectors_y
+    def find_feasible(self,parameter, performance, temp_performance):
+
+        fit_parameter, fit_performance = self.fit(parameter, performance)
+        fit_temp_performance = (temp_performance*self.sign)[:,self.order]
+
+        comparison_matrix = (fit_temp_performance <= fit_performance).all(axis=1)
+
+        return parameter[comparison_matrix], performance[comparison_matrix]
 
 
-class ArgMaxDataset(Dummy):
-    def __init__(self, order, sign, debug=False) -> None:
-        super().__init__(order, sign, debug)
+    def modify_data(self, parameter, performance, train=True):
+        new_parameter = []
 
-    def prepare_partial(self, ):
-        new_x = []
-        if self.debug:
-            debug_x = []
-            debug_y = []
-        for y in self.Y:
-            x_prime, y_prime = self.find_max(y, )
-            new_x.append(x_prime)
-            if self.debug:
-                debug_x.append(x_prime)
-                debug_y.append(y_prime)
-        if self.debug:
-            return np.array(debug_x), np.array(debug_y)
-        return np.array(new_x), np.array(self.Y)
+        for temp_performance in performance:
+            new_temp_parameter, _ = self.find_max(parameter, performance, temp_performance)
+            new_parameter.append(new_temp_parameter)
+
+        return np.array(new_parameter),np.array(performance)
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
-    def __init__(self, order, sign, epsilon=0.2, debug=False) -> None:
-        super().__init__(order, sign, debug)
+    def __init__(self, order, sign, epsilon=0.2) -> None:
+        super().__init__(order, sign)
         self.epsilon = epsilon
 
-    def prepare_partial(self, ):
-        new_x = []
-        new_y = []
-        for y in self.Y:
-            x_prime, y_prime = self.find_max(y, )  # (x',y') = argmax(y)
-            y = self.preproc_y_prime(y)  # y*(1-eps*sign)
-            new_x.append(x_prime)
-            new_y.append(y)
+    def scale_down_data(self, parameter, performance):
+        random_scale = np.random.uniform(0, self.epsilon, size=performance.shape)
+        absolute_performance = np.absolute(performance)
 
-        return np.array(new_x), np.array(new_y)
+        scale_down_value = random_scale * absolute_performance
+        scale_down_performance = np.copy(performance)
+        for idx_axis in range(len(self.order)):
+            if self.order[idx_axis] == 1:
+                scale_down_performance[:,idx_axis] -= scale_down_value[:,idx_axis]
+            else:
+                scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
+        return parameter, scale_down_performance
+
+    def modify_data(self, parameter, performance, train=True):
+
+        parameter, scale_down_performance = self.scale_down_data(parameter, performance)
+
+        return super().modify_data(parameter, scale_down_performance)
+
+class AblationDuplicateDataset(SoftArgMaxDataset):
+    def __init__(self, order, sign, duplication, epsilon=0.2) -> None:
+        super().__init__(order, sign, epsilon)
+        self.duplication = duplication
+
+    def sort_vectors(self, parameter, performance):
+
+        # We stack performance first because of self.order
+        data = np.hstack((performance, parameter))
+
+        for i in range(len(self.order) - 1, -1, -1):
+            data = sorted(data, key=lambda x: x[self.order[i]], reverse=True)
+
+        return data[:, :performance.shape[1]], data[:, performance.shape[1]:]
+
+    def generate_duplication_data(self, parameter, performance, temp_performance, train):
+        candidates_vector_parameter, candidates_vector_performance = self.find_feasible(parameter, performance,
+                                                                                        temp_performance)
+
+        sort_vector_parameter, sort_vector_performance = self.sort_vectors(candidates_vector_parameter, candidates_vector_performance)
+
+        if train:
+            num_sample = self.duplication + 1
+        else:
+            num_sample = 1
+        return sort_vector_parameter[:num_sample], sort_vector_performance[:num_sample]
+
+    def modify_data(self, parameter, performance, train=True):
+        scale_down_parameter, scale_down_performance = self.scale_down_data(parameter, performance)
+
+        new_parameter, new_performance = [], []
+        for temp_performance in scale_down_performance:
+            new_temp_parameters, new_temp_performances = self.generate_duplication_data(parameter, performance, temp_performance, train)
+            new_parameter += new_temp_parameters
+            new_performance += new_temp_performances
+
+        return np.array(new_parameter), np.array(new_performance)
 
 
-class LorencoDataset(SoftArgMaxDataset):
-    def __init__(self, order, sign, n,k,epsilon=0.2, debug=False) -> None:
-        super().__init__(order, sign, debug)
-        self.epsilon = epsilon
-        self.n = n
-        self.k = k
-
-    def prepare_partial(self):
-        new_x = []
-        new_y = []
-        for (x, y) in zip(self.X, self.Y):
-            y = self.preproc_y_prime(y)
-            new_x.append(x)
-            new_y.append(y)
-
-        return np.array(new_x), np.array(new_y)
-
-
-class HybridDataset(ArgMaxDataset):
-    def __init__(self, order, sign, epsilon=0.2, debug=False) -> None:
-        super().__init__(order, sign, debug)
-        self.epsilon = epsilon
-
-    def prepare_data(self, ):
-        new_x = []
-        new_y = []
-        for y in self.Y:
-            x_prime, y_prime = self.find_feasible(y)  # find all feasible (x,y') for y with y' >= y
-            y_prime = self.preproc_y_prime(y_prime)  # y*(1-epsilon)
-
-            new_x.extend(x_prime)
-            new_y.extend(y_prime)
-
-        return np.array(new_x), np.array(new_y)

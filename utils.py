@@ -116,3 +116,39 @@ def validate_config(train_config):
                 value = rule["value"]
                 assert train_config[key] == value, "The {} config you choose for {} have conflict, " \
                                                    "please fix the conflict or use default value".format(key, rule["pipeline"])
+
+
+def generate_metrics_given_config(train_config):
+
+    metrics_dict = dict()
+    if train_config["loss_per_epoch"]:
+        metrics_dict["train_loss"] = []
+        metrics_dict["validation_loss"] = []
+    if train_config["train_accuracy_per_epoch"]:
+        metrics_dict["train_accuracy_per_epoch"] = []
+    if train_config["test_accuracy_per_epoch"]:
+        metrics_dict["validation_accuracy_per_epoch"] = []
+    if train_config["test_margin_accuracy"]:
+        metrics_dict["test_margins"] = []
+    if train_config["train_margin_accuracy"]:
+        metrics_dict["train_margins"] = []
+    if train_config["lookup"]:
+        metrics_dict["lookup_accuracy"] = []
+        metrics_dict["lookup_circuit_error_average"] = []
+        metrics_dict["lookup_performance_error_average"] = []
+        metrics_dict["lookup_circuit_error_std"] = []
+        metrics_dict["lookup_performance_error_std"] = []
+    metrics_dict["circuit_error_average"] = []
+    metrics_dict["performance_error_average"] = []
+    metrics_dict["circuit_error_std"] = []
+    metrics_dict["performance_error_std"] = []
+    metrics_dict["circuit_max_error"] = []
+
+    return metrics_dict
+
+def merge_metrics(parent_metrics, child_metrics):
+
+    for k in parent_metrics.keys():
+        parent_metrics[k].append(child_metrics[k])
+
+
