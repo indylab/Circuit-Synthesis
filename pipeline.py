@@ -4,10 +4,12 @@ import os
 
 from models import ModelEvaluator
 from simulator import load_simulator
-from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, validate_config
+from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, validate_config, save_result
 from metrics import get_margin_error
 from eval_model import *
-from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
+from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
+    plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold
+from datetime import datetime
 
 def generate_dataset_given_config(train_config, circuit_config):
     if train_config["pipeline"] == "LourencoPipeline":
@@ -57,14 +59,28 @@ def generate_model_given_config(model_config):
         raise KeyError("The model you defined does not exist")
 
 
+def generate_visual_given_result(result, train_config, visual_config):
+    cur_time = str(datetime.now().strftime('%Y-%m-%d %H:%M'))
+    result_dict = dict()
+    pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(train_config["circuit"], train_config["pipeline"], cur_time)
+    if train_config["test_margin_accuracy"] or train_config["train_margin_accuracy"]:
+        margin_plot_result = plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        result_dict.update(margin_plot_result)
+    if train_config["test_accuracy_per_epoch"] or train_config["train_accuracy_per_epoch"]:
+        accuracy_plot_result = plot_multiple_accuracy_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        result_dict.update(accuracy_plot_result)
+    if train_config["loss_per_epoch"]:
+        loss_plot_result = plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        result_dict.update(loss_plot_result)
 
-
+    return result_dict
 
 def pipeline():
 
     train_config = load_train_config()
     validate_config(train_config)
     visual_config = load_visual_config()
+
     model_config = load_model_config()
     circuit_config = generate_circuit_given_config(train_config)
     dataset = generate_dataset_given_config(train_config, circuit_config)
@@ -84,6 +100,8 @@ def pipeline():
                               train_config=train_config, model=model)
 
     result = pipeline.eval()
+    visual_result = generate_visual_given_result(result, train_config, visual_config)
+    result.update(visual_result)
+    save_result(train_config, result)
 
-if __name__ == '__main__':
-    pipeline()
+

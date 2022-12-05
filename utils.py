@@ -140,14 +140,12 @@ def generate_metrics_given_config(train_config):
         metrics_dict["test_margins"] = []
     if train_config["train_margin_accuracy"]:
         metrics_dict["train_margins"] = []
-    '''
     if train_config["lookup"]:
-        metrics_dict["lookup_accuracy"] = []
+        metrics_dict["lookup_margin"] = []
         metrics_dict["lookup_circuit_error_average"] = []
         metrics_dict["lookup_performance_error_average"] = []
         metrics_dict["lookup_circuit_error_std"] = []
         metrics_dict["lookup_performance_error_std"] = []
-    '''
     metrics_dict["circuit_error_average"] = []
     metrics_dict["performance_error_average"] = []
     metrics_dict["circuit_error_std"] = []
@@ -178,3 +176,49 @@ def generate_performance_diff_metrics(performance_prediction, test_performance, 
         metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=1)
 
     return metrics_dict
+
+
+def baseline_lookup_testing(performance_test, performance_train, sign):
+    unique_performance_train = np.unique(performance_train, axis=0)
+    unique_performance_test = np.unique(performance_test, axis=0)
+
+    sign_performance_train = unique_performance_train * sign
+    sign_performance_test = unique_performance_test * sign
+
+    lookup_performance_test = []
+
+
+    for data_index in range(len(sign_performance_test)):
+        minimum_err = None
+        minimum_index = None
+        greater = False
+        for cmp_data_index in range(len(sign_performance_train)):
+            if np.all(sign_performance_train[cmp_data_index] >= sign_performance_test[data_index]):
+                lookup_performance_test.append(list(sign_performance_train[cmp_data_index]))
+                greater = True
+                break
+            temp_err = (np.abs(sign_performance_train[cmp_data_index] - sign_performance_test[data_index]))
+            temp_diff = np.divide(temp_err, sign_performance_test[data_index], where=sign_performance_test[data_index] != 0)
+
+            temp_max_diff = np.max(temp_diff)
+            if minimum_err is None or temp_max_diff < minimum_err:
+                minimum_index = cmp_data_index
+                minimum_err = temp_max_diff
+        if not greater:
+            lookup_performance_test.append(list(sign_performance_train[minimum_index]))
+
+    lookup_performance_test = np.array(lookup_performance_test)
+    margin_error = get_margin_error(lookup_performance_test, sign_performance_test, sign)
+    metrics_dict = dict()
+    metrics_dict["lookup_margin"] = np.max(margin_error, axis=1)
+    metrics_dict["lookup_circuit_error_average"] = np.average(margin_error)
+    metrics_dict["lookup_performance_error_average"] = np.average(margin_error, axis=0)
+    metrics_dict["lookup_circuit_error_std"] = stats.sem(margin_error)
+    metrics_dict["lookup_performance_error_std"] = stats.sem(margin_error, axis=1)
+
+    return metrics_dict
+
+
+def save_result(train_config, result, customize_save_name=None):
+    #TODO
+    pass

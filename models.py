@@ -2,7 +2,7 @@ import numpy as np
 from dataset import BaseDataset
 
 from utils import generate_metrics_given_config, merge_metrics, run_simulation_given_parameter, \
-    generate_performance_diff_metrics
+    generate_performance_diff_metrics, baseline_lookup_testing
 from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
 
 def subset_split(X,y,train_percentage):
@@ -86,11 +86,15 @@ class ModelEvaluator:
                 new_test_parameter, new_test_performance = self.dataset.modify_data(parameter_test,
                                                                                       performance_test, train=False)
 
+
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
                                               new_train_parameter, new_train_performance,
                                               new_test_parameter, new_test_performance, self.simulator, self.scaler)
                 kfold_metrics_dict = result_eval_model.eval()
 
+                if self.train_config["lookup"]:
+                    lookup_metrics_dict = baseline_lookup_testing(performance_test, performance_train, self.simulator.sign)
+                    kfold_metrics_dict.update(lookup_metrics_dict)
                 merge_metrics(subset_metrics_dict, kfold_metrics_dict)
             merge_metrics(metrics_dict, subset_metrics_dict)
         return metrics_dict
