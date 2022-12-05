@@ -10,6 +10,7 @@ from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
     plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold
 from datetime import datetime
+import time
 
 def generate_dataset_given_config(train_config, circuit_config):
     if train_config["pipeline"] == "LourencoPipeline":
@@ -89,7 +90,14 @@ def pipeline():
 
     if train_config["rerun_training"]:
         data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
+        start =time.time()
+        print('start sim')
         parameter, performance = simulator.runSimulation(data_for_evaluation, True)
+        print('took for sim', time.time()-start)
+        print('Params shape', parameter.shape)
+        print('Perfomance shape',performance.shape)
+
+        
     else:
         parameter_file_list = [x + ".csv" for x in circuit_config["parameter_list"]]
         performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]

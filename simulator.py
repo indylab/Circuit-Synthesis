@@ -6,6 +6,7 @@ import subprocess
 import re
 import time
 import math
+from alive_progress import alive_bar
 
 from utils import *
 
@@ -56,43 +57,47 @@ class Simulator:
         if not train:
             argumentMap["out"] = tmp_out_path
 
-        for i in range(math.ceil(
-                num_params_to_sim / MAX_SIM_SIZE)):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
+        size = math.ceil(num_params_to_sim / MAX_SIM_SIZE)
+        
+        with alive_bar(size) as bar:
+            for i in range(size):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
+                
+                argumentMap["num_samples"] = parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, 0].shape[0]
+                if argumentMap["num_samples"] == 0:
+                    continue
 
-            argumentMap["num_samples"] = parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, 0].shape[0]
-            if argumentMap["num_samples"] == 0:
-                continue
+                for param_index, p in enumerate(self.parameter_list):
+                    argumentMap[f"{p}_array"] = " ".join(
+                        list(parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, param_index].astype(str)))
 
-            for param_index, p in enumerate(self.parameter_list):
-                argumentMap[f"{p}_array"] = " ".join(
-                    list(parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, param_index].astype(str)))
+                updateFile(self.test_netlist, updated_netlist_filepath, argumentMap)
 
-            updateFile(self.test_netlist, updated_netlist_filepath, argumentMap)
+                if self.save_error_log:
+                    args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",
+                            os.path.join(argumentMap["out"], "log.txt"), '-i',
+                            updated_netlist_filepath]
+                else:
+                    args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
 
-            if self.save_error_log:
-                args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",
-                        os.path.join(argumentMap["out"], "log.txt"), '-i',
-                        updated_netlist_filepath]
-            else:
-                args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
+                with open('out-file.txt', 'w') as f:
+                    subprocess.run(args,stdout=f,stderr=f)
+                x, y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
 
-            subprocess.run(args)
-            x, y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
+                all_x.append(x)
+                all_y.append(y)
+                bar()
 
-            all_x.append(x)
-            all_y.append(y)
+            final_x = np.vstack(all_x)
+            final_y = np.vstack(all_y)
 
-        final_x = np.vstack(all_x)
-        final_y = np.vstack(all_y)
+            assert final_x.shape[
+                    0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
+            assert final_y.shape[
+                    0] == num_params_to_sim, f"y has to few values. Original: {parameters.shape} Y: {final_y.shape}"
 
-        assert final_x.shape[
-                   0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
-        assert final_y.shape[
-                   0] == num_params_to_sim, f"y has to few values. Original: {parameters.shape} Y: {final_y.shape}"
-
-        if not train:
-            delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
-        return final_x, final_y
+            if not train:
+                delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
+            return final_x, final_y
 
     def load_data(self, train):
         if train:
