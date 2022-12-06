@@ -141,7 +141,7 @@ def generate_metrics_given_config(train_config):
     if train_config["train_margin_accuracy"]:
         metrics_dict["train_margins"] = []
     if train_config["lookup"]:
-        metrics_dict["lookup_margin"] = []
+        metrics_dict["lookup_margins"] = []
         metrics_dict["lookup_circuit_error_average"] = []
         metrics_dict["lookup_performance_error_average"] = []
         metrics_dict["lookup_circuit_error_std"] = []
@@ -210,7 +210,7 @@ def baseline_lookup_testing(performance_test, performance_train, sign):
     lookup_performance_test = np.array(lookup_performance_test)
     margin_error = get_margin_error(lookup_performance_test, sign_performance_test, sign)
     metrics_dict = dict()
-    metrics_dict["lookup_margin"] = np.max(margin_error, axis=1)
+    metrics_dict["lookup_margins"] = np.max(margin_error, axis=1)
     metrics_dict["lookup_circuit_error_average"] = np.average(margin_error)
     metrics_dict["lookup_performance_error_average"] = np.average(margin_error, axis=0)
     metrics_dict["lookup_circuit_error_std"] = stats.sem(margin_error)
@@ -219,6 +219,10 @@ def baseline_lookup_testing(performance_test, performance_train, sign):
     return metrics_dict
 
 
-def save_result(train_config, result, customize_save_name=None):
-    #TODO
-    pass
+def save_result(result, pipeline_save_name):
+
+    save_folder = os.path.join(os.path.join(os.getcwd(), "result_out"), pipeline_save_name)
+    os.mkdir(save_folder)
+    for k in result.keys():
+        out_variable_save_path = os.path.join(save_folder, k + ".npy")
+        np.save(out_variable_save_path, result[k])

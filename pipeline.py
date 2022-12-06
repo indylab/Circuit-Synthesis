@@ -60,10 +60,11 @@ def generate_model_given_config(model_config):
         raise KeyError("The model you defined does not exist")
 
 
-def generate_visual_given_result(result, train_config, visual_config):
-    cur_time = str(datetime.now().strftime('%Y-%m-%d %H:%M'))
+def generate_visual_given_result(result, train_config, visual_config, pipeline_save_name):
+    folder_path = os.path.join(os.path.join(os.getcwd(), "out_plot"), pipeline_save_name)
+    os.mkdir(folder_path)
     result_dict = dict()
-    pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(train_config["circuit"], train_config["pipeline"], cur_time)
+
     if train_config["test_margin_accuracy"] or train_config["train_margin_accuracy"]:
         margin_plot_result = plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
         result_dict.update(margin_plot_result)
@@ -103,13 +104,16 @@ def pipeline():
         performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
         parameter, performance = getData(parameter_file_list, performance_file_list, circuit_config["arguments"]["out"])
 
-
+    print("Pipeline Start")
     pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
                               train_config=train_config, model=model)
 
+    cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
+    pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(train_config["circuit"], train_config["pipeline"], cur_time)
+
     result = pipeline.eval()
-    visual_result = generate_visual_given_result(result, train_config, visual_config)
+    visual_result = generate_visual_given_result(result, train_config, visual_config, pipeline_save_name)
     result.update(visual_result)
-    save_result(train_config, result)
+    save_result(result, pipeline_save_name)
 
 

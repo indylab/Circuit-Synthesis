@@ -11,6 +11,7 @@ def parse_yaml_value(arguments, param, param_type):
     value_reg = r"[0-9]+\.?[0-9]*"
     unit_reg = r"[a-z][A-Z]*"
     raw = arguments[f"{param}_{param_type}"]
+
     if type(raw) != str:
         value = raw
         unit = ''

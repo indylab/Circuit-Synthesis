@@ -1,4 +1,4 @@
-test_netlist: LNA/LNA_test.sp
+test_netlist: LNA/LNA_Pooya.sp
 parameter_list:
   - LNA-ls
   - LNA-ld

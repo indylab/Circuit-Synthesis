@@ -13,4 +13,4 @@ margin_threshold:
   - 0.1
   - 0.2
   - 0.5
-graph: True
+log: True

@@ -30,10 +30,11 @@ class Simulator:
 
         # validate arguments
         for p in parameter_list:
-            assert (str(p) + "_start" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
-            assert (str(p) + "_stop" in arguments.keys()), ("Each paramater must have a start index", arguments.keys())
+
+            assert (str(p) + "_start" in arguments.keys()), ("{} paramater must have a start index".format(p), arguments.keys())
+            assert (str(p) + "_stop" in arguments.keys()), ("{} paramater must have a start index".format(p), arguments.keys())
             assert (str(p) + "_change" in arguments.keys()), (
-                "Each paramater must have a start index", arguments.keys())
+                "{} paramater must have a start index".format(p), arguments.keys())
 
         self.save_error_log = False
         self.order = order
@@ -57,6 +58,7 @@ class Simulator:
         if not train:
             argumentMap["out"] = tmp_out_path
 
+        delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
         size = math.ceil(num_params_to_sim / MAX_SIM_SIZE)
         
         with alive_bar(size) as bar:

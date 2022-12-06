@@ -43,8 +43,8 @@ repeat $i
     let Pnoise = (8*vn)/(Va*Va)
     let dbpn = db(Pnoise)
     let pw = ib*1.2
-    print pw >> {out}/vco-power-test.csv
-    print dbpn >> {out}/vco-pnoise-test.csv
+    print pw >> {out}/vco-power.csv
+    print dbpn >> {out}/vco-pnoise.csv
 
     tran 1ns 100ns
     meas tran tdiff1 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
@@ -54,11 +54,11 @@ repeat $i
     meas tran tdiff2 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
     let f2 = 1/tdiff2
     let ft = abs(tran1.f1-f2)
-    print ft >> {out}/vco-tuningrange-test.csv
+    print ft >> {out}/vco-tuningrange.csv
 
-    print $w_array[$&index] >> {out}/vco-w-test.csv
-    print $w1_array[$&index] >> {out}/vco-w1-test.csv
-    print $w2_array[$&index] >> {out}/vco-w2-test.csv
+    print $w_array[$&index] >> {out}/vco-w.csv
+    print $w1_array[$&index] >> {out}/vco-w1.csv
+    print $w2_array[$&index] >> {out}/vco-w2.csv
 
 end
 .endc
