@@ -14,17 +14,22 @@ import time
 
 def generate_dataset_given_config(train_config, circuit_config):
     if train_config["pipeline"] == "LourencoPipeline":
+        print("Return Lorunco Dataset")
         return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"])
     else:
         if train_config["basedata"]:
+            print("Return Base Dataset")
             return BaseDataset(circuit_config["order"], circuit_config["sign"])
         else:
             if train_config["subfeasible"]:
                 if train_config["duplication"] == 0:
+                    print("Return SoftArgMax Dataset")
                     return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"])
                 else:
+                    print("Return Ablation Duplication Dataset")
                     return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"])
             else:
+                print("Return Argmax Dataset")
                 return ArgMaxDataset(circuit_config["order"], circuit_config["sign"])
 
 
