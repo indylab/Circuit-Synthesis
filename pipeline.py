@@ -96,7 +96,7 @@ def pipeline():
         performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
         parameter, performance = getData(parameter_file_list, performance_file_list, circuit_config["arguments"]["out"])
 
-
+    print("Pipeline Start")
     pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
                               train_config=train_config, model=model)
 

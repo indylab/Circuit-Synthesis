@@ -74,14 +74,17 @@ class ModelEvaluator:
         subset = self.train_config["subset"]
         metrics_dict = generate_metrics_given_config(self.train_config)
         for percentage in subset:
+            print("Running with percentage {}".format(percentage))
             if percentage == 1 or percentage > 1:
                 raise ValueError("Subset Percentage must smaller than 1")
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) != 100 \
                     and np.gcd(int(percentage * 100), 100) != int(percentage * 100):
                 raise ValueError("Subset Percentage must be divisble")
             subset_metrics_dict = generate_metrics_given_config(self.train_config)
+            count = 0
             for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage):
-
+                count += 1
+                print("Run with {} percentage of training data, Run number {}".format(percentage, count))
                 new_train_parameter, new_train_performance = self.dataset.modify_data(parameter_train, performance_train, train=True)
                 new_test_parameter, new_test_performance = self.dataset.modify_data(parameter_test,
                                                                                       performance_test, train=False)

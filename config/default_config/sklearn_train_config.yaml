@@ -1,4 +1,3 @@
-process_dataset: ArgmaxDataset
 subset:
   - 0.05
   - 0.1
