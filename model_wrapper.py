@@ -61,6 +61,7 @@ class PytorchModelWrapper:
                 val_accs.append(test_accuracy)
 
         for epoch in range(self.train_config["epochs"]):
+            print('epoch: ', epoch, '')
             self.model.train()
             avg_loss = 0
             val_avg_loss = 0
@@ -97,9 +98,11 @@ class PytorchModelWrapper:
                 if self.train_config["train_margin_accuracy"]:
                     train_accuracy = self.eval_epoch_accuracy(train_X, scaler)
                     train_accs.append(train_accuracy)
+                    print('train',train_accuracy)
                 if self.train_config["test_margin_accuracy"]:
                     test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
                     val_accs.append(test_accuracy)
+                    print('test',test_accuracy)
         result_dict = dict()
 
         result_dict["train_loss"] = losses

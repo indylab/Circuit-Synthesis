@@ -78,7 +78,7 @@ class Simulator:
                             updated_netlist_filepath]
                 else:
                     args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
-
+            
                 with open('out-file.txt', 'w') as f:
                     subprocess.run(args,stdout=f,stderr=f)
                 x, y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])

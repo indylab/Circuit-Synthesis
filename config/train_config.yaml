@@ -1,6 +1,6 @@
 pipeline: CrossFoldValidationPipeline
 circuit: Nmos
-rerun_training: False
+rerun_training: True
 device: cpu
 subset:
   - 0.5
