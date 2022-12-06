@@ -23,10 +23,10 @@ V1 net7 0 dc 0 ac 1 portnum 1 z0 50
 
 .control
 
-set ls_array = ( {ls_array} )
-set ld_array = ( {ld_array} )
-set lg_array = ( {lg_array} )
-set w_array = ( {w_array} )
+set ls_array = ( {LNA-ls_array} )
+set ld_array = ( {LNA-ld_array} )
+set lg_array = ( {LNA-lg_array} )
+set w_array = ( {LNA-w_array} )
 
 set i = {num_samples}
 let index = 1
@@ -45,17 +45,17 @@ repeat $i
 
     let G1 = (real(s21))^2
     let G2 = vecmax(G1)
-    print G2 >> {out}Gt-test.csv
+    print G2 >> {out}/LNA-Gt.csv
 
 
-    print reals11 >> {out}s11-test.csv
+    print reals11 >> {out}/LNA-s11.csv
     let nf = real(minimum(NF))
-    print nf >> {out}nf-test.csv
+    print nf >> {out}/LNA-nf.csv
 
-    print $ls_array[$&index] >> {out}ls-test.csv
-    print $ld_array[$&index] >> {out}ld-test.csv
-    print $lg_array[$&index] >> {out}lg-test.csv
-    print $w_array[$&index] >> {out}w-test.csv
+    print $ls_array[$&index] >> {out}/LNA-ls.csv
+    print $ld_array[$&index] >> {out}/LNA-ld.csv
+    print $lg_array[$&index] >> {out}/LNA-lg.csv
+    print $w_array[$&index] >> {out}/LNA-w.csv
 
     let index = index + 1
 end

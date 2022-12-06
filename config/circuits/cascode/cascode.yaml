@@ -20,10 +20,10 @@ arguments:
   cascode-w0_start: 4u
   cascode-w0_stop: 7.5u
   cascode-w0_change: 0.25u
-  cascode-w1_start: "7u",
-  cascode-w1_stop: "10u",
-  cascode-w1_change: "0.2u",
-  cascode-r_start: 200,
-  cascode-r_stop: 500,
-  cascode-r_change: 18.75,
+  cascode-w1_start: 7u
+  cascode-w1_stop: 10u
+  cascode-w1_change: 0.2u
+  cascode-r_start: 200
+  cascode-r_stop: 500
+  cascode-r_change: 18.75
   out: data/cascode
