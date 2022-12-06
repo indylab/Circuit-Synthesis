@@ -16,13 +16,16 @@ def generate_dataset_given_config(train_config, circuit_config):
     if train_config["pipeline"] == "LourencoPipeline":
         return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"])
     else:
-        if train_config["subfeasible"]:
-            if train_config["duplication"] == 0:
-                return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"])
-            else:
-                return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"])
+        if train_config["basedata"]:
+            return BaseDataset(circuit_config["order"], circuit_config["sign"])
         else:
-            return ArgMaxDataset(circuit_config["order"], circuit_config["sign"])
+            if train_config["subfeasible"]:
+                if train_config["duplication"] == 0:
+                    return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"])
+                else:
+                    return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"])
+            else:
+                return ArgMaxDataset(circuit_config["order"], circuit_config["sign"])
 
 
 def generate_circuit_given_config(train_config):
