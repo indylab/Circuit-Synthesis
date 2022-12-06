@@ -15,7 +15,6 @@ def setup():
     pwd = os.getcwd()
 
 
-    simulate_out_folder = os.path.join(pwd, "out")
     train_result_folder = os.path.join(pwd, "result_out")
     train_plot_folder = os.path.join(pwd, "out_plot")
     tmp_netlist_out_folder = os.path.join(pwd, "tmp_out")
@@ -28,7 +27,7 @@ def setup():
     two_stage_data_out_path = os.path.join(test_data_out_folder, "two_stage")
     VCO_data_out_path = os.path.join(test_data_out_folder, "VCO")
 
-    create_folder(simulate_out_folder, "SIMULATE OUT")
+
     create_folder(train_result_folder, "TRAIN RESULT")
     create_folder(train_plot_folder, "TRAIN PLOT")
     create_folder(tmp_netlist_out_folder, "TEMP NETLIST OUT")
