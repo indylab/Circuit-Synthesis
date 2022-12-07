@@ -6,7 +6,7 @@ parameter_list:
   - mixer-wt
 performance_list:
   - mixer-PowerConsumption
-  - mixer-Swing.csv
+  - mixer-Swing
   - mixer-Conversion_Gain
 order:
   - 0
