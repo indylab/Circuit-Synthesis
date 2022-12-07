@@ -9,6 +9,7 @@ import re
 from metrics import get_margin_error
 from scipy import stats
 from torch.cuda import is_available
+import platform
 
 CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 
@@ -33,6 +34,15 @@ def load_circuit(circuit_name):
     config_ngspice = load_yaml(folder)
 
     config.update(config_ngspice)
+
+    system = platform.system()
+    if system == "Windows":
+        config["ngspice_exec"] = config["ngspice_exec_path"]
+    else:
+        config["ngspice_exec"] = config["ngspice_exec_direct"]
+
+    del config["ngspice_exec_path"]
+    del config["ngspice_exec_direct"]
     return config
 
 def load_train_config(configpath=DEFAULT_TRAIN_CONFIG_PATH):

@@ -1,1 +1,2 @@
-ngspice_exec: ./ngspice/Spice64/bin/ngspice.exe
+ngspice_exec_path: ./ngspice/Spice64/bin/ngspice.exe
+ngspice_exec_direct: ngspice

@@ -1,36 +1,33 @@
-test_netlist:
-  - mixer/conversiongain_mixer-test.sp
-  - mixer/new_distortion_mixer-test.sp
-  - mixer/Power_consumption_mixer-test.sp
+test_netlist: mixer/Mixer-test.sp
 parameter_list:
-  - mixer-Vbrf
-  - mixer-RL
-  - mixer-WN
-  - mixer-WT
+  - mixer-vbrf
+  - mixer-rl
+  - mixer-wn
+  - mixer-wt
 performance_list:
-  - mixer-conversiongain1
-  - mixer-mixer_distortion
-  - mixer-Power_consumption
+  - mixer-PowerConsumption
+  - mixer-Swing.csv
+  - mixer-Conversion_Gain
 order:
   - 0
+  - 1
   - 2
-  - 1
 sign:
-  - 1
+  - -1
   - 1
   - 1
 arguments:
-  model_path: config/model/45nm_CS.pm
-  mixer-Vbrf_start: 600m
-  mixer-Vbrf_stop: 810m
-  mixer-Vbrf_change: 30m
-  mixer-RL_start: 240
-  mixer-RL_stop: 520
-  mixer-RL_change: 40
-  mixer-WN_start: 8.55u
-  mixer-WN_stop: 11.70u
-  mixer-WN_change: 0.45u
-  mixer-WT_start: 17.1u
-  mixer-WT_stop: 23.4u
-  mixer-WT_change: 0.9u
+  model_path: config/model/45n270AModels.pm
+  mixer-vbrf_start: 600m
+  mixer-vbrf_stop: 810m
+  mixer-vbrf_change: 30m
+  mixer-rl_start: 240
+  mixer-rl_stop: 520
+  mixer-rl_change: 40
+  mixer-wn_start: 8.55u
+  mixer-wn_stop: 11.70u
+  mixer-wn_change: 0.45u
+  mixer-wt_start: 17.1u
+  mixer-wt_stop: 23.4u
+  mixer-wt_change: 0.9u
   out: data/mixer
