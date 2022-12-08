@@ -1,6 +1,6 @@
 pipeline: CrossFoldValidationPipeline
-circuit: mixer
-rerun_training: True
+circuit: nmos
+rerun_training: False
 device: cpu
 subset:
   - 0.9

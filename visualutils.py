@@ -288,7 +288,7 @@ def plot_multiple_loss_with_confidence(loss, train_config, visual_config, save_f
         ax.set_xlim([0, None])
         ax.set_ylim([0, None])
         ax.legend()
-        plt.ylabel("Test {} Loss".format("L1"))
+        plt.ylabel("{} {} Loss".format(save_name, "L1"))
         plt.xlabel("Epochs")
 
         plt.savefig(save_path, dpi=250)

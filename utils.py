@@ -236,3 +236,7 @@ def save_result(result, pipeline_save_name):
     for k in result.keys():
         out_variable_save_path = os.path.join(save_folder, k + ".npy")
         np.save(out_variable_save_path, result[k])
+
+
+def check_save_data_status(parameter_file_list, performance_file_list, save_path, circuit_config):
+    pass
