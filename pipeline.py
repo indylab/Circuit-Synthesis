@@ -4,7 +4,8 @@ import os
 
 from models import ModelEvaluator
 from simulator import load_simulator
-from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, validate_config, save_result
+from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, \
+    validate_config, save_result, check_save_data_status, saveDictToTxt
 from metrics import get_margin_error
 from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
@@ -97,7 +98,8 @@ def pipeline():
     simulator = load_simulator(circuit_config)
     model = generate_model_given_config(model_config)
 
-    if train_config["rerun_training"]:
+
+    if train_config["rerun_training"] or not check_save_data_status(circuit_config):
         data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
         start =time.time()
         print('start sim')
@@ -106,8 +108,11 @@ def pipeline():
         print('Params shape', parameter.shape)
         print('Perfomance shape',performance.shape)
 
-        
+        print("Saving metadata for this simulation")
+        metadata_path = os.path.join(circuit_config["arguments"]["out"], "metadata.txt")
+        saveDictToTxt(circuit_config["arguments"], metadata_path)
     else:
+        print("Load from saved data")
         parameter_file_list = [x + ".csv" for x in circuit_config["parameter_list"]]
         performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
         parameter, performance = getData(parameter_file_list, performance_file_list, circuit_config["arguments"]["out"])

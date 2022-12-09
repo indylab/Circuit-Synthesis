@@ -238,5 +238,53 @@ def save_result(result, pipeline_save_name):
         np.save(out_variable_save_path, result[k])
 
 
-def check_save_data_status(parameter_file_list, performance_file_list, save_path, circuit_config):
-    pass
+def check_save_data_status(circuit_config):
+
+    parameter_file_list = [x + ".csv" for x in circuit_config["parameter_list"]]
+    performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
+
+    save_path = circuit_config["arguments"]["out"]
+    for file_name in parameter_file_list + performance_file_list:
+        if not os.path.exists(os.path.join(save_path, file_name)):
+            return False
+
+    metadata_path = os.path.join(save_path, "metadata.txt")
+    if not os.path.exists(metadata_path):
+        print("metadata not exist")
+        return False
+    else:
+        return_dict = parsetxtToDict(metadata_path)
+        keys = set(list(circuit_config["arguments"].keys()) + list(return_dict.keys()))
+
+        for key in keys:
+            try:
+                if circuit_config["arguments"][key] != return_dict[key]:
+                    print("Train Config Not Match")
+                    return False
+            except KeyError:
+                print("Train Config Not Match, Additional Parameter")
+                return False
+
+    return True
+
+def parsetxtToDict(file_path):
+    with open(file_path, "r") as file:
+        file_info = file.readlines()
+        return_dict = dict()
+
+        for line in file_info:
+            line_info = line.strip().split(":")
+            try:
+                return_dict[line_info[0]] = float(line_info[1])
+            except ValueError:
+                return_dict[line_info[0]] = line_info[1]
+        return return_dict
+
+def saveDictToTxt(dict, save_path):
+    with open(save_path, "w") as file:
+        count = 0
+        for k,v in dict.items():
+            if count != 0:
+                file.write('\n')
+            file.write(str(k) + ":" + str(v))
+            count += 1

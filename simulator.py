@@ -22,9 +22,9 @@ class Simulator:
 
         self.ngspice_exec = ngspice_exec
         self.test_netlist = os.path.join('config', 'circuits', test_netlist)
-        self.arguments = arguments
-        self.performance_list = performance_list
-        self.parameter_list = parameter_list
+        self.arguments = dict(arguments)
+        self.performance_list = list(performance_list)
+        self.parameter_list = list(parameter_list)
 
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
