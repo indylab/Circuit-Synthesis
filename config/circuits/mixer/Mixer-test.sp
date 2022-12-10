@@ -57,8 +57,6 @@ alter @mn2[w]=$wn_array[$&index]
 alter @mn7[w]=$wt_array[$&index]
 alter @mn6[w]=$wt_array[$&index]
 
-let index = index + 1
-
 tran 0.5n 20n
 meas tran id1 RMS i(V1) from=10ns to=19ns
 let Power=id1*1.2
@@ -79,12 +77,12 @@ let wt = $wt_array[$&index]
 let rl = $rl_array[$&index]
 let vbrf = $vbrf_array[$&index]
 
-print wn >> data/mixer/mixer-wn.csv
-print wt >> data/mixer/mixer-wt.csv
-print rl >> data/mixer/mixer-rl.csv
-print vbrf >> data/mixer/mixer-vbrf.csv
+print wn >> {out}/mixer-wn.csv
+print wt >> {out}/mixer-wt.csv
+print rl >> {out}/mixer-rl.csv
+print vbrf >> {out}/mixer-vbrf.csv
 
-
+let index = index + 1
 end
 
 
