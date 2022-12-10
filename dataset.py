@@ -28,11 +28,11 @@ class BaseDataset:
         """
         Preprocess data to be used in the model
         """
-        data = np.hstack((parameter, performance))
+        data = np.hstack((np.copy(parameter), np.copy(performance)))
         scaler = MinMaxScaler(feature_range=(-1, 1))
         scaler.fit(data)
-        data = scaler.transform(data)
-        return data[:, :parameter.shape[1]], data[:, parameter.shape[1]:], scaler
+        scaled_data = scaler.transform(data)
+        return scaled_data[:, :parameter.shape[1]], scaled_data[:, parameter.shape[1]:], scaler
 
     @staticmethod
     def inverse_transform(parameter, performance, scaler):

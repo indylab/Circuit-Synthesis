@@ -192,8 +192,8 @@ def baseline_lookup_testing(performance_test, performance_train, sign):
     unique_performance_train = np.unique(performance_train, axis=0)
     unique_performance_test = np.unique(performance_test, axis=0)
 
-    sign_performance_train = unique_performance_train * sign
-    sign_performance_test = unique_performance_test * sign
+    sign_performance_train = np.array(unique_performance_train) * sign
+    sign_performance_test = np.array(unique_performance_test) * sign
 
     lookup_performance_test = []
 
