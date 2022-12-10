@@ -1,6 +1,6 @@
 pipeline: SklearnPipeline
-circuit: cascode
-rerun_training: False
+circuit: VCO
+rerun_training: True
 device: cpu
 subset:
   - 0.95

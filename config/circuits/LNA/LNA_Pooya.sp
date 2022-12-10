@@ -52,11 +52,17 @@ repeat $i
     let nf = real(minimum(NF))
     print nf >> {out}/LNA-nf.csv
 
-    print $ls_array[$&index] >> {out}/LNA-ls.csv
-    print $ld_array[$&index] >> {out}/LNA-ld.csv
-    print $lg_array[$&index] >> {out}/LNA-lg.csv
-    print $w_array[$&index] >> {out}/LNA-w.csv
+    let ls = $ls_array[$&index]
+    let ld = $ld_array[$&index]
+    let lg = $lg_array[$&index]
+    let w = $w_array[$&index]
 
+    print ls >> {out}/LNA-ls.csv
+    print ld >> {out}/LNA-ld.csv
+    print lg >> {out}/LNA-lg.csv
+    print w >> {out}/LNA-w.csv
+
+    set appendwrite
     let index = index + 1
 end
 .endc

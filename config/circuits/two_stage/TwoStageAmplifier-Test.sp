@@ -55,11 +55,14 @@ repeat $i
     let id1 = @mn8[id]
     let pw = (id1+id2)*3.3
     let av = v(out2)/v(net1)
-    wrdata {out}/ts-w0.csv $w0_array[$&index]
-    wrdata {out}/ts-w1.csv $w1_array[$&index]
-    wrdata {out}/ts-w2.csv $w2_array[$&index]
-    wrdata {out}/ts-pw.csv pw
-    wrdata {out}/ts-a0.csv av
+    let w0 = $w0_array[$&index]
+    let w1 = $w1_array[$&index]
+    let w2 = $w2_array[$&index]
+    print w0 >> {out}/ts-w0.csv
+    print w1 >> {out}/ts-w1.csv
+    print w2 >> {out}/ts-w2.csv
+    print pw >> {out}/ts-pw.csv
+    print av >> {out}/ts-a0.csv
 
     ac dec 1000 1G 100G
     let resp = db(v(out2)/v(net1))

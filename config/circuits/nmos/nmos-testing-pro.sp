@@ -28,11 +28,17 @@ repeat $i
     let cdb = abs(@mn0[cdb])
     let cp = (1+a0)*cgd+cdb
     let bw = 1/(2*pi*r_test*cp)
-    wrdata {out}/nmos-r.csv $r_array[$&index]
-    wrdata {out}/nmos-w.csv $w_array[$&index]
-    wrdata {out}/nmos-bw.csv bw
-    wrdata {out}/nmos-pw.csv pw
-    wrdata {out}/nmos-a0.csv a0
+
+    let r = $r_array[$&index]
+    let w = $w_array[$&index]
+
+    print r >> {out}/nmos-r.csv
+    print w >> {out}/nmos-w.csv
+    print bw >> {out}/nmos-bw.csv
+    print pw >> {out}/nmos-pw.csv
+    print a0 >> {out}/nmos-a0.csv
+
+
     set appendwrite
     let index = index + 1
 end

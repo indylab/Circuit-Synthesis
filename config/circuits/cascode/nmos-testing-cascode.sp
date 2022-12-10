@@ -32,12 +32,17 @@ repeat $i
     let cp = (1+a0)*cgd+cdb
     let bw = 1/(2*pi*r_test*cp)
     print bw cgd cdb
-    wrdata {out}/cascode-r.csv $r_array[$&index]
-    wrdata {out}/cascode-w0.csv $w0_array[$&index]
-    wrdata {out}/cascode-w1.csv $w1_array[$&index]
-    wrdata {out}/cascode-bw.csv bw
-    wrdata {out}/cascode-pw.csv pw
-    wrdata {out}/cascode-a0.csv a0
+
+    let r = $r_array[$&index]
+    let w0 = $w0_array[$&index]
+    let w1 = $w1_array[$&index]
+
+    print r >> {out}/cascode-r.csv
+    print w0 >> {out}/cascode-w0.csv
+    print w1 >> {out}/cascode-w1.csv
+    print bw >> {out}/cascode-bw.csv
+    print pw >> {out}/cascode-pw.csv
+    print a0 >> {out}/cascode-a0.csv
     set appendwrite
 	let index = index + 1
 end

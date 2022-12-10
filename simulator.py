@@ -54,8 +54,6 @@ class Simulator:
         updated_netlist_filepath = os.path.join(tmp_out_path, updated_netlist_filename)
         argumentMap = self.arguments
 
-        all_x, all_y = [], []
-
         if not train:
             argumentMap["out"] = tmp_out_path
 
@@ -84,15 +82,11 @@ class Simulator:
 
                 with open(os.path.join(os.getcwd(), "tmp_out", 'out-file.txt'), 'w') as f:
                     subprocess.run(args,stdout=f,stderr=f)
-                x, y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
 
-                all_x.append(x)
-                all_y.append(y)
                 bar()
 
-            final_x = np.vstack(all_x)
-            final_y = np.vstack(all_y)
 
+            final_x, final_y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
             assert final_x.shape[
                     0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
             assert final_y.shape[

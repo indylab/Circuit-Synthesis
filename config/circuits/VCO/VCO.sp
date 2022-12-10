@@ -55,10 +55,12 @@ repeat $i
     let f2 = 1/tdiff2
     let ft = abs(tran1.f1-f2)
     print ft >> {out}/vco-tuningrange.csv
-
-    print $w_array[$&index] >> {out}/vco-w.csv
-    print $w1_array[$&index] >> {out}/vco-w1.csv
-    print $w2_array[$&index] >> {out}/vco-w2.csv
+    let w = $w_array[$&index]
+    let w1 = $w1_array[$&index]
+    let w2 = $w2_array[$&index]
+    print w >> {out}/vco-w.csv
+    print w1 >> {out}/vco-w1.csv
+    print w2 >> {out}/vco-w2.csv
 
 end
 .endc
