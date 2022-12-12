@@ -5,7 +5,7 @@ import os
 from models import ModelEvaluator
 from simulator import load_simulator
 from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, \
-    validate_config, save_result, check_save_data_status, saveDictToTxt
+    validate_config, save_result, check_save_data_status, saveDictToTxt, checkAlias
 from metrics import get_margin_error
 from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
@@ -117,7 +117,11 @@ def pipeline():
         performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
         parameter, performance = getData(parameter_file_list, performance_file_list, circuit_config["arguments"]["out"])
 
+    print("Check Alias Problem")
+    checkAlias(parameter, performance)
+
     print("Pipeline Start")
+
     pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
                               train_config=train_config, model=model)
 

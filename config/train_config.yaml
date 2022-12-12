@@ -1,6 +1,6 @@
 pipeline: SklearnPipeline
-circuit: mixer
-rerun_training: True
+circuit: VCO
+rerun_training: False
 device: cpu
 subset:
   - 0.95

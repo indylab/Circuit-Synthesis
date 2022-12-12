@@ -62,6 +62,7 @@ repeat $i
     print w1 >> {out}/vco-w1.csv
     print w2 >> {out}/vco-w2.csv
 
+    let index = index + 1
 end
 .endc
 .end

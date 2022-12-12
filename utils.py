@@ -288,3 +288,35 @@ def saveDictToTxt(dict, save_path):
                 file.write('\n')
             file.write(str(k) + ":" + str(v))
             count += 1
+
+
+def sortVector(parameter, performance):
+    data = np.hstack((performance, parameter))
+
+    for i in range(len(performance.shape)):
+        data = sorted(data, key=lambda x: x[i], reverse=True)
+    data = np.array(data)
+    return data[:, performance.shape[1]:], data[:, :performance.shape[1]]
+
+
+def checkAlias(parameter, performance):
+
+    sort_parameter, sort_performance = sortVector(parameter, performance)
+
+    counter = 0
+    duplicate_amount = 0
+    while counter <= len(sort_performance) - 2:
+        if np.all(np.equal(sort_performance[counter], sort_performance[counter + 1])):
+            print("BELOW ARE THE DUPLICATE CASE")
+            print("THE TWO DIFFERENT PARAMETER")
+            print(sort_parameter[counter])
+            print(sort_parameter[counter + 1])
+            print("THE SAME RESULT PERFORMANCE")
+            print(sort_performance[counter])
+
+            duplicate_amount += 1
+        counter += 1
+
+    print("TOTAL DUPLICATE CASE IS {}".format(duplicate_amount))
+    if duplicate_amount > 0:
+        raise ValueError("THERE ARE ALIASING IN THE RESULT")

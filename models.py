@@ -57,6 +57,7 @@ class EvalModel:
 class ModelEvaluator:
     def __init__(self, parameter, performance, dataset, metric, simulator, train_config, model):
         new_parameter, new_performance, data_scaler = dataset.transform_data(parameter, performance)
+
         self.parameter = new_parameter
         self.performance = new_performance
         self.simulator = simulator
