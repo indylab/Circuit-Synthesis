@@ -170,8 +170,8 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
 
         for i in range(len(self.order) - 1, -1, -1):
             data = sorted(data, key=lambda x: x[self.order[i]], reverse=True)
-
-        return data[:, :performance.shape[1]], data[:, performance.shape[1]:]
+        data = np.array(data)
+        return data[:, performance.shape[1]:], data[:, :performance.shape[1]]
 
     def generate_duplication_data(self, parameter, performance, temp_performance, train):
         candidates_vector_parameter, candidates_vector_performance = self.find_feasible(parameter, performance,
