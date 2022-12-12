@@ -1,5 +1,5 @@
 pipeline: SklearnPipeline
-circuit: mixer
+circuit: vco #vco and lna bugs
 rerun_training: True
 device: cpu
 subset:

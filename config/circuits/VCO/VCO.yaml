@@ -1,11 +1,13 @@
-test_netlist: VCO/VCO.sp
+test_netlist: VCO/VCO1.sp
 parameter_list:
-  - vco-w
-  - vco-w1
-  - vco-w2
+  - vco-wn
+  - vco-wt
+  - vco-wv
+  - vco-lt
 performance_list:
-  - vco-power
-  - vco-pnoise
+  - vco-out_power
+  - vco-power_consumption
+  - vco-freq
   - vco-tuningrange
 order:
   - 0
@@ -17,13 +19,18 @@ sign:
   - 1
 arguments:
   model_path: config/model/45nm_CS.pm
-  vco-w_start: 4u
-  vco-w_stop: 5.4u
-  vco-w_change: 0.1u
-  vco-w1_start: 2u
-  vco-w1_stop: 10u
-  vco-w1_change: 0.5u
-  vco-w2_start: 15u
-  vco-w2_stop: 17.8u
-  vco-w2_change: 0.2u
+  vco-wn_start: 117u
+  vco-wn_stop: 124u
+  vco-wn_change: 1u
+  vco-wt_start: 145u
+  vco-wt_stop: 159u
+  vco-wt_change: 2u
+  vco-wv_start: 73u
+  vco-wv_stop: 87u
+  vco-wv_change: 2u
+  vco-lt_start: 3.6u
+  vco-lt_stop: 4.4u
+  vco-lt_change: 0.1u
   out: data/VCO
+
+  

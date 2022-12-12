@@ -1,67 +1,76 @@
 nmos:VCO
-
 .include {model_path}
-
 .option TEMP=27C
-
-L2 net16 net18 590.00p
-L0 0 ouputn 590.00p
-L1 0 ouputp 590.00p
-mn3 net1 net1 vdd! 0 PMOS w=2u l=1u
-C6 net16 net18 400f ic=200.0m
-C0 ouputn 0 80f
-C1 ouputp 0 80f ic=200.0m
-V2 vctrl 0 dc 0
-V0 vdd! 0 dc 1.2
-mp2 net18 net1 vdd! vdd! PMOS w=100u l=1u
-mp1 ouputp ouputn net16 vdd! PMOS w=4u l=65n
-mp0 ouputn ouputp net16 vdd! PMOS w=4u l=65n
-R0 0 net1 5.0K
-mp4 ouputn vctrl ouputn ouputn PMOS w=15u l=65n
-mp5 ouputp vctrl ouputp ouputp PMOS w=15u l=65n
-
+mn6 Vcont vout2 Vcont 0 NMOS w=80u l=45n
+mn5 Vcont vout1 Vcont 0 NMOS w=80u l=45n
+mn3 net3 net3 0 0 NMOS w=11u l=45n
+mn4 net5 net3 0 0 NMOS w=150u l=45n
+mn1 vout1 vout2 net5 0 NMOS w=120u l=45n
+mn0 vout2 vout1 net5 0 NMOS w=120u l=45n
+L1 net4 vout1 4n
+L0 net4 vout2 4n
+R1 net4 vout2 2200
+R0 net4 vout1 2200
+C1 net4 vout2 150.0f ic=1
+C0 net4 vout1 150.0f
+V1 Vcont 0 dc 0.6
+V0 net4 0 dc 1.2
+I3 net4 net3  dc 300u
+E1 (vo 0 vout1 vout2) 1
 .control
-set w_array = ( {vco-w_array} )
-set w1_array = ( {vco-w1_array} )
-set w2_array = ( {vco-w2_array} )
-
+set wn_array = ( {vco-wn_array} )
+set wt_array = ( {vco-wt_array} )
+set wv_array = ( {vco-wv_array} )
+set lt_array = ( {vco-lt_array} )
 set i = {num_samples}
 let index = 1
 repeat $i
-    alter @mp1[w] = w_array[$&index]
-    alter @mp0[w] = w_array[$&index]
-    alter @mp5[w]= w2_array[$&index]
-    alter @mp4[w]= w2_array[$&index]
-    alter @mn3[w] = w1_array[$&index]
+   let f = 3G
+   let Q = 30
+alter @mn0[w] = $wn_array[$&index]
+alter @mn1[w] = $wt_array[$&index]    
+alter @mn4[w] = $wt_array[$&index]
+alter @mn5[w] = $wv_array[$&index]
+alter @mn6[w] = $wv_array[$&index]
+alter L1 = $lt_array[$&index]
+alter L0 = $lt_array[$&index]
+alter R0 = ($lt_array[$&index])*2*pi*f*Q
+alter R0 = ($lt_array[$&index])*2*pi*f*Q
+alter C1 = 1/(185.15*f*f*($lt_array[$&index]))
+alter C0 = 1/(185.15*f*f*($lt_array[$&index]))
 
-    op
-    let gm = @mp1[gm]
-    let rs = (590p*20G)/15
-    let vn = (1.38e-23)*300*gm*15*rs*rs*10k
-    let ib = @mp2[id]
-    let Va =  ib*15*15*rs
-    let Pnoise = (8*vn)/(Va*Va)
-    let dbpn = db(Pnoise)
-    let pw = ib*1.2
-    print pw >> {out}/vco-power.csv
-    print dbpn >> {out}/vco-pnoise.csv
+let w = $wn_array[$&index]
+let w1 = $wt_array[$&index]
+let w2 = $wv_array[$&index]
+let w3 = $lt_array[$&index]
 
-    tran 1ns 100ns
-    meas tran tdiff1 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
-    let f1 = 1/tdiff1
-    alter V2 dc = 1
-    tran 1ns 100ns
-    meas tran tdiff2 TRIG v(ouputn) VAL=0 RISE=1 TARG v(ouputn) VAL=0 RISE=2
-    let f2 = 1/tdiff2
-    let ft = abs(tran1.f1-f2)
-    print ft >> {out}/vco-tuningrange.csv
-    let w = $w_array[$&index]
-    let w1 = $w1_array[$&index]
-    let w2 = $w2_array[$&index]
-    print w >> {out}/vco-w.csv
-    print w1 >> {out}/vco-w1.csv
-    print w2 >> {out}/vco-w2.csv
+print w >> {out}/vco-wn.csv
+print w1 >> {out}/vco-wt.csv
+print w2 >> {out}/vco-wv.csv
+print w3 >> {out}/vco-lt.csv
 
+let index = index + 1
+tran 0.05n 20n
+let Vout = v(Vout1)-(Vout2)
+meas tran hp TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
+let f0 = 1/(2*hp)
+print f0 >> vco-freq.csv
+meas tran Voutrms RMS Vout from=10ns to=18ns
+let Pout = Voutrms*Voutrms/50
+print Pout >> vco-out_power.csv 
+meas tran Itot RMS i(V0) from=10ns to=18ns
+let DC_Power= Itot * 1.2
+print DC_Power >> vco-power_consumption.csv
+alter @V1[dc] = 0
+tran 0.05n 20n
+meas tran tdiff1 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
+let f1 = 1/(2*tdiff1)
+alter @V1[dc] = 1.2
+tran 0.05n 20n
+meas tran tdiff2 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
+let f2 = 1/(2*tdiff2)
+let TR = abs((tran2.f1)-f2)
+print TR >> vco-tuningrange.csv
 end
 .endc
 .end
