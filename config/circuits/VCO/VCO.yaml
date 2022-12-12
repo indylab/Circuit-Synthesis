@@ -1,4 +1,4 @@
-test_netlist: VCO/VCO1.sp
+test_netlist: VCO/VCO.sp
 parameter_list:
   - vco-wn
   - vco-wt
