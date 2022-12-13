@@ -19,9 +19,10 @@ class BasePytorchModelDataset(Dataset):
 
 
 class BaseDataset:
-    def __init__(self, order,sign) -> None:
+    def __init__(self, order,sign, train_config) -> None:
         self.order = order
         self.sign = np.array(sign)
+        self.train_config = train_config
 
     @staticmethod
     def transform_data(parameter, performance):
@@ -60,17 +61,26 @@ class BaseDataset:
         inverse_fit_performance = inverse_fit_performance * self.sign
         return parameter,inverse_fit_performance
 
-    def modify_data(self, parameter, performance, train=True):
-        return parameter, performance
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            return train_parameter, train_performance
+        else:
+            return test_parameter, test_performance
 
 
 class LorencoDataset(BaseDataset):
-    def __init__(self, order, sign, n, K) -> None:
-        super().__init__(order,sign)
+    def __init__(self, order, sign, n, K, train_config) -> None:
+        super().__init__(order,sign, train_config)
         self.n = n
         self.K = K
 
-    def modify_data(self, parameter, performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            return self.LourencoMethod(train_parameter, train_performance)
+        else:
+            return test_parameter, test_performance
+
+    def LourencoMethod(self, parameter, performance):
         new_param = []
         new_perform = []
         average_perform = np.average(performance, axis=0)
@@ -88,30 +98,34 @@ class LorencoDataset(BaseDataset):
 
 
 class ArgMaxDataset(BaseDataset):
-    def __init__(self, order, sign) -> None:
-        super().__init__(order, sign)
+    def __init__(self, order, sign, train_config) -> None:
+        super().__init__(order, sign, train_config)
 
     def find_best_performance(self, parameter, performance):
         """
         Sorts the vectors according to the best perfomance from left to right
         """
-
+        if parameter.shape[0] == 0:
+            return -1, -1, False
         fit_parameter, fit_performance = self.fit(parameter, performance)
 
         for idx_axis in range(performance.shape[1]):
+
             res = np.argwhere(fit_performance[:,idx_axis] == np.amax(fit_performance[:,idx_axis])).reshape(-1)
+
             fit_performance = fit_performance[res]
             fit_parameter = fit_parameter[res]
             if len(res) == 1:
-                return fit_parameter.reshape(-1), fit_performance.reshape(-1)
+                return fit_parameter.reshape(-1), fit_performance.reshape(-1), True
 
     def find_max(self, parameter, performance, temp_performance):
         # find x' =  argmax (y) from pairs of (x,y)
         # Generate New pair of (x',y) and put them into new dataset
+
         candidates_vector_parameter, candidates_vector_performance = self.find_feasible(parameter, performance, temp_performance)
-        sort_vector_parameter, sort_vector_performance = self.find_best_performance(candidates_vector_parameter,
+        sort_vector_parameter, sort_vector_performance, find_max_boolean = self.find_best_performance(candidates_vector_parameter,
                                                                            candidates_vector_performance)
-        return sort_vector_parameter, sort_vector_performance
+        return sort_vector_parameter, sort_vector_performance, find_max_boolean
 
     def find_feasible(self,parameter, performance, temp_performance):
 
@@ -124,19 +138,33 @@ class ArgMaxDataset(BaseDataset):
         return parameter[comparison_matrix], performance[comparison_matrix]
 
 
-    def modify_data(self, parameter, performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            return self.argmaxModifyData(train_parameter, train_performance)
+        else:
+            if self.train_config["evaluation_same_distribution"]:
+                return self.argmaxModifyData(test_parameter, test_performance, train_parameter, train_performance)
+            else:
+                return test_parameter, test_performance
+
+    def argmaxModifyData(self, parameter, performance, same_dist_parameter = None, same_dist_performance = None):
         new_parameter = []
 
         for temp_performance in performance:
-            new_temp_parameter, _ = self.find_max(parameter, performance, temp_performance)
+            if same_dist_parameter is None:
+                new_temp_parameter, _, _ = self.find_max(parameter, performance, temp_performance)
+            else:
+                new_temp_parameter, _, find_max_boolean = self.find_max(same_dist_parameter, same_dist_performance, temp_performance)
+                if not find_max_boolean:
+                    new_temp_parameter, _, _ = self.find_max(parameter, performance, temp_performance)
             new_parameter.append(new_temp_parameter)
 
         return np.array(new_parameter),np.array(performance)
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
-    def __init__(self, order, sign, epsilon=0.2) -> None:
-        super().__init__(order, sign)
+    def __init__(self, order, sign, train_config, epsilon=0.2) -> None:
+        super().__init__(order, sign, train_config)
         self.epsilon = epsilon
 
     def scale_down_data(self, parameter, performance):
@@ -152,15 +180,17 @@ class SoftArgMaxDataset(ArgMaxDataset):
                 scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
         return parameter, scale_down_performance
 
-    def modify_data(self, parameter, performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            parameter, scale_down_performance = self.scale_down_data(train_parameter, train_performance)
+            return super().argmaxModifyData(parameter, scale_down_performance)
+        else:
+            return test_parameter, test_performance
 
-        parameter, scale_down_performance = self.scale_down_data(parameter, performance)
-
-        return super().modify_data(parameter, scale_down_performance)
 
 class AblationDuplicateDataset(SoftArgMaxDataset):
-    def __init__(self, order, sign, duplication, epsilon=0.2) -> None:
-        super().__init__(order, sign, epsilon)
+    def __init__(self, order, sign, duplication, train_config, epsilon=0.2) -> None:
+        super().__init__(order, sign, train_config, epsilon)
         self.duplication = duplication
 
     def sort_vectors(self, parameter, performance):
@@ -185,7 +215,13 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             num_sample = 1
         return sort_vector_parameter[:num_sample], sort_vector_performance[:num_sample]
 
-    def modify_data(self, parameter, performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            return self.ablationModifyData(train_parameter, train_performance)
+        else:
+            return test_parameter, test_performance
+
+    def ablationModifyData(self, parameter, performance):
         scale_down_parameter, scale_down_performance = self.scale_down_data(parameter, performance)
 
         new_parameter, new_performance = [], []
@@ -195,5 +231,3 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             new_performance += new_temp_performances
 
         return np.array(new_parameter), np.array(new_performance)
-
-
