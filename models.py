@@ -58,6 +58,9 @@ class ModelEvaluator:
     def __init__(self, parameter, performance, eval_dataset, metric, simulator, train_config, model):
         new_parameter, new_performance, data_scaler = eval_dataset.transform_data(parameter, performance)
 
+        if np.any(new_performance == 0):
+            raise ValueError("There is 0 in performance after scaling")
+
         self.parameter = new_parameter
         self.performance = new_performance
         self.simulator = simulator
@@ -92,8 +95,6 @@ class ModelEvaluator:
                 new_train_parameter, new_train_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
 
                 new_test_parameter, new_test_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
-
-
 
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
                                               new_train_parameter, new_train_performance,
