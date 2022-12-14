@@ -2,5 +2,6 @@ pipeline: CrossFoldValidationPipeline
 circuit: nmos
 rerun_training: False
 device: cpu
-check_circuit: False
+check_circuit: True
 num_sample_check: 8
+random_sample_scale: 2

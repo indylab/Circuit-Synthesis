@@ -322,13 +322,13 @@ def checkAlias(parameter, performance):
     if duplicate_amount > 0:
         raise ValueError("THERE ARE ALIASING IN THE RESULT")
 
-def evalCircuit(num_sample_check, simulator, scaler):
+def evalCircuit(num_sample_check, simulator, scaler, random_scale):
 
     num_parameter = len(simulator.parameter_list)
     num_performance = len(simulator.performance_list)
 
-    random_parameter = np.random.uniform(-1,1,size=(num_sample_check, num_parameter))
-    random_performance = np.random.uniform(-1,1,size=(num_sample_check, num_performance))
+    random_parameter = np.random.uniform(-1 * random_scale,random_scale,size=(num_sample_check, num_parameter))
+    random_performance = np.random.uniform(-1 * random_scale, random_scale,size=(num_sample_check, num_performance))
 
     scale_back_parameter, _ = BaseDataset.inverse_transform(random_parameter, random_performance, scaler)
 
