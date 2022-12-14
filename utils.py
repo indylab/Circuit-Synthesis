@@ -10,6 +10,7 @@ from metrics import get_margin_error
 from scipy import stats
 from torch.cuda import is_available
 import platform
+from dataset import BaseDataset
 
 CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 
@@ -320,3 +321,20 @@ def checkAlias(parameter, performance):
     print("TOTAL DUPLICATE CASE IS {}".format(duplicate_amount))
     if duplicate_amount > 0:
         raise ValueError("THERE ARE ALIASING IN THE RESULT")
+
+def evalCircuit(num_sample_check, simulator, scaler):
+
+    num_parameter = len(simulator.parameter_list)
+    num_performance = len(simulator.performance_list)
+
+    random_parameter = np.random.uniform(-1,1,size=(num_sample_check, num_parameter))
+    random_performance = np.random.uniform(-1,1,size=(num_sample_check, num_performance))
+
+    scale_back_parameter, _ = BaseDataset.inverse_transform(random_parameter, random_performance, scaler)
+
+    simulate_parameter, simulate_performance = simulator.runSimulation(scale_back_parameter, train=False)
+
+    print("The parameter been sampled is")
+    print(simulate_parameter)
+    print("The simulated performance is")
+    print(simulate_performance)

@@ -2,7 +2,7 @@ import numpy as np
 from dataset import BaseDataset
 
 from utils import generate_metrics_given_config, merge_metrics, run_simulation_given_parameter, \
-    generate_performance_diff_metrics, baseline_lookup_testing
+    generate_performance_diff_metrics, baseline_lookup_testing, evalCircuit
 from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
 
 def subset_split(X,y,train_percentage):
@@ -55,13 +55,13 @@ class EvalModel:
 
 
 class ModelEvaluator:
-    def __init__(self, parameter, performance, dataset, metric, simulator, train_config, model):
-        new_parameter, new_performance, data_scaler = dataset.transform_data(parameter, performance)
+    def __init__(self, parameter, performance, eval_dataset, metric, simulator, train_config, model):
+        new_parameter, new_performance, data_scaler = eval_dataset.transform_data(parameter, performance)
 
         self.parameter = new_parameter
         self.performance = new_performance
         self.simulator = simulator
-        self.dataset = dataset
+        self.eval_dataset = eval_dataset
         self.metric = metric
         self.train_config = train_config
         self.scaler = data_scaler
@@ -74,6 +74,9 @@ class ModelEvaluator:
 
         subset = self.train_config["subset"]
         metrics_dict = generate_metrics_given_config(self.train_config)
+        if self.train_config["check_circuit"]:
+            evalCircuit(self.train_config["num_sample_check"], self.simulator, self.scaler)
+
         for percentage in subset:
             print("Running with percentage {}".format(percentage))
             if percentage == 1 or percentage > 1:
@@ -86,9 +89,9 @@ class ModelEvaluator:
             for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage):
                 count += 1
                 print("Run with {} percentage of training data, Run number {}".format(percentage, count))
-                new_train_parameter, new_train_performance = self.dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
+                new_train_parameter, new_train_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
 
-                new_test_parameter, new_test_performance = self.dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
+                new_test_parameter, new_test_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
 
 
 
