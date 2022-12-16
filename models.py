@@ -56,10 +56,11 @@ class EvalModel:
 
 class ModelEvaluator:
     def __init__(self, parameter, performance, eval_dataset, metric, simulator, train_config, model):
-        new_parameter, new_performance, data_scaler = eval_dataset.transform_data(parameter, performance)
 
-        if np.any(new_performance == 0):
-            raise ValueError("There is 0 in performance after scaling")
+        if np.any(performance == 0):
+            raise ValueError("There is 0 in performance before scaling")
+
+        new_parameter, new_performance, data_scaler = eval_dataset.transform_data(parameter, performance)
 
         self.parameter = new_parameter
         self.performance = new_performance
@@ -96,14 +97,22 @@ class ModelEvaluator:
 
                 new_test_parameter, new_test_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
 
+
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
                                               new_train_parameter, new_train_performance,
                                               new_test_parameter, new_test_performance, self.simulator, self.scaler)
                 kfold_metrics_dict = result_eval_model.eval()
 
                 if self.train_config["lookup"]:
-                    lookup_metrics_dict = baseline_lookup_testing(performance_test, performance_train, self.simulator.sign)
+                    print("Start lookup testing")
+                    _, inverse_transform_performance_train = BaseDataset.inverse_transform(
+                        parameter_train, performance_train, self.scaler)
+                    _, inverse_transform_performance_test = BaseDataset.inverse_transform(
+                        parameter_test, performance_test, self.scaler)
+                    lookup_metrics_dict = baseline_lookup_testing(inverse_transform_performance_test, inverse_transform_performance_train, self.simulator.sign)
                     kfold_metrics_dict.update(lookup_metrics_dict)
+                    print("Finish lookup testing")
+
                 merge_metrics(subset_metrics_dict, kfold_metrics_dict)
             merge_metrics(metrics_dict, subset_metrics_dict)
         return metrics_dict
