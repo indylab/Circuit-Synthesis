@@ -31,7 +31,7 @@ class Simulator:
 
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
-
+        self.MAX_SIM_SIZE = 500
         # validate arguments
         for p in parameter_list:
 
@@ -44,13 +44,34 @@ class Simulator:
         self.order = order
         self.sign = sign
 
+    def process_batch(self,parameters,argumentMap,updated_netlist_filepath, batch_index):
+        argumentMap["num_samples"] = parameters[i * self.MAX_SIM_SIZE:(i + 1) * self.MAX_SIM_SIZE, 0].shape[0]
+        if argumentMap["num_samples"] == 0:
+            continue
+
+        for param_index, p in enumerate(self.parameter_list):
+            argumentMap[f"{p}_array"] = " ".join(
+                list(parameters[i * self.MAX_SIM_SIZE:(i + 1) * self.MAX_SIM_SIZE, param_index].astype(str)))
+
+        updateFile(self.test_netlist, updated_netlist_filepath, argumentMap)
+
+        if self.save_error_log:
+            args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",
+                    os.path.join(argumentMap["out"], "log.txt"), '-i',
+                    updated_netlist_filepath]
+        else:
+            args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
+
+        with open(os.path.join(os.getcwd(), "tmp_out", 'out-file.txt'), 'w') as f:
+            subprocess.run(args,stdout=f,stderr=f)
+
     def runSimulation(self, parameters, train):
         assert type(parameters) is np.ndarray, "parameters should be np.array"
         assert parameters.shape[1] == len(self.parameter_list), f"list of points to simulate should be same length " \
                                                                 f"as number of parameters {parameters.shape[1]} != " \
                                                                 f"{len(self.parameter_list)} "
         num_params_to_sim = parameters.shape[0]
-        MAX_SIM_SIZE = 500
+        
 
         updated_netlist_filename = self.test_netlist.split("/")[-1] + "-formatted"
         tmp_out_path = os.path.join(os.getcwd(), "tmp_out")
@@ -61,8 +82,17 @@ class Simulator:
             argumentMap["out"] = tmp_out_path
 
         delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
-        size = math.ceil(num_params_to_sim / MAX_SIM_SIZE)
-        
+        size = math.ceil(num_params_to_sim / self.MAX_SIM_SIZE)
+
+        if self.multiprocessing:
+            from multiprocessing import Pool
+            
+            with Pool(processes=4) as pool:
+                #Some functional magick
+                process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
+
+                pool.map(process_partial, range(size))
+
         with alive_bar(size) as bar:
             for i in range(size):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
                 
@@ -74,19 +104,19 @@ class Simulator:
                     argumentMap[f"{p}_array"] = " ".join(
                         list(parameters[i * MAX_SIM_SIZE:(i + 1) * MAX_SIM_SIZE, param_index].astype(str)))
 
-                updateFile(self.test_netlist, updated_netlist_filepath, argumentMap)
+                # updateFile(self.test_netlist, updated_netlist_filepath, argumentMap)
 
-                if self.save_error_log:
-                    args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",
-                            os.path.join(argumentMap["out"], "log.txt"), '-i',
-                            updated_netlist_filepath]
-                else:
-                    args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
+                # if self.save_error_log:
+                #     args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', "-o",
+                #             os.path.join(argumentMap["out"], "log.txt"), '-i',
+                #             updated_netlist_filepath]
+                # else:
+                #     args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', updated_netlist_filepath]
 
-                with open(os.path.join(os.getcwd(), "tmp_out", 'out-file.txt'), 'w') as f:
-                    subprocess.run(args,stdout=f,stderr=f)
+                # with open(os.path.join(os.getcwd(), "tmp_out", 'out-file.txt'), 'w') as f:
+                #     subprocess.run(args,stdout=f,stderr=f)
 
-                bar()
+            #     bar()
 
 
             final_x, final_y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
