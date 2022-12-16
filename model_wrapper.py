@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 import numpy as np
-
+import wandb
 from utils import run_simulation_given_parameter, generate_performance_diff_metrics
 
 
@@ -26,6 +26,10 @@ class PytorchModelWrapper:
         self.model = model
         self.train_config = train_config
         self.simulator = simulator
+
+        if 'log_experiments' in train_config:
+            wandb.init(project="circuit_training", config=train_config)
+            self.logging = True
 
     def fit(self, train_X, train_y, test_X, test_y, scaler):
         train_dataset = BasePytorchModelDataset(train_X, train_y)
@@ -91,8 +95,13 @@ class PytorchModelWrapper:
 
                     loss = torch.clamp(loss, max=500000, min=-500000)
                     val_avg_loss += (loss.item() - val_avg_loss) / (t + 1)
+
+
             losses.append(avg_loss)
             val_losses.append(val_avg_loss)
+
+            
+
 
             if (epoch + 1) == self.train_config["first_eval"] or (epoch + 1) % self.train_config["check_every"] == 0:
                 if self.train_config["train_margin_accuracy"]:
@@ -103,6 +112,10 @@ class PytorchModelWrapper:
                     test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
                     val_accs.append(test_accuracy)
                     print('test',test_accuracy)
+
+            if self.logging:
+                wandb.log({'train_loss': avg_loss, 'val_loss': val_avg_loss, 'epoch': epoch, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy})
+                
         result_dict = dict()
 
         result_dict["train_loss"] = losses
