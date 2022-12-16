@@ -100,7 +100,8 @@ class PytorchModelWrapper:
             losses.append(avg_loss)
             val_losses.append(val_avg_loss)
 
-            
+            if self.logging:
+                wandb.log({'train_loss': avg_loss, 'val_loss': val_avg_loss, 'epoch': epoch, })
 
 
             if (epoch + 1) == self.train_config["first_eval"] or (epoch + 1) % self.train_config["check_every"] == 0:
@@ -108,13 +109,20 @@ class PytorchModelWrapper:
                     train_accuracy = self.eval_epoch_accuracy(train_X, scaler)
                     train_accs.append(train_accuracy)
                     print('train',train_accuracy)
+
+                    if self.logging:
+                        wandb.log({'train_accuracy': train_accuracy, 'epoch': epoch,})
+
                 if self.train_config["test_margin_accuracy"]:
                     test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
                     val_accs.append(test_accuracy)
                     print('test',test_accuracy)
+                    
+                    if self.logging:
+                        wandb.log({ 'test_accuracy': test_accuracy, 'epoch': epoch,})
 
-            if self.logging:
-                wandb.log({'train_loss': avg_loss, 'val_loss': val_avg_loss, 'epoch': epoch, 'train_accuracy': train_accuracy, 'test_accuracy': test_accuracy})
+               
+          
                 
         result_dict = dict()
 
