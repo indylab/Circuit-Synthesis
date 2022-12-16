@@ -184,7 +184,7 @@ def generate_performance_diff_metrics(performance_prediction, test_performance, 
         metrics_dict["circuit_error_average"] = np.average(margin_error)
         metrics_dict["performance_error_average"] = np.average(margin_error, axis=0)
         metrics_dict["circuit_error_std"] = stats.sem(margin_error)
-        metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=1)
+        metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=0)
 
     return metrics_dict
 
