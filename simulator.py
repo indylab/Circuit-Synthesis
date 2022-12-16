@@ -26,6 +26,9 @@ class Simulator:
         self.performance_list = list(performance_list)
         self.parameter_list = list(parameter_list)
 
+        self.num_params = len(parameter_list)
+        self.num_perf = len(performance_list)
+
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
 

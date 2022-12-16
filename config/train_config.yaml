@@ -1,5 +1,5 @@
 pipeline: CrossFoldValidationPipeline
-circuit: LNA
+circuit: nmos
 rerun_training: False
 device: cpu
 check_circuit: True

@@ -53,7 +53,10 @@ def generate_circuit_given_config(train_config):
     circuit = load_circuit(circuit_definition_path)
     return circuit
 
-def generate_model_given_config(model_config):
+def generate_model_given_config(model_config,num_params,num_perf):
+    model_config['parameter_count'] = num_perf
+    model_config['output_count'] = num_params
+
     model_mapping = {
         "RandomForestRegressor": RandomForestRegressor,
         "Model500GELU": Model500GELU,
@@ -96,7 +99,10 @@ def pipeline():
     circuit_config = generate_circuit_given_config(train_config)
     dataset = generate_dataset_given_config(train_config, circuit_config)
     simulator = load_simulator(circuit_config)
-    model = generate_model_given_config(model_config)
+   
+
+    model = generate_model_given_config(model_config,num_params=simulator.num_params,
+                                                     num_perf=simulator.num_perf)
 
 
     if train_config["rerun_training"] or not check_save_data_status(circuit_config):
