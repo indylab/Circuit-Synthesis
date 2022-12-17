@@ -62,7 +62,7 @@ class Simulator:
 
         delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
         size = math.ceil(num_params_to_sim / MAX_SIM_SIZE)
-        
+        start = time.time()
         with alive_bar(size) as bar:
             for i in range(size):  # sim in batches of MAX_SIM_SIZE (ngspice has a max input size)
                 
@@ -88,13 +88,14 @@ class Simulator:
 
                 bar()
 
+            print('Simulation Complete took time {}'.format(time.time()-start), )
 
             final_x, final_y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
             assert final_x.shape[
                     0] == num_params_to_sim, f"x has to few values. Original: {parameters.shape} X: {final_x.shape}"
             assert final_y.shape[
                     0] == num_params_to_sim, f"y has to few values. Original: {parameters.shape} Y: {final_y.shape}"
-
+            
             if not train:
                 delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
             return final_x, final_y
