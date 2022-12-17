@@ -81,16 +81,19 @@ def load_model_config(configpath=DEFAULT_MODEL_CONFIG_PATH):
 def load_conflict_config(configpath=DEFAULT_CONFIG_CONFLICT_PATH):
     return load_yaml(configpath)
 
-def updateFile(trainingFilePath, outputFilePath, argumentMap):
-
+def updateFile(trainingFilePath, outputFilePath, argumentMap,batch_index):
+    file_name = outputFilePath+f'{batch_index}.sp'
+   
     with open(trainingFilePath, 'r') as read_file:
         file_content = read_file.read()
         for key, val in argumentMap.items():
+
             temp_pattern = "{" + str(key) + "}"
             file_content = file_content.replace(temp_pattern, str(val))
-
-        with open(outputFilePath, 'w') as write_file:
+        
+        with open(file_name, 'w') as write_file:
             write_file.write(file_content)
+    return file_name
 
 
 def convert2numpy(filenames):
