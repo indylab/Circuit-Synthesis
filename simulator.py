@@ -61,6 +61,7 @@ class Simulator:
             argumentMap["out"] = tmp_out_path
 
         delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
+        print('sim_size {}'.format(num_params_to_sim))
         size = math.ceil(num_params_to_sim / MAX_SIM_SIZE)
         start = time.time()
         with alive_bar(size) as bar:
