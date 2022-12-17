@@ -26,11 +26,10 @@ class PytorchModelWrapper:
         self.model = model
         self.train_config = train_config
         self.simulator = simulator
-
-        if 'log_experiments' in train_config:
+        self.logging = train_config['log_experiments']
+        if self.logging :
             wandb.init(project="circuit_training", config=train_config)
-            self.logging = True
-
+           
     def fit(self, train_X, train_y, test_X, test_y, scaler):
         train_dataset = BasePytorchModelDataset(train_X, train_y)
         test_dataset = BasePytorchModelDataset(test_X, test_y)
@@ -117,7 +116,7 @@ class PytorchModelWrapper:
                     test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
                     val_accs.append(test_accuracy)
                     print('test',test_accuracy)
-                    
+
                     if self.logging:
                         wandb.log({ 'test_accuracy': test_accuracy, 'epoch': epoch,})
 
