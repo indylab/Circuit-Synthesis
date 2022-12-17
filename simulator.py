@@ -36,13 +36,8 @@ class Simulator:
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
         self.MAX_SIM_SIZE = 500
-
-        self.multiprocessing = True #self.arguments["multiprocessing"]
-        # print(self.multiprocessing)
-        # if self.multiprocessing:
-        #     from multiprocessing import Pool
-        #     from functools import partial
-            
+        self.num_workers = 8
+        self.multiprocessing = True 
 
         # validate arguments
         for p in parameter_list:
@@ -57,20 +52,16 @@ class Simulator:
         self.sign = sign
 
     def process_batch(self,parameters,argumentMap,updated_netlist_filepath, batch_index):
-        
-        num_samples = parameters[batch_index * self.MAX_SIM_SIZE:(batch_index + 1) * self.MAX_SIM_SIZE, 0].shape[0]
-        if num_samples == 0:
+        #ArgumentMap is also forked
+        argumentMap["num_samples"] = parameters[batch_index * self.MAX_SIM_SIZE:(batch_index + 1) * self.MAX_SIM_SIZE, 0].shape[0]
+        if argumentMap["num_samples"] == 0:
             return
-        argumentMap["num_samples"] = num_samples
 
         for param_index, p in enumerate(self.parameter_list):
-            
             argumentMap[f"{p}_array"] = " ".join(
                 list(parameters[batch_index * self.MAX_SIM_SIZE:(batch_index + 1) * self.MAX_SIM_SIZE, param_index].astype(str)))
             
-
         file_name = updateFile(self.test_netlist, updated_netlist_filepath, argumentMap,batch_index)
-
         args = [self.ngspice_exec, '-r', 'rawfile.raw', '-b', '-i', file_name]
 
         with open(os.path.join(os.getcwd(), "tmp_out", f'out-file_{batch_index}.txt'), 'w') as f:
@@ -95,13 +86,14 @@ class Simulator:
         delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
         size = math.ceil(num_params_to_sim / self.MAX_SIM_SIZE)
         start = time.time()
-
+        print(f'Starting MP with simulation size of {num_params_to_sim} and {size} batches')
         if self.multiprocessing:
-            with Pool(processes=4) as pool:
+            with Pool(processes=self.num_workers) as pool:
                 #Some functional magick
                 process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
+                #Run the simulation
                 pool.map(process_partial, range(size))
-        print('mp took', time.time() - start, 'seconds')
+        print('Mp took', time.time() - start, 'seconds')
 
         final_x, final_y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
         assert final_x.shape[
