@@ -54,13 +54,13 @@ tran 0.05n 20n
 let Vout = v(Vout1)-(Vout2)
 meas tran hp TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
 let f0 = 1/(2*hp)
-print f0 >> vco-freq.csv
+print f0 >> {out}/vco-freq.csv
 meas tran Voutrms RMS Vout from=10ns to=18ns
 let Pout = Voutrms*Voutrms/50
-print Pout >> vco-out_power.csv 
+print Pout >> {out}/vco-out_power.csv 
 meas tran Itot RMS i(V0) from=10ns to=18ns
 let DC_Power= Itot * 1.2
-print DC_Power >> vco-power_consumption.csv
+print DC_Power >> {out}/vco-power_consumption.csv
 alter @V1[dc] = 0
 tran 0.05n 20n
 meas tran tdiff1 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
@@ -70,7 +70,7 @@ tran 0.05n 20n
 meas tran tdiff2 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
 let f2 = 1/(2*tdiff2)
 let TR = abs((tran2.f1)-f2)
-print TR >> vco-tuningrange.csv
+print TR >> {out}/vco-tuningrange.csv
 end
 .endc
 .end
