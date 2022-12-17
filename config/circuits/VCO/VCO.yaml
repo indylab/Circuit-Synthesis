@@ -28,9 +28,9 @@ arguments:
   vco-wv_start: 73u
   vco-wv_stop: 87u
   vco-wv_change: 2u
-  vco-lt_start: 3.6u
-  vco-lt_stop: 4.4u
-  vco-lt_change: 0.1u
+  vco-lt_start: 3.6n
+  vco-lt_stop: 4.3n
+  vco-lt_change: 0.1n
   out: data/VCO
 
   
