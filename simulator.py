@@ -35,7 +35,7 @@ class Simulator:
 
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
-        self.MAX_SIM_SIZE = 500
+        self.MAX_SIM_SIZE = 50
         self.num_workers = 8
         self.multiprocessing = True 
 
