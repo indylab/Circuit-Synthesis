@@ -78,6 +78,7 @@ class ModelEvaluator:
 
         subset = self.train_config["subset"]
         metrics_dict = generate_metrics_given_config(self.train_config)
+        
         if self.train_config["check_circuit"]:
             evalCircuit(self.train_config["num_sample_check"], self.simulator, self.scaler, self.train_config["random_sample_scale"])
 

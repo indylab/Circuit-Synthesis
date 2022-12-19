@@ -11,6 +11,7 @@ from scipy import stats
 from torch.cuda import is_available
 import platform
 from dataset import BaseDataset
+import shutil
 
 CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 
@@ -81,16 +82,18 @@ def load_model_config(configpath=DEFAULT_MODEL_CONFIG_PATH):
 def load_conflict_config(configpath=DEFAULT_CONFIG_CONFLICT_PATH):
     return load_yaml(configpath)
 
-def updateFile(trainingFilePath, outputFilePath, argumentMap,batch_index):
+def updateFile(trainingFilePath, outputFilePath, argumentMap,batch_index,path):
     file_name = outputFilePath+f'{batch_index}.sp'
-   
+    
     with open(trainingFilePath, 'r') as read_file:
         file_content = read_file.read()
         for key, val in argumentMap.items():
-
+            
+            if key == 'out':
+                val = path
+            
             temp_pattern = "{" + str(key) + "}"
             file_content = file_content.replace(temp_pattern, str(val))
-        
         with open(file_name, 'w') as write_file:
             write_file.write(file_content)
     return file_name
@@ -108,6 +111,7 @@ def convert2numpy(filenames):
 
 
 def getData(param_outfile_names, perform_outfile_names, out):
+    
     param_fullname = [os.path.join(out, file) for file in param_outfile_names]
     perform_fullname = [os.path.join(out, file) for file in perform_outfile_names]
     x = convert2numpy(param_fullname)
@@ -118,16 +122,20 @@ def getData(param_outfile_names, perform_outfile_names, out):
 def delete_testing_files(out_directory, names):
     out = out_directory
     names = list(itertools.chain(*names))
-    files = [os.path.join(out, file) for file in names]
-
-    for file in files:
-        try:
-            os.remove(file)
-        except FileNotFoundError:
+    dirs = os.listdir(out)
+    for dir in dirs:
+        if not(dir.startswith("batch")):
             continue
-        except PermissionError:
-            sleep(1)
-            os.remove(file)
+        shutil.rmtree(os.path.join(out, dir))
+        # files = [os.path.join(out, dir,file) for file in names]
+        # for file in files:
+        #     try:
+        #         os.remove(file)
+        #     except FileNotFoundError:
+        #         continue
+        #     except PermissionError:
+        #         sleep(1)
+        #         os.remove(file)
 
 def validate_config(train_config):
     conflict_config = load_conflict_config()

@@ -12,3 +12,4 @@ out_plot/
 out/
 result_out/
 out-file.txt
+wandb/*

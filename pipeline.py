@@ -107,7 +107,7 @@ def pipeline():
                                                      num_perf=simulator.num_perf)
 
 
-    if train_config["rerun_training"] or not check_save_data_status(circuit_config):
+    if train_config["rerun_training"]: #or not check_save_data_status(circuit_config):
         data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
         start =time.time()
         print('start sim')
@@ -121,9 +121,9 @@ def pipeline():
         saveDictToTxt(circuit_config["arguments"], metadata_path)
     else:
         print("Load from saved data")
-        parameter_file_list = [x + ".csv" for x in circuit_config["parameter_list"]]
-        performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
-        parameter, performance = getData(parameter_file_list, performance_file_list, circuit_config["arguments"]["out"])
+        parameter= np.load(os.path.join(simulator.arguments["out"], "x.npy"))
+        performance =np.load(os.path.join(simulator.arguments["out"], "y.npy"))
+
 
     print("Check Alias Problem")
     checkAlias(parameter, performance)
