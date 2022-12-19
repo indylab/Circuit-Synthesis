@@ -15,15 +15,16 @@ from functools import partial
 from utils import *
 
 
-def load_simulator(config):
+def load_simulator(circuit_config,simulator_config):
 
-    return Simulator(**config)
+    return Simulator(simulator_config,**circuit_config)
 
 
 class Simulator:
-    def __init__(self, ngspice_exec, test_netlist, parameter_list, performance_list, arguments, order,
-                 sign):
+    def __init__(self, simulator_config, ngspice_exec, test_netlist, parameter_list, performance_list, arguments, order,
+                 sign,):
 
+       
         self.ngspice_exec = ngspice_exec
         self.test_netlist = os.path.join('config', 'circuits', test_netlist)
         self.arguments = dict(arguments)
@@ -35,9 +36,11 @@ class Simulator:
 
         self.param_filenames = [str(x) + ".csv" for x in parameter_list]
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
-        self.MAX_SIM_SIZE = 50
-        self.num_workers = 8
+        self.MAX_SIM_SIZE = simulator_config['sim_size']
+        self.num_workers = simulator_config['num_workers']
         self.multiprocessing = True 
+        print(f'Number of Workers, {self.num_workers}')
+        print(f'MAX_SIM_SIZE, {self.MAX_SIM_SIZE}')
 
         # validate arguments
         for p in parameter_list:

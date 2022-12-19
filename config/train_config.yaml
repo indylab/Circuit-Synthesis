@@ -1,11 +1,17 @@
-pipeline: CrossFoldValidationPipeline
-circuit: vco
+pipeline: CrossFoldValidationPipeline #SklearnPipeline #CrossFoldValidationPipeline
+model_config: 
+  model: Model500GELU #RandomForestRegressor #Model500GELU
+evaluation_same_distribution: True
+circuit: nmos
 rerun_training: False
 device: cpu
 check_circuit: True
 num_sample_check: 8
 random_sample_scale: 1.5
-log_experiments: True
+log_experiments: False
+simulator_config:
+  num_workers: 4
+  sim_size: 100
 subset:
   - 0.2
   - 0.5

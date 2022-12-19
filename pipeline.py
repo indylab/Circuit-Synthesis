@@ -56,9 +56,9 @@ def generate_circuit_given_config(train_config):
 def generate_model_given_config(model_config,num_params,num_perf):
     model_config['parameter_count'] = num_perf
     model_config['output_count'] = num_params
-
+    
     model_mapping = {
-        "RandomForestRegressor": RandomForestRegressor,
+        "RandomForestRegressor": SklearnModel,
         "Model500GELU": Model500GELU,
     }
 
@@ -95,13 +95,15 @@ def pipeline():
     validate_config(train_config)
     visual_config = load_visual_config()
 
-    model_config = load_model_config()
+    # model_config = load_model_config()
     circuit_config = generate_circuit_given_config(train_config)
     dataset = generate_dataset_given_config(train_config, circuit_config)
-    simulator = load_simulator(circuit_config)
+
+    simulator = load_simulator(circuit_config=circuit_config,
+                                simulator_config=train_config['simulator_config'])
    
 
-    model = generate_model_given_config(model_config,num_params=simulator.num_params,
+    model = generate_model_given_config(train_config['model_config'],num_params=simulator.num_params,
                                                      num_perf=simulator.num_perf)
 
 

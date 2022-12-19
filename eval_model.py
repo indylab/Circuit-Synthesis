@@ -1,6 +1,17 @@
 from sklearn.ensemble import RandomForestRegressor
 import torch.nn as nn
 
+class SklearnModel():
+    def __init__(self,parameter_count=2, output_count=2, model=RandomForestRegressor()):
+        self.model = model
+    def fit(self,x,y):
+        self.model.fit(x,y)
+        return self.model
+    def predict(x,):
+        return self.model.predict()
+        
+
+
 class Model500GELU(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
         super(Model500GELU, self).__init__()

@@ -29,7 +29,13 @@ class PytorchModelWrapper:
         self.logging = train_config['log_experiments']
         if self.logging :
             wandb.init(project="circuit_training", config=train_config)
-           
+    
+    def reset(self,):
+        for layers in self.model.children():
+            for layer in layers:
+                if hasattr(layer, 'reset_parameters'):
+                    layer.reset_parameters()
+
     def fit(self, train_X, train_y, test_X, test_y, scaler):
         train_dataset = BasePytorchModelDataset(train_X, train_y)
         test_dataset = BasePytorchModelDataset(test_X, test_y)

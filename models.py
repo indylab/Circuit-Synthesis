@@ -35,7 +35,7 @@ class EvalModel:
         self.scaler = scaler
 
     def eval(self):
-
+        # self.model.reset()
         train_result = self.model.fit(self.train_performance, self.train_parameter, self.test_performance, self.test_parameter, self.scaler)
         if self.train_config["test_margin_accuracy"]:
             parameter_prediction = self.model.predict(self.test_performance)
