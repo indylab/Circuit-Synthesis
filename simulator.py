@@ -81,6 +81,7 @@ class Simulator:
         
         final_x,final_y = getData(self.param_filenames, self.perform_filenames, path)
         
+        
         return final_x,final_y
 
     def runSimulation(self, parameters, train):
@@ -102,13 +103,15 @@ class Simulator:
         delete_testing_files(argumentMap["out"], [self.perform_filenames, self.param_filenames])
         size = math.ceil(num_params_to_sim / self.MAX_SIM_SIZE)
         start = time.time()
+        # pbar = alive_bar(total=len(tasks))
         print(f'Starting MP with simulation size of {num_params_to_sim} and {size} batches')
-        if self.multiprocessing:
-            with Pool(processes=self.num_workers) as pool:
-                #Some functional magick
-                process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
-                #Run the simulation
-                out_data = pool.map(process_partial, range(size))
+        
+
+        with Pool(processes=self.num_workers) as pool:
+            #Some functional magick
+            process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
+            #Run the simulation
+            out_data = pool.map(process_partial, range(size))
         
         final_x = []
         final_y = []

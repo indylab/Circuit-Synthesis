@@ -53,6 +53,8 @@ let index = index + 1
 tran 0.05n 20n
 let Vout = v(Vout1)-(Vout2)
 meas tran hp TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
+let f0 = 1/(2*hp)
+print f0 >> {out}/vco-freq.csv
 meas tran Voutrms RMS Vout from=10ns to=18ns
 let Pout = Voutrms*Voutrms/50
 print Pout >> {out}/vco-out_power.csv 
