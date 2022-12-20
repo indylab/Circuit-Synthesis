@@ -7,3 +7,4 @@ seaborn==0.10.1
 torch==1.9.1+cu102
 alive_progress==2.0
 PyYAML==6.0
+wandb==0.13.7
