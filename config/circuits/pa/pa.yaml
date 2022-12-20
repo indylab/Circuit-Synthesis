@@ -1,0 +1,48 @@
+test_netlist: pa/pa-test.sp
+parameter_list:
+  - pa-lint
+  - pa-ls1
+  - pa-ls2
+  - pa-vb1
+  - pa-vb2
+  - pa-w1
+  - pa-w2
+performance_list:
+  - pa-gain1
+  - pa-PAE1
+  - pa-DE1
+order:
+  - 0
+  - 2
+  - 1
+sign:
+  - -1
+  - 1
+  - 1
+arguments:
+  model_path: config/model/45nm_CS.pm
+  pa-lint_start: 160p
+  pa-lint_stop: 165p
+  pa-lint_change: 25p
+  pa-ls1_start: 450p
+  pa-ls1_stop: 450p
+  pa-ls1_change: 20p
+  pa-ls2_start: 470p
+  pa-ls2_stop: 480p
+  pa-ls2_change: 5p
+  pa-vb1_start: 780m
+  pa-vb1_stop: 800m
+  pa-vb1_change: 10m
+  pa-vb2_start: 760m
+  pa-vb2_stop: 790m
+  pa-vb2_change: 15m
+  pa-w1_start: 18u
+  pa-w1_stop: 22u
+  pa-w1_change: 2u
+  pa-w2_start: 27u
+  pa-w2_stop: 34.5u
+  pa-w2_change: 2.5u
+  out: data/pa
+
+
+

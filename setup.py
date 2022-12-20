@@ -26,7 +26,7 @@ def setup():
     mixer_data_out_path = os.path.join(test_data_out_folder, "mixer")
     two_stage_data_out_path = os.path.join(test_data_out_folder, "two_stage")
     VCO_data_out_path = os.path.join(test_data_out_folder, "VCO")
-
+    pa_data_out_path = os.path.join(test_data_out_folder, "pa")
 
     create_folder(train_result_folder, "TRAIN RESULT")
     create_folder(train_plot_folder, "TRAIN PLOT")
@@ -38,7 +38,7 @@ def setup():
     create_folder(mixer_data_out_path, "MIXER DATA OUT")
     create_folder(two_stage_data_out_path, "TWO STAGE DATA OUT")
     create_folder(VCO_data_out_path, "VCO DATA OUT")
-
+    create_folder(pa_data_out_path, "PA DATA OUT")
 
 if __name__ == '__main__':
     setup()

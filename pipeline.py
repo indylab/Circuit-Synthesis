@@ -42,7 +42,8 @@ def generate_circuit_given_config(train_config):
         "lna": os.path.join(os.path.join(config_path, "LNA"), "LNA.yaml"),
         "mixer": os.path.join(os.path.join(config_path, "mixer"), "mixer.yaml"),
         "two_stage": os.path.join(os.path.join(config_path, "two_stage"), "two_stage.yaml"),
-        "vco": os.path.join(os.path.join(config_path, "VCO"), "VCO.yaml")
+        "vco": os.path.join(os.path.join(config_path, "VCO"), "VCO.yaml"),
+        "pa": os.path.join(os.path.join(config_path, "pa"), "pa.yaml"),
     }
 
     if train_config["circuit"].lower() in circuit_mapping:

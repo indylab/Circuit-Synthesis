@@ -81,7 +81,6 @@ class Simulator:
         
         final_x,final_y = getData(self.param_filenames, self.perform_filenames, path)
         
-        
         return final_x,final_y
 
     def runSimulation(self, parameters, train):
@@ -105,13 +104,14 @@ class Simulator:
         start = time.time()
         # pbar = alive_bar(total=len(tasks))
         print(f'Starting MP with simulation size of {num_params_to_sim} and {size} batches')
-        
 
-        with Pool(processes=self.num_workers) as pool:
-            #Some functional magick
-            process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
-            #Run the simulation
-            out_data = pool.map(process_partial, range(size))
+
+        if self.multiprocessing:
+            with Pool(processes=self.num_workers) as pool:
+                #Some functional magick
+                process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
+                #Run the simulation
+                out_data = pool.map(process_partial, range(size))
         
         final_x = []
         final_y = []
@@ -124,6 +124,7 @@ class Simulator:
         final_y = np.concatenate(final_y)
 
         print('MP took', time.time() - start, 'seconds')
+        
 
         # final_x, final_y = getData(self.param_filenames, self.perform_filenames, argumentMap["out"])
         assert final_x.shape[
