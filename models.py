@@ -35,7 +35,7 @@ class EvalModel:
         self.scaler = scaler
 
     def eval(self):
-        # self.model.reset()
+        
         train_result = self.model.fit(self.train_performance, self.train_parameter, self.test_performance, self.test_parameter, self.scaler)
         if self.train_config["test_margin_accuracy"]:
             parameter_prediction = self.model.predict(self.test_performance)
@@ -49,6 +49,7 @@ class EvalModel:
             _, mapping_performance_prediction = run_simulation_given_parameter(self.simulator, inverse_transform_parameter, train=False)
             validate_train_result = generate_performance_diff_metrics(mapping_performance_prediction, inverse_transform_performance, self.simulator, train=True)
             train_result.update(validate_train_result)
+        self.model.reset()
         return train_result
 
 
@@ -69,6 +70,7 @@ class ModelEvaluator:
         self.metric = metric
         self.train_config = train_config
         self.scaler = data_scaler
+        
         if train_config["pipeline"] == "SklearnPipeline":
             self.model_wrapper = SklearnModelWrapper(model)
         else:
@@ -89,21 +91,23 @@ class ModelEvaluator:
             if np.gcd(int(percentage * 100), 100) + int(percentage * 100) != 100 \
                     and np.gcd(int(percentage * 100), 100) != int(percentage * 100):
                 raise ValueError("Subset Percentage must be divisble")
+
             subset_metrics_dict = generate_metrics_given_config(self.train_config)
             count = 0
             for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage):
                 count += 1
                 print("Run with {} percentage of training data, Run number {}".format(percentage, count))
+
+                
                 new_train_parameter, new_train_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
-
                 new_test_parameter, new_test_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
-
-
+                
+                
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
                                               new_train_parameter, new_train_performance,
                                               new_test_parameter, new_test_performance, self.simulator, self.scaler)
                 kfold_metrics_dict = result_eval_model.eval()
-
+                
                 if self.train_config["lookup"]:
                     print("Start lookup testing")
                     _, inverse_transform_performance_train = BaseDataset.inverse_transform(

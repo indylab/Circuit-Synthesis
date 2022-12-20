@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import wandb
 from utils import run_simulation_given_parameter, generate_performance_diff_metrics
-
+from sklearn.utils.validation import check_is_fitted
 
 class SklearnModelWrapper:
     def __init__(self, model):
@@ -20,6 +20,10 @@ class SklearnModelWrapper:
         predict = self.model.predict(X)
         return predict
 
+    def reset(self,):
+        print('Reset The model')
+        self.model = self.model.__class__()
+
 
 class PytorchModelWrapper:
     def __init__(self, model, train_config, simulator):
@@ -31,6 +35,7 @@ class PytorchModelWrapper:
             wandb.init(project="circuit_training", config=train_config)
     
     def reset(self,):
+        print('Reset The model')
         for layers in self.model.children():
             for layer in layers:
                 if hasattr(layer, 'reset_parameters'):
