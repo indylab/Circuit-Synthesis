@@ -3,7 +3,6 @@ dataset: Argmax #Argmax #SoftArgmax #Lourenco #Base #Ablation
 model_config: 
   model: RandomForestRegressor #RandomForestRegressor #Model500GELU
 evaluation_same_distribution: False
-circuit: nmos #cascode #mixer nmos lna vco two_stage pa0
 rerun_training: False
 device: cpu
 check_circuit: True

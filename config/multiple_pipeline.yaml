@@ -1,0 +1,6 @@
+circuits: 
+  - nmos
+  - lna
+  - cascode
+  - mixer
+  - vco
