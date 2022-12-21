@@ -1,0 +1,5 @@
+circuit: nmos
+simulator_config:
+  num_workers: 8
+  sim_size: 100
+  multiprocessing: False

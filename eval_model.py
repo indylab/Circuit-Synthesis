@@ -15,6 +15,7 @@ class SklearnModel():
 
 class Model500GELU(nn.Module):
     def __init__(self, parameter_count=2, output_count=2):
+
         super(Model500GELU, self).__init__()
         self.network = nn.Sequential(
             nn.Linear(parameter_count, 200),
