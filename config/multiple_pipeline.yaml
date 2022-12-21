@@ -4,4 +4,3 @@ circuits:
   - cascode
   - mixer
   - vco
-multiple_pipeline: True

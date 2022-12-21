@@ -102,8 +102,7 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
 def pipeline(circuit):
 
     train_config = load_train_config()
-    if circuit is not None:
-        train_config['circuit'] = circuit
+    train_config['circuit'] = circuit
 
     validate_config(train_config)
     visual_config = load_visual_config()
