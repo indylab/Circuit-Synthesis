@@ -171,7 +171,7 @@ class ArgMaxDataset(BaseDataset):
                 argmax_ratio += 1
             new_parameter.append(new_temp_parameter)
         print(f'Argmax ratio is {argmax_ratio/len(parameter)} with argmax replaced {argmax_ratio} times')
-        return np.array(parameter),np.array(performance)
+        return np.array(new_temp_parameter),np.array(performance)
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
