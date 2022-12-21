@@ -7,6 +7,8 @@ from scipy import stats
 
 
 def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, save_name):
+    plt.clf()
+
     eval_margin = visual_config["margin_threshold"]
     result_dict = dict()
     if train_config["train_margin_accuracy"]:
@@ -35,6 +37,7 @@ def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config,
     return result_dict
 
 def plot_multiple_accuracy_with_confidence_cross_fold(train_config, visual_config, result, save_name):
+    plt.clf()
 
     result_dict = dict()
     if train_config["train_accuracy_per_epoch"]:
@@ -57,6 +60,8 @@ def plot_multiple_accuracy_with_confidence_cross_fold(train_config, visual_confi
     return result_dict
 
 def plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, result, save_name):
+    plt.clf()
+
     multi_train_loss, multi_train_loss_lower_bounds, multi_train_loss_upper_bounds = plot_multiple_loss_with_confidence(result["train_loss"],
                                                                                                                         train_config, visual_config, save_name, "train")
     multi_test_loss, multi_test_loss_lower_bounds, multi_test_loss_upper_bounds = plot_multiple_loss_with_confidence(result["validation_loss"],
@@ -80,6 +85,7 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
 
 
     subset = train_config["subset"]
+    dataset = train_config["dataset"]
     color = visual_config["color"][:len(subset)]
     log = visual_config["log"]
 
@@ -88,7 +94,7 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
     multi_lower_bound = []
     multi_upper_bound = []
 
-    save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder), save_name + "-margin.png")
+    save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder), save_name + f"-margin_{dataset}.png")
 
 
     #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
