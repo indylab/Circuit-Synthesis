@@ -102,7 +102,6 @@ class ModelEvaluator:
                 new_train_parameter, new_train_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
                 new_test_parameter, new_test_performance = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
                 
-                
                 result_eval_model = EvalModel(self.train_config, self.model_wrapper,
                                               new_train_parameter, new_train_performance,
                                               new_test_parameter, new_test_performance, self.simulator, self.scaler)

@@ -1,5 +1,5 @@
 pipeline: SklearnPipeline #SklearnPipeline #CrossFoldValidationPipeline #LourencoSklearnPipeline LourencoPipeline
-dataset: Lourenco #Argmax #SoftArgmax #Lourenco #Base #Ablation
+dataset: Argmax #Argmax #SoftArgmax #Lourenco #Base #Ablation
 model_config: 
   model: RandomForestRegressor #RandomForestRegressor #Model500GELU
 evaluation_same_distribution: False
@@ -13,7 +13,7 @@ log_experiments: False
 simulator_config:
   num_workers: 8
   sim_size: 100
-  multiprocessing: False
+  multiprocessing: True
 subset:
   - 0.05
   - 0.1

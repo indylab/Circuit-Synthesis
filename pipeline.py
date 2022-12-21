@@ -113,7 +113,7 @@ def pipeline():
                                                      num_perf=simulator.num_perf)
 
 
-    if train_config["rerun_training"]: #or not check_save_data_status(circuit_config):
+    if train_config["rerun_training"] or not check_save_data_status(circuit_config):
         data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
         
         start =time.time()

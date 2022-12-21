@@ -243,14 +243,7 @@ def save_result(result, pipeline_save_name):
 
 
 def check_save_data_status(circuit_config):
-
-    parameter_file_list = [x + ".csv" for x in circuit_config["parameter_list"]]
-    performance_file_list = [x + ".csv" for x in circuit_config["performance_list"]]
-
     save_path = circuit_config["arguments"]["out"]
-    for file_name in parameter_file_list + performance_file_list:
-        if not os.path.exists(os.path.join(save_path, file_name)):
-            return False
 
     metadata_path = os.path.join(save_path, "metadata.txt")
     if not os.path.exists(metadata_path):
