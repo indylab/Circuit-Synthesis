@@ -7,8 +7,8 @@ class SklearnModel():
     def fit(self,x,y):
         self.model.fit(x,y)
         return self.model
-    def predict(x,):
-        return self.model.predict()
+    def predict(self,x):
+        return self.model.predict(x)
         
 
 
