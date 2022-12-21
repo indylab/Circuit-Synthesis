@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from torch.utils.data import Dataset
 
+from utils import scale_down_data
+
 
 class BasePytorchModelDataset(Dataset):
     def __init__(self, performance, parameters):
@@ -66,6 +68,17 @@ class BaseDataset:
             return train_parameter, train_performance
         else:
             return test_parameter, test_performance
+
+
+class SoftBaseDataset(BaseDataset):
+    def __init__(self, order, sign, train_config, epsilon=0.0):
+        super().__init__(order, sign, train_config)
+        self.epsilon = epsilon
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+        if train:
+            return train_parameter, train_performance
+        else:
+            return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
 
 class LorencoDataset(BaseDataset):
@@ -180,22 +193,10 @@ class SoftArgMaxDataset(ArgMaxDataset):
         self.epsilon = epsilon
         print(f'Epsilon is {epsilon}')
 
-    def scale_down_data(self, parameter, performance):
-        random_scale = np.random.uniform(0, self.epsilon, size=performance.shape)
-        absolute_performance = np.absolute(performance)
-
-        scale_down_value = random_scale * absolute_performance
-        scale_down_performance = np.copy(performance)
-        for idx_axis in range(len(self.sign)):
-            if self.sign[idx_axis] == 1:
-                scale_down_performance[:,idx_axis] -= scale_down_value[:,idx_axis]
-            else:
-                scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
-        return parameter, scale_down_performance
 
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
-            parameter, scale_down_performance = self.scale_down_data(train_parameter, train_performance)
+            parameter, scale_down_performance = scale_down_data(train_parameter, train_performance, self.epsilon, self.sign)
             return super().argmaxModifyData(parameter, scale_down_performance)
         else:
             return test_parameter, test_performance
@@ -235,7 +236,7 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             return test_parameter, test_performance
 
     def ablationModifyData(self, parameter, performance, train=True):
-        scale_down_parameter, scale_down_performance = self.scale_down_data(parameter, performance)
+        scale_down_parameter, scale_down_performance = scale_down_data(parameter, performance, self.epsilon, self.sign)
 
         new_parameter, new_performance = [], []
         for temp_performance in scale_down_performance:

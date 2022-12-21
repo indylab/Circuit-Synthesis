@@ -334,3 +334,17 @@ def evalCircuit(num_sample_check, simulator, scaler, random_scale):
     print(simulate_parameter)
     print("The simulated performance is")
     print(simulate_performance)
+
+
+def scale_down_data(parameter, performance, epsilon, sign):
+    random_scale = np.random.uniform(0, epsilon, size=performance.shape)
+    absolute_performance = np.absolute(performance)
+
+    scale_down_value = random_scale * absolute_performance
+    scale_down_performance = np.copy(performance)
+    for idx_axis in range(len(sign)):
+        if sign[idx_axis] == 1:
+            scale_down_performance[:,idx_axis] -= scale_down_value[:,idx_axis]
+        else:
+            scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
+    return parameter, scale_down_performance
