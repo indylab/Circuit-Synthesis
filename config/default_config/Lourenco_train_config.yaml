@@ -1,7 +1,7 @@
 subset:
   - 0.9
 n: 0.15
-K: 40
+K: 4
 epochs: 100
 check_every: 20
 first_eval: 1
