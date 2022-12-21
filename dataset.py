@@ -2,7 +2,20 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from torch.utils.data import Dataset
 
-from utils import scale_down_data
+
+
+def scale_down_data(parameter, performance, epsilon, sign):
+    random_scale = np.random.uniform(0, epsilon, size=performance.shape)
+    absolute_performance = np.absolute(performance)
+
+    scale_down_value = random_scale * absolute_performance
+    scale_down_performance = np.copy(performance)
+    for idx_axis in range(len(sign)):
+        if sign[idx_axis] == 1:
+            scale_down_performance[:,idx_axis] -= scale_down_value[:,idx_axis]
+        else:
+            scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
+    return parameter, scale_down_performance
 
 
 class BasePytorchModelDataset(Dataset):
