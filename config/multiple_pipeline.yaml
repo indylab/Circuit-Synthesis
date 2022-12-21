@@ -1,0 +1,7 @@
+circuits: 
+  - nmos
+  - lna
+  - cascode
+  - mixer
+  - vco
+multiple_pipeline: True

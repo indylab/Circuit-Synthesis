@@ -81,7 +81,10 @@ def generate_model_given_config(model_config,num_params,num_perf):
 
 def generate_visual_given_result(result, train_config, visual_config, pipeline_save_name):
     folder_path = os.path.join(os.path.join(os.getcwd(), "out_plot"), pipeline_save_name)
-    os.mkdir(folder_path)
+    try:
+        os.mkdir(folder_path)
+    except:
+        pass #if less than a minute passed
     result_dict = dict()
 
     if train_config["test_margin_accuracy"] or train_config["train_margin_accuracy"]:
@@ -96,13 +99,14 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
 
     return result_dict
 
-def pipeline():
+def pipeline(circuit):
 
     train_config = load_train_config()
+    if circuit is not None:
+        train_config['circuit'] = circuit
+
     validate_config(train_config)
     visual_config = load_visual_config()
-
-    # model_config = load_model_config()
     circuit_config = generate_circuit_given_config(train_config)
     dataset = generate_dataset_given_config(train_config, circuit_config)
 
@@ -137,19 +141,21 @@ def pipeline():
 
     print("Pipeline Start")
 
-    pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
+    model_pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
                               train_config=train_config, model=model)
 
     cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
     pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(train_config["circuit"], train_config["pipeline"], cur_time)
 
-    result = pipeline.eval()
+    result = model_pipeline.eval()
     visual_result = generate_visual_given_result(result, train_config, visual_config, pipeline_save_name)
     result.update(visual_result)
     save_result(result, pipeline_save_name)
 
 
 # def multidataset_pipeline():
+#     for circuit in circuit_lists:
+#         for dataset in dataset_lists:
 #     train_config = load_train_config()
 #     validate_config(train_config)
 #     visual_config = load_visual_config()
@@ -202,5 +208,4 @@ def pipeline():
 #         # result.update(visual_result)
 #         # save_result(result, pipeline_save_name)
 #         dataset_results[dataset] = result
-#     plot_multiple_datasets(dataset_results, train_config, visual_config, pipeline_save_name)
 
