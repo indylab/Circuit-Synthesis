@@ -54,6 +54,7 @@ def load_train_config(configpath=DEFAULT_TRAIN_CONFIG_PATH):
     existing_pipeline = {
         "CrossFoldValidationPipeline": os.path.join(default_config_folder_path, "crossfold_validation_train_config.yaml"),
         "LourencoPipeline": os.path.join(default_config_folder_path, "Lourenco_train_config.yaml"),
+        "LourencoSklearnPipeline": os.path.join(default_config_folder_path, "Lourenco_train_config.yaml"),
         "SklearnPipeline": os.path.join(default_config_folder_path, "sklearn_train_config.yaml")
     }
 
@@ -127,15 +128,6 @@ def delete_testing_files(out_directory, names):
         if not(dir.startswith("batch")):
             continue
         shutil.rmtree(os.path.join(out, dir))
-        # files = [os.path.join(out, dir,file) for file in names]
-        # for file in files:
-        #     try:
-        #         os.remove(file)
-        #     except FileNotFoundError:
-        #         continue
-        #     except PermissionError:
-        #         sleep(1)
-        #         os.remove(file)
 
 def validate_config(train_config):
     conflict_config = load_conflict_config()

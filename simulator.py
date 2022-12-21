@@ -36,7 +36,7 @@ class Simulator:
         self.perform_filenames = [str(x) + ".csv" for x in performance_list]
         self.MAX_SIM_SIZE = simulator_config['sim_size']
         self.num_workers = simulator_config['num_workers']
-        self.multiprocessing = True 
+        self.multiprocessing = simulator_config['multiprocessing'] 
         print(f'Number of Workers, {self.num_workers}')
         print(f'MAX_SIM_SIZE, {self.MAX_SIM_SIZE}')
 
@@ -103,15 +103,21 @@ class Simulator:
         size = math.ceil(num_params_to_sim / self.MAX_SIM_SIZE)
         start = time.time()
         # pbar = alive_bar(total=len(tasks))
-        print(f'Starting MP with simulation size of {num_params_to_sim} and {size} batches')
 
 
         if self.multiprocessing:
+            print(f'Starting MP with simulation size of {num_params_to_sim} and {size} batches')
+
             with Pool(processes=self.num_workers) as pool:
                 #Some functional magick
                 process_partial = partial(self.process_batch,parameters,argumentMap,updated_netlist_filepath)
                 #Run the simulation
                 out_data = pool.map(process_partial, range(size))
+        else:
+            print("Running without multiprocessing")
+            out_data = []
+            for i in range(size):
+                out_data.append(self.process_batch(parameters,argumentMap,updated_netlist_filepath,i))
         
         final_x = []
         final_y = []

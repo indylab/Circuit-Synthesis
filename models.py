@@ -71,7 +71,7 @@ class ModelEvaluator:
         self.train_config = train_config
         self.scaler = data_scaler
         
-        if train_config["pipeline"] == "SklearnPipeline":
+        if (train_config["pipeline"] == "SklearnPipeline") | (train_config["pipeline"] == "LourencoSklearnPipeline") :
             self.model_wrapper = SklearnModelWrapper(model)
         else:
             self.model_wrapper = PytorchModelWrapper(model, train_config, simulator)

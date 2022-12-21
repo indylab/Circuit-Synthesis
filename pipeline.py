@@ -14,24 +14,30 @@ from datetime import datetime
 import time
 
 def generate_dataset_given_config(train_config, circuit_config):
-    if train_config["pipeline"] == "LourencoPipeline":
-        print("Return Lorunco Dataset")
-        return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"], train_config)
-    else:
-        if train_config["basedata"]:
+    
+        if train_config["dataset"] == "Lourenco":
+            print("Return Lourenco Dataset")
+            if ('n' not in train_config)|('K' not in train_config):
+                train_config["n"] = 0.15
+                train_config["K"] = 1
+                
+            return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"], train_config)
+
+        if train_config["dataset"]=="Base":
             print("Return Base Dataset")
             return BaseDataset(circuit_config["order"], circuit_config["sign"], train_config)
-        else:
-            if train_config["subfeasible"]:
-                if train_config["duplication"] == 0:
-                    print("Return SoftArgMax Dataset")
-                    return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
-                else:
-                    print("Return Ablation Duplication Dataset")
-                    return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"], train_config)
-            else:
-                print("Return Argmax Dataset")
-                return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
+     
+        if train_config["dataset"]=='SoftArgmax':
+            print("Return SoftArgMax Dataset")
+            return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
+
+        if train_config["dataset"]=='Ablation':
+            print("Return Ablation Duplication Dataset")
+            return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"], train_config)
+        
+        if train_config["dataset"]=='Argmax':
+            print("Return Argmax Dataset")
+            return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
 
 
 def generate_circuit_given_config(train_config):
@@ -103,19 +109,20 @@ def pipeline():
     simulator = load_simulator(circuit_config=circuit_config,
                                 simulator_config=train_config['simulator_config'])
    
-
     model = generate_model_given_config(train_config['model_config'],num_params=simulator.num_params,
                                                      num_perf=simulator.num_perf)
 
 
     if train_config["rerun_training"]: #or not check_save_data_status(circuit_config):
         data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
+        
         start =time.time()
         print('start sim')
         parameter, performance = simulator.runSimulation(data_for_evaluation, True)
         print('took for sim', time.time()-start)
         print('Params shape', parameter.shape)
         print('Perfomance shape',performance.shape)
+        
 
         print("Saving metadata for this simulation")
         metadata_path = os.path.join(circuit_config["arguments"]["out"], "metadata.txt")
@@ -124,8 +131,7 @@ def pipeline():
         print("Load from saved data")
         parameter= np.load(os.path.join(simulator.arguments["out"], "x.npy"))
         performance =np.load(os.path.join(simulator.arguments["out"], "y.npy"))
-
-
+   
     print("Check Alias Problem")
     checkAlias(parameter, performance)
 
@@ -142,4 +148,59 @@ def pipeline():
     result.update(visual_result)
     save_result(result, pipeline_save_name)
 
+
+# def multidataset_pipeline():
+#     train_config = load_train_config()
+#     validate_config(train_config)
+#     visual_config = load_visual_config()
+
+#     # model_config = load_model_config()
+#     circuit_config = generate_circuit_given_config(train_config)
+#     dataset = generate_dataset_given_config(train_config, circuit_config)
+
+#     simulator = load_simulator(circuit_config=circuit_config,
+#                                 simulator_config=train_config['simulator_config'])
+   
+#     model = generate_model_given_config(train_config['model_config'],num_params=simulator.num_params,
+#                                                      num_perf=simulator.num_perf)
+
+#     dataset_results = {}
+#     for dataset in train_config['multidatset']:
+#         print(f"Working on Dataset {dataset}")
+#         if train_config["rerun_training"]: #or not check_save_data_status(circuit_config):
+#             data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
+            
+#             start =time.time()
+#             print('start sim')
+#             parameter, performance = simulator.runSimulation(data_for_evaluation, True)
+#             print('took for sim', time.time()-start)
+#             print('Params shape', parameter.shape)
+#             print('Perfomance shape',performance.shape)
+            
+
+#             print("Saving metadata for this simulation")
+#             metadata_path = os.path.join(circuit_config["arguments"]["out"], "metadata.txt")
+#             saveDictToTxt(circuit_config["arguments"], metadata_path)
+#         else:
+#             print("Load from saved data")
+#             parameter= np.load(os.path.join(simulator.arguments["out"], "x.npy"))
+#             performance =np.load(os.path.join(simulator.arguments["out"], "y.npy"))
+    
+#         print("Check Alias Problem")
+#         checkAlias(parameter, performance)
+
+#         print("Pipeline Start")
+
+#         pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
+#                                 train_config=train_config, model=model)
+
+#         cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
+#         pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(train_config["circuit"], train_config["pipeline"], cur_time)
+
+#         result = pipeline.eval()
+#         # visual_result = generate_visual_given_result(result, train_config, visual_config, pipeline_save_name)
+#         # result.update(visual_result)
+#         # save_result(result, pipeline_save_name)
+#         dataset_results[dataset] = result
+#     plot_multiple_datasets(dataset_results, train_config, visual_config, pipeline_save_name)
 
