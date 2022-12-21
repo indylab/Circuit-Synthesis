@@ -14,6 +14,7 @@ simulator_config:
   num_workers: 8
   sim_size: 100
   multiprocessing: True
+epsilon: 0.3
 subset:
   - 0.05
   - 0.1

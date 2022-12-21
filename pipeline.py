@@ -29,11 +29,13 @@ def generate_dataset_given_config(train_config, circuit_config):
      
         if train_config["dataset"]=='SoftArgmax':
             print("Return SoftArgMax Dataset")
-            return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
+            epsilon = train_config["epsilon"]
+            return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
 
         if train_config["dataset"]=='SoftBase':
             print("Return Soft Base Dataset")
-            return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], train_config)
+            epsilon = train_config["epsilon"]
+            return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
 
         if train_config["dataset"]=='Ablation':
             print("Return Ablation Duplication Dataset")
