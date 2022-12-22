@@ -15,7 +15,7 @@ def scale_down_data(parameter, performance, epsilon, sign):
             scale_down_performance[:,idx_axis] -= scale_down_value[:,idx_axis]
         else:
             scale_down_performance[:,idx_axis] += scale_down_value[:, idx_axis]
-    return parameter, scale_down_performance
+    return parameter, scale_down_performance, {}
 
 
 class BasePytorchModelDataset(Dataset):
@@ -78,9 +78,9 @@ class BaseDataset:
 
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
-            return train_parameter, train_performance
+            return train_parameter, train_performance, {}
         else:
-            return test_parameter, test_performance
+            return test_parameter, test_performance, {}
 
 
 class SoftBaseDataset(BaseDataset):
@@ -89,7 +89,7 @@ class SoftBaseDataset(BaseDataset):
         self.epsilon = epsilon
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
-            return train_parameter, train_performance
+            return train_parameter, train_performance, {}
         else:
             return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
@@ -130,7 +130,7 @@ class LorencoDataset(BaseDataset):
             new_param.append(parameter)
 
     
-        return np.vstack(new_param), np.vstack(new_perform)
+        return np.vstack(new_param), np.vstack(new_perform), {}
 
 
 class ArgMaxDataset(BaseDataset):
@@ -199,7 +199,11 @@ class ArgMaxDataset(BaseDataset):
                 argmax_ratio += 1
             new_parameter.append(new_temp_parameter)
         print(f'Argmax ratio is {argmax_ratio/len(parameter)} with argmax replaced {argmax_ratio} times')
-        return np.array(new_parameter),np.array(performance)
+
+        extra_info = dict()
+        extra_info["Argmax_ratio"] = argmax_ratio / len(parameter)
+        extra_info["Argmax_modify_num"] = argmax_ratio
+        return np.array(new_parameter),np.array(performance), extra_info
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
@@ -211,7 +215,7 @@ class SoftArgMaxDataset(ArgMaxDataset):
 
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
-            parameter, scale_down_performance = scale_down_data(train_parameter, train_performance, self.epsilon, self.sign)
+            parameter, scale_down_performance,_ = scale_down_data(train_parameter, train_performance, self.epsilon, self.sign)
             return super().argmaxModifyData(parameter, scale_down_performance)
         else:
             return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
@@ -251,7 +255,7 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
     def ablationModifyData(self, parameter, performance, train=True):
-        scale_down_parameter, scale_down_performance = scale_down_data(parameter, performance, self.epsilon, self.sign)
+        scale_down_parameter, scale_down_performance,_ = scale_down_data(parameter, performance, self.epsilon, self.sign)
 
         new_parameter, new_performance = [], []
         for temp_performance in scale_down_performance:
@@ -260,4 +264,4 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             new_parameter += list(new_temp_parameters)
             new_performance += list(new_temp_performances)
 
-        return np.array(new_parameter), np.array(new_performance)
+        return np.array(new_parameter), np.array(new_performance), {}

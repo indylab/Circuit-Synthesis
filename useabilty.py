@@ -44,7 +44,7 @@ def useability_pipeline():
     dataset = ArgMaxDataset(circuit_config["order"], circuit_config["sign"], pipeline_config)
     norm_parameter, norm_performance, scaler = dataset.transform_data(parameter, performance)
 
-    modify_parameter, modify_performance = dataset.modify_data(norm_parameter, norm_performance, None, None, True)
+    modify_parameter, modify_performance, _ = dataset.modify_data(norm_parameter, norm_performance, None, None, True)
 
     model = Model500GELU(len(circuit_config["performance_list"]), len(circuit_config["parameter_list"]))
 

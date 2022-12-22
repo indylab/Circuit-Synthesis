@@ -104,6 +104,25 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
 
     return result_dict
 
+
+def generate_circuit_status(circuit_config, parameter, performance, train_config, path):
+
+    circuit_dict = dict()
+    circuit_dict["num_parameter"] = parameter.shape[1]
+    circuit_dict["num_performance"] = performance.shape[1]
+    circuit_dict["data_size"] = performance.shape[0]
+
+    argmax_dataset = ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
+
+    _, _, extra_info = argmax_dataset.modify_data(parameter, performance, None, None, True)
+
+    circuit_dict["argmax_ratio"] = extra_info["Argmax_ratio"]
+    circuit_dict["argmax_modify_num"] = extra_info["Argmax_modify_num"]
+
+    saveDictToTxt(circuit_dict, path)
+
+
+
 def pipeline(circuit):
 
     train_config = load_train_config()
@@ -143,8 +162,12 @@ def pipeline(circuit):
     print("Check Alias Problem")
     checkAlias(parameter, performance)
 
-    print("Pipeline Start")
+    print("Generate Circuit Status")
+    circuit_status_path = os.path.join(os.getcwd(), circuit_config["arguments"]["out"], "circuit_stats.txt")
+    if not os.path.exists(circuit_status_path):
+        generate_circuit_status(circuit_config, parameter, performance, train_config, circuit_status_path)
 
+    print("Pipeline Start")
     model_pipeline = ModelEvaluator(parameter, performance, dataset, metric=get_margin_error, simulator=simulator,
                               train_config=train_config, model=model)
 
