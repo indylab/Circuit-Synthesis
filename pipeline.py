@@ -14,36 +14,35 @@ from datetime import datetime
 import time
 
 def generate_dataset_given_config(train_config, circuit_config):
-    
-        if train_config["dataset"] == "Lourenco":
-            print("Return Lourenco Dataset")
-            if ('n' not in train_config)|('K' not in train_config):
-                train_config["n"] = 0.15
-                train_config["K"] = 1
-                
-            return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"], train_config)
+    epsilon = train_config["epsilon"]
+    if train_config["dataset"] == "Lourenco":
+        print("Return Lourenco Dataset")
+        if ('n' not in train_config)|('K' not in train_config):
+            train_config["n"] = 0.15
+            train_config["K"] = 1
 
-        if train_config["dataset"]=="Base":
-            print("Return Base Dataset")
-            return BaseDataset(circuit_config["order"], circuit_config["sign"], train_config)
-     
-        if train_config["dataset"]=='SoftArgmax':
-            print("Return SoftArgMax Dataset")
-            epsilon = train_config["epsilon"]
-            return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+        return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"], train_config, epsilon)
 
-        if train_config["dataset"]=='SoftBase':
-            print("Return Soft Base Dataset")
-            epsilon = train_config["epsilon"]
-            return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+    if train_config["dataset"]=="Base":
+        print("Return Base Dataset")
+        return BaseDataset(circuit_config["order"], circuit_config["sign"], train_config)
 
-        if train_config["dataset"]=='Ablation':
-            print("Return Ablation Duplication Dataset")
-            return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"], train_config)
-        
-        if train_config["dataset"]=='Argmax':
-            print("Return Argmax Dataset")
-            return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
+    if train_config["dataset"]=='SoftArgmax':
+        print("Return SoftArgMax Dataset")
+
+        return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+
+    if train_config["dataset"]=='SoftBase':
+        print("Return Soft Base Dataset")
+        return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+
+    if train_config["dataset"]=='Ablation':
+        print("Return Ablation Duplication Dataset")
+        return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"], train_config, epsilon)
+
+    if train_config["dataset"]=='Argmax':
+        print("Return Argmax Dataset")
+        return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
 
 
 def generate_circuit_given_config(train_config):
