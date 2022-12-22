@@ -56,29 +56,32 @@ def useability_pipeline():
 
 
     while True:
-        performance_req = []
-        for req in performance_req_list:
-            req_value = input("Please Enter Performance requirements for field {}: \n".format(req))
-            performance_req.append(float(req_value))
-        print(performance_req)
+        try:
+            performance_req = []
+            for req in performance_req_list:
+                req_value = input("Please Enter Performance requirements for field {}: \n".format(req))
+                performance_req.append(float(req_value))
+            print(performance_req)
 
-        performance_req = np.array(performance_req)[None,:]
-        random_parameter = np.random.rand(1, len(circuit_config["parameter_list"]))
-        data = np.hstack((np.copy(random_parameter), np.copy(performance_req)))
+            performance_req = np.array(performance_req)[None,:]
+            random_parameter = np.random.rand(1, len(circuit_config["parameter_list"]))
+            data = np.hstack((np.copy(random_parameter), np.copy(performance_req)))
 
-        scaled_data = scaler.transform(data)
+            scaled_data = scaler.transform(data)
 
-        norm_performance_req = scaled_data[:,len(circuit_config["parameter_list"]):]
-        model.eval()
-        predict_parameter = model(torch.Tensor(norm_performance_req)).detach().numpy()
+            norm_performance_req = scaled_data[:,len(circuit_config["parameter_list"]):]
+            model.eval()
+            predict_parameter = model(torch.Tensor(norm_performance_req)).detach().numpy()
 
 
-        scale_back_predict_parameter, _ = inverse_transform(predict_parameter, norm_performance_req, scaler)
-        _, simulate_performance = simulator.runSimulation(scale_back_predict_parameter, train=False)
+            scale_back_predict_parameter, _ = inverse_transform(predict_parameter, norm_performance_req, scaler)
+            _, simulate_performance = simulator.runSimulation(scale_back_predict_parameter, train=False)
 
-        print("Circuit parameter list is", circuit_config["parameter_list"])
-        print("Predict parameter is", scale_back_predict_parameter)
-        print("The predicted parameter performance ", simulate_performance)
+            print("Circuit parameter list is", circuit_config["parameter_list"])
+            print("Predict parameter is", scale_back_predict_parameter)
+            print("The predicted parameter performance ", simulate_performance)
+        except:
+            print("There is error in generating prediction")
 
         continue_key = input("Press Q to quit and other keys to continue: \n")
         if continue_key == "Q":
