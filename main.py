@@ -1,12 +1,13 @@
-
 from pipeline import pipeline
-from utils import *
+import argparse
 
 
 
 if __name__ == '__main__':
-    multiple_config = load_yaml(os.path.join(CONFIG_PATH,'multiple_pipeline.yaml'))
-    for circuit in multiple_config['circuits']:
-        print('Working on circuit: ', circuit)
-        pipeline(circuit)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', help='Train Config File Path', default="./config/train_config.yaml")
+    args = parser.parse_args()
+    config_path = args.path
+
+    pipeline(config_path)
 

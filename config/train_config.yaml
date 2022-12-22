@@ -1,7 +1,8 @@
 pipeline: SklearnPipeline #SklearnPipeline #CrossFoldValidationPipeline #LourencoSklearnPipeline LourencoPipeline
 dataset: Argmax #Argmax #SoftArgmax #Lourenco #Base #Ablation
-model_config: 
+model_config:
   model: RandomForestRegressor #RandomForestRegressor #Model500GELU
+metric: absolute
 evaluation_same_distribution: False
 rerun_training: False
 device: cpu
