@@ -95,16 +95,17 @@ class SoftBaseDataset(BaseDataset):
 
 
 class LorencoDataset(BaseDataset):
-    def __init__(self, order, sign, n, K, train_config) -> None:
+    def __init__(self, order, sign, n, K, train_config, epsilon=0.0) -> None:
         super().__init__(order,sign, train_config)
         self.n = n
         self.K = K
+        self.epsilon = epsilon
 
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
             return self.LourencoMethod(train_parameter, train_performance)
         else:
-            return test_parameter, test_performance
+            return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
     def LourencoMethod(self, parameter, performance):
         new_param = []
@@ -133,8 +134,9 @@ class LorencoDataset(BaseDataset):
 
 
 class ArgMaxDataset(BaseDataset):
-    def __init__(self, order, sign, train_config) -> None:
+    def __init__(self, order, sign, train_config, epsilon=0.0) -> None:
         super().__init__(order, sign, train_config)
+        self.epsilon = epsilon
 
     def find_best_performance(self, parameter, performance):
         """
@@ -180,7 +182,7 @@ class ArgMaxDataset(BaseDataset):
             if self.train_config["evaluation_same_distribution"]:
                 return self.argmaxModifyData(test_parameter, test_performance, train_parameter, train_performance)
             else:
-                return test_parameter, test_performance
+                return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
     def argmaxModifyData(self, parameter, performance, same_dist_parameter = None, same_dist_performance = None):
         new_parameter = []
@@ -212,7 +214,7 @@ class SoftArgMaxDataset(ArgMaxDataset):
             parameter, scale_down_performance = scale_down_data(train_parameter, train_performance, self.epsilon, self.sign)
             return super().argmaxModifyData(parameter, scale_down_performance)
         else:
-            return test_parameter, test_performance
+            return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
 
 class AblationDuplicateDataset(SoftArgMaxDataset):
@@ -246,7 +248,7 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
         if train:
             return self.ablationModifyData(train_parameter, train_performance)
         else:
-            return test_parameter, test_performance
+            return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
     def ablationModifyData(self, parameter, performance, train=True):
         scale_down_parameter, scale_down_performance = scale_down_data(parameter, performance, self.epsilon, self.sign)
