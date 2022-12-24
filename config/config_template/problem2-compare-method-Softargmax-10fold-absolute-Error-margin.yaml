@@ -1,6 +1,6 @@
 dataset:
   - type: SoftArgmax
-metric: relative
+metric: absolute
 model_config:
   - model: Model500GELU
   - model: RandomForestRegressor

@@ -1,11 +1,7 @@
 dataset:
   - type: SoftArgmax
-  - type: SoftBase
-  - type: Ablation
-  - type: Argmax
-  - type: Lourenco
 metric: absolute
-model_config:
+model_config: 
   - model: Model500GELU
 rerun_training: True
 device: cpu
@@ -19,6 +15,10 @@ simulator_config:
   multiprocessing: True
 epsilon: 0.2
 subset:
+  - 0.05
+  - 0.1
+  - 0.2
+  - 0.5
   - 0.9
 circuits:
   - nmos
@@ -31,5 +31,5 @@ circuits:
 loss_per_epoch: False
 test_accuracy_per_epoch: False
 train_accuracy_per_epoch: False
-compare_dataset: True
+compare_dataset: False
 compare_method: False
