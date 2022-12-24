@@ -17,7 +17,6 @@ CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 DEFAULT_TRAIN_CONFIG_PATH = os.path.join(CONFIG_PATH, "train_config.yaml")
 DEFAULT_VISUAL_CONFIG_PATH = os.path.join(CONFIG_PATH, "visual_config.yaml")
 DEFAULT_MODEL_CONFIG_PATH = os.path.join(CONFIG_PATH, "model.yaml")
-DEFAULT_CONFIG_CONFLICT_PATH = os.path.join(CONFIG_PATH, "config_conflict.yaml")
 
 def load_yaml(yaml_path):
     with open(yaml_path, "r") as file:
@@ -63,8 +62,6 @@ def load_visual_config(configpath=DEFAULT_VISUAL_CONFIG_PATH):
 def load_model_config(configpath=DEFAULT_MODEL_CONFIG_PATH):
     return load_yaml(configpath)
 
-def load_conflict_config(configpath=DEFAULT_CONFIG_CONFLICT_PATH):
-    return load_yaml(configpath)
 
 def updateFile(trainingFilePath, outputFilePath, argumentMap,batch_index,path):
     file_name = outputFilePath+f'{batch_index}.sp'
@@ -126,12 +123,6 @@ def generate_metrics_given_config(train_config):
         metrics_dict["test_margins"] = []
     if train_config["train_margin_accuracy"]:
         metrics_dict["train_margins"] = []
-    if train_config["lookup"]:
-        metrics_dict["lookup_margins"] = []
-        metrics_dict["lookup_circuit_error_average"] = []
-        metrics_dict["lookup_performance_error_average"] = []
-        metrics_dict["lookup_circuit_error_std"] = []
-        metrics_dict["lookup_performance_error_std"] = []
     metrics_dict["circuit_error_average"] = []
     metrics_dict["performance_error_average"] = []
     metrics_dict["circuit_error_std"] = []
@@ -162,48 +153,6 @@ def generate_performance_diff_metrics(performance_prediction, test_performance, 
         metrics_dict["performance_error_std"] = stats.sem(margin_error, axis=0)
 
     return metrics_dict
-
-
-def baseline_lookup_testing(performance_test, performance_train, sign):
-    unique_performance_train = np.unique(performance_train, axis=0)
-    unique_performance_test = np.unique(performance_test, axis=0)
-
-    sign_performance_train = np.array(unique_performance_train) * sign
-    sign_performance_test = np.array(unique_performance_test) * sign
-
-    lookup_performance_test = []
-
-
-    for data_index in range(len(sign_performance_test)):
-        minimum_err = None
-        minimum_index = None
-        greater = False
-        for cmp_data_index in range(len(sign_performance_train)):
-            if np.all(sign_performance_train[cmp_data_index] >= sign_performance_test[data_index]):
-                lookup_performance_test.append(list(sign_performance_train[cmp_data_index]))
-                greater = True
-                break
-            temp_err = (np.abs(sign_performance_train[cmp_data_index] - sign_performance_test[data_index]))
-            temp_diff = np.divide(temp_err, sign_performance_test[data_index], where=sign_performance_test[data_index] != 0)
-
-            temp_max_diff = np.max(temp_diff)
-            if minimum_err is None or temp_max_diff < minimum_err:
-                minimum_index = cmp_data_index
-                minimum_err = temp_max_diff
-        if not greater:
-            lookup_performance_test.append(list(sign_performance_train[minimum_index]))
-
-    lookup_performance_test = np.array(lookup_performance_test)
-    margin_error = get_margin_error(lookup_performance_test, sign_performance_test, sign)
-    metrics_dict = dict()
-    metrics_dict["lookup_margins"] = np.max(margin_error, axis=1)
-    metrics_dict["lookup_circuit_error_average"] = np.average(margin_error)
-    metrics_dict["lookup_performance_error_average"] = np.average(margin_error, axis=0)
-    metrics_dict["lookup_circuit_error_std"] = stats.sem(margin_error)
-    metrics_dict["lookup_performance_error_std"] = stats.sem(margin_error, axis=1)
-
-    return metrics_dict
-
 
 def save_result(result, pipeline_save_name):
 
@@ -339,10 +288,16 @@ def update_train_config_given_model_type(model_type, train_config):
         train_config["loss_per_epoch"] = False
         train_config["test_accuracy_per_epoch"] = False
         train_config["train_accuracy_per_epoch"] = False
-    else:
+    elif model_type == 1:
+        #Pytorch model, so have loss, accuracy per epochs if want
         train_config["check_every"] = 20 if "check_every" not in train_config else train_config["check_every"]
         train_config["epochs"] = 100 if "epochs" not in train_config else train_config["epochs"]
         train_config["first_eval"] = 1 if "first_eval" not in train_config else train_config["first_eval"]
         train_config["accuracy_per_epoch_threshold"] = 0.05 if "accuracy_per_epoch_threshold" not in train_config \
             else train_config["accuracy_per_epoch_threshold"]
-
+    else:
+        #Lookup model, no loss accuracy and no train margin
+        train_config["train_margin_accuracy"] = False
+        train_config["loss_per_epoch"] = False
+        train_config["test_accuracy_per_epoch"] = False
+        train_config["train_accuracy_per_epoch"] = False

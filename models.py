@@ -2,8 +2,8 @@ import numpy as np
 from dataset import BaseDataset
 
 from utils import generate_metrics_given_config, merge_metrics, run_simulation_given_parameter, \
-    generate_performance_diff_metrics, baseline_lookup_testing, evalCircuit
-from model_wrapper import SklearnModelWrapper, PytorchModelWrapper
+    generate_performance_diff_metrics, evalCircuit
+from model_wrapper import SklearnModelWrapper, PytorchModelWrapper, LookupWrapper
 
 def subset_split(X,y,train_percentage):
     split_size = np.gcd(int(train_percentage * 100), 100)
@@ -73,8 +73,10 @@ class ModelEvaluator:
 
         if train_config["model_type"] == 0:
             self.model_wrapper = SklearnModelWrapper(model)
-        else:
+        elif train_config["model_type"] == 1:
             self.model_wrapper = PytorchModelWrapper(model, train_config, simulator)
+        else:
+            self.model_wrapper = LookupWrapper(self.simulator.sign)
 
     def eval(self):
 
@@ -106,16 +108,6 @@ class ModelEvaluator:
                                               new_train_parameter, new_train_performance,
                                               new_test_parameter, new_test_performance, self.simulator, self.scaler)
                 kfold_metrics_dict = result_eval_model.eval()
-                
-                if self.train_config["lookup"]:
-                    print("Start lookup testing")
-                    _, inverse_transform_performance_train = BaseDataset.inverse_transform(
-                        parameter_train, performance_train, self.scaler)
-                    _, inverse_transform_performance_test = BaseDataset.inverse_transform(
-                        parameter_test, performance_test, self.scaler)
-                    lookup_metrics_dict = baseline_lookup_testing(inverse_transform_performance_test, inverse_transform_performance_train, self.simulator.sign)
-                    kfold_metrics_dict.update(lookup_metrics_dict)
-                    print("Finish lookup testing")
 
                 merge_metrics(subset_metrics_dict, kfold_metrics_dict)
             merge_metrics(metrics_dict, subset_metrics_dict)

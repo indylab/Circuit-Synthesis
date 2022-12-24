@@ -24,6 +24,52 @@ class SklearnModelWrapper:
         print('Reset The model')
         self.model = self.model.__class__()
 
+class LookupWrapper:
+    def __init__(self, sign):
+        self.train_performance = None
+        self.train_parameter = None
+        self.sign = sign
+
+    def fit(self, train_X, train_y, test_X, test_y, scaler):
+        self.train_performance = train_X
+        self.train_parameter = train_y
+        return {}
+
+    def predict(self, X):
+
+        sign_performance_train = np.array(self.train_performance) * self.sign
+        sign_performance_test = np.array(X) * self.sign
+
+        lookup_parameter_test = []
+        for data_index in range(len(sign_performance_test)):
+            minimum_err = None
+            minimum_index = None
+            greater = False
+            for cmp_data_index in range(len(sign_performance_train)):
+                if np.all(sign_performance_train[cmp_data_index] >= sign_performance_test[data_index]):
+                    lookup_parameter_test.append(list(self.train_parameter[cmp_data_index]))
+                    greater = True
+                    break
+                temp_err = (np.abs(sign_performance_train[cmp_data_index] - sign_performance_test[data_index]))
+                temp_diff = np.divide(temp_err, sign_performance_test[data_index],
+                                      where=sign_performance_test[data_index] != 0)
+
+                temp_max_diff = np.max(temp_diff)
+                if minimum_err is None or temp_max_diff < minimum_err:
+                    minimum_index = cmp_data_index
+                    minimum_err = temp_max_diff
+            if not greater:
+                lookup_parameter_test.append(list(self.train_parameter[minimum_index]))
+
+        lookup_parameter_test = np.array(lookup_parameter_test)
+
+        return lookup_parameter_test
+
+
+    def reset(self,):
+        self.train_performance = None
+        self.train_parameter = None
+
 
 class PytorchModelWrapper:
     def __init__(self, model, train_config, simulator):

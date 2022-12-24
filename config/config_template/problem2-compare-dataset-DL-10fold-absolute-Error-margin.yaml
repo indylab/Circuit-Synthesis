@@ -31,6 +31,5 @@ circuits:
 loss_per_epoch: False
 test_accuracy_per_epoch: False
 train_accuracy_per_epoch: False
-lookup: False
 compare_dataset: True
 compare_method: False

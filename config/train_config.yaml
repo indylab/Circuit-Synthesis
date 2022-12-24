@@ -20,5 +20,7 @@ subset:
   - 0.2
   - 0.5
   - 0.9
+circuits:
+  - nmos
 compare_dataset: False
 compare_method: False

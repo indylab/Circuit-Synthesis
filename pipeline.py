@@ -82,6 +82,11 @@ def generate_model_given_config(model_config,num_params,num_perf):
     dl_model_mapping = {
         "Model500GELU": Model500GELU,
     }
+
+    lookup_model_mapping = {
+        "Lookup": None
+    }
+
     if model_config["model"] in sklearn_model_mapping.keys():
         eval_model = sklearn_model_mapping[model_config["model"]]
         copy_model_config = dict(model_config)
@@ -95,8 +100,9 @@ def generate_model_given_config(model_config,num_params,num_perf):
         copy_model_config = dict(model_config)
         copy_model_config.pop("extra_args", None)
         copy_model_config.pop("model", None)
-
         return eval_model(**copy_model_config), 1
+    elif model_config["model"] in lookup_model_mapping.keys():
+        return None, 2
     else:
         raise KeyError("The model you defined does not exist")
 
@@ -149,7 +155,9 @@ def pipeline(configpath):
     if train_config["compare_dataset"] and train_config["compare_method"]:
         raise ValueError("You cannot compare dataset and method at the same time")
 
-
+    if (train_config["compare_dataset"] or train_config["compare_method"]) and \
+            (len(train_config["model_config"]) > 1 and len(train_config["dataset"]) > 1):
+        raise ValueError("When you doing comparison testing, dataset and model can not be both greater than 1")
 
     for circuit in train_config['circuits']:
         print("Pipeline with {} circuit".format(circuit))
