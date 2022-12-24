@@ -58,19 +58,18 @@ class PytorchModelWrapper:
         train_loss = nn.L1Loss()
         optimizer = optim.Adam(self.model.parameters())
 
-        if self.train_config["train_margin_accuracy"]:
-            train_accs = []
-        if self.train_config["test_margin_accuracy"]:
-            val_accs = []
+
+        train_accs = []
+        val_accs = []
         losses = []
         val_losses = []
         device = self.train_config["device"]
 
-        if self.train_config["first_eval"] == 0:
-            if self.train_config["train_margin_accuracy"]:
+        if (self.train_config["test_accuracy_per_epoch"] or self.train_config["train_accuracy_per_epoch"]) and self.train_config["first_eval"] == 0:
+            if self.train_config["train_accuracy_per_epoch"]:
                 train_accuracy = self.eval_epoch_accuracy(train_X, scaler)
                 train_accs.append(train_accuracy)
-            if self.train_config["test_margin_accuracy"]:
+            if self.train_config["test_accuracy_per_epoch"]:
                 test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
                 val_accs.append(test_accuracy)
 
@@ -113,34 +112,32 @@ class PytorchModelWrapper:
             if self.logging:
                 wandb.log({'train_loss': avg_loss, 'val_loss': val_avg_loss, 'epoch': epoch, })
 
+            if self.train_config["test_accuracy_per_epoch"] or self.train_config["train_accuracy_per_epoch"]:
+                if (epoch + 1) == self.train_config["first_eval"] or (epoch + 1) % self.train_config["check_every"] == 0:
+                    if self.train_config["train_accuracy_per_epoch"]:
+                        train_accuracy = self.eval_epoch_accuracy(train_X, scaler)
+                        train_accs.append(train_accuracy)
+                        print('train',train_accuracy)
 
-            if (epoch + 1) == self.train_config["first_eval"] or (epoch + 1) % self.train_config["check_every"] == 0:
-                if self.train_config["train_margin_accuracy"]:
-                    train_accuracy = self.eval_epoch_accuracy(train_X, scaler)
-                    train_accs.append(train_accuracy)
-                    print('train',train_accuracy)
+                        if self.logging:
+                            wandb.log({'train_accuracy': train_accuracy, 'epoch': epoch,})
 
-                    if self.logging:
-                        wandb.log({'train_accuracy': train_accuracy, 'epoch': epoch,})
+                    if self.train_config["test_accuracy_per_epoch"]:
+                        test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
+                        val_accs.append(test_accuracy)
+                        print('test',test_accuracy)
 
-                if self.train_config["test_margin_accuracy"]:
-                    test_accuracy = self.eval_epoch_accuracy(test_X, scaler)
-                    val_accs.append(test_accuracy)
-                    print('test',test_accuracy)
+                        if self.logging:
+                            wandb.log({ 'test_accuracy': test_accuracy, 'epoch': epoch,})
 
-                    if self.logging:
-                        wandb.log({ 'test_accuracy': test_accuracy, 'epoch': epoch,})
 
-               
-          
-                
         result_dict = dict()
 
         result_dict["train_loss"] = losses
         result_dict["validation_loss"] = val_losses
-        if self.train_config["train_margin_accuracy"]:
-            result_dict["train_accuracy_per_epoch"] = train_accuracy
-        if self.train_config["test_margin_accuracy"]:
+        if self.train_config["train_accuracy_per_epoch"]:
+            result_dict["train_accuracy_per_epoch"] = train_accs
+        if self.train_config["test_accuracy_per_epoch"]:
             result_dict["validation_accuracy_per_epoch"] = val_accs
 
         return result_dict

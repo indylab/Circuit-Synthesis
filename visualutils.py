@@ -5,15 +5,51 @@ import numpy as np
 from scipy import stats
 
 
+def plot_multiple_margin_with_confidence_comparison(margin_array_mean, margin_array_upper_bound, margin_array_lower_bound,
+                                                    labels, subsets, save_folder, visual_config):
+    os.mkdir(save_folder)
 
-def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, save_name):
+    color = visual_config["color"]
+    eval_margin = visual_config["margin_threshold"]
+
+    font_size = visual_config["font_size"]
+    plt.rcParams.update({'font.size': font_size})
+
+    for percentage_index in range(len(subsets)):
+        plt.clf()
+        percentage_margin_mean_cross_comparison = [i[percentage_index] for i in margin_array_mean]
+        percentage_margin_upper_bound_cross_comparison = [i[percentage_index] for i in margin_array_upper_bound]
+        percentage_margin_lower_bound_cross_comparison = [i[percentage_index] for i in margin_array_lower_bound]
+
+        for compared_item_index in range(len(percentage_margin_mean_cross_comparison)):
+
+            plt.plot(eval_margin, percentage_margin_mean_cross_comparison[compared_item_index],
+                     label=labels[compared_item_index], color=color[compared_item_index])
+            plt.fill_between(eval_margin, percentage_margin_lower_bound_cross_comparison[compared_item_index],
+                             percentage_margin_upper_bound_cross_comparison[compared_item_index], alpha=.3, color=color[compared_item_index])
+
+
+        plt.axvline(x=0.05, linestyle='dashed', color="k")
+        plt.legend()
+        plt.xscale('log')
+        plt.xlabel("Accuracy")
+        plt.ylabel("Test Success Rate")
+
+        image_save_path = os.path.join(save_folder, "subset-{}.png".format(subsets[percentage_index]))
+        plt.savefig(image_save_path, dpi=250)
+
+
+
+
+def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, save_name, dataset_type):
     plt.clf()
 
     eval_margin = visual_config["margin_threshold"]
     result_dict = dict()
     if train_config["train_margin_accuracy"]:
         multi_train_mean, multi_train_upper_bound, \
-        multi_train_lower_bound, _, _, _ = plot_multiple_margin_with_confidence(eval_margin, result["train_margins"], train_config, visual_config, save_name, "train", None)
+        multi_train_lower_bound, _, _, _ = plot_multiple_margin_with_confidence(eval_margin, result["train_margins"],
+                                                                                train_config, visual_config, save_name, "train", dataset_type, None)
         result_dict["multi_train_mean"] = multi_train_mean
         result_dict["multi_train_upper_bound"] = multi_train_upper_bound
         result_dict["multi_train_lower_bound"] = multi_train_lower_bound
@@ -24,7 +60,7 @@ def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config,
 
         multi_test_mean, multi_test_upper_bound, multi_test_lower_bound, baseline_mean, baseline_upper_bound, \
         baseline_lower_bound = plot_multiple_margin_with_confidence(eval_margin, result["test_margins"],
-                                                                    train_config, visual_config, save_name, "test", lookup_margin)
+                                                                    train_config, visual_config, save_name, "test", dataset_type, lookup_margin)
 
         if train_config["lookup"]:
             result_dict["baseline_mean"] = baseline_mean
@@ -77,7 +113,7 @@ def plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, r
 
     return result_dict
 
-def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_config, visual_config, save_folder, save_name, lookup_margin=None):
+def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_config, visual_config, save_folder, save_name, dataset_type, lookup_margin=None):
 
 
     font_size = visual_config["font_size"]
@@ -85,7 +121,6 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
 
 
     subset = train_config["subset"]
-    dataset = train_config["dataset"]
     color = visual_config["color"][:len(subset)]
     log = visual_config["log"]
 
@@ -94,7 +129,7 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
     multi_lower_bound = []
     multi_upper_bound = []
 
-    save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder), save_name + f"-margin_{dataset}.png")
+    save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder), save_name + f"-margin_{dataset_type}.png")
 
 
     #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number

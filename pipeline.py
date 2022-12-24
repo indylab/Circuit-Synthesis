@@ -5,44 +5,50 @@ import os
 from models import ModelEvaluator
 from simulator import load_simulator
 from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, \
-    validate_config, save_result, check_save_data_status, saveDictToTxt, checkAlias
+    save_result, check_save_data_status, saveDictToTxt, checkAlias, \
+    generate_train_config_for_single_pipeline, update_train_config_given_model_type
 from metrics import get_margin_error, get_relative_margin_error
 from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
-    plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold
+    plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold, \
+    plot_multiple_margin_with_confidence_comparison
 from datetime import datetime
 import time
 
-def generate_dataset_given_config(train_config, circuit_config):
+def generate_dataset_given_config(train_config, circuit_config, dataset_config):
     epsilon = train_config["epsilon"]
-    if train_config["dataset"] == "Lourenco":
+    dataset_type = dataset_config["type"]
+    if dataset_type == "Lourenco":
         print("Return Lourenco Dataset")
-        if ('n' not in train_config)|('K' not in train_config):
-            train_config["n"] = 0.15
-            train_config["K"] = 1
+        dataset_config["n"] = 0.15 if "n" not in dataset_config else dataset_config["n"]
+        dataset_config["K"] = 1 if "K" not in dataset_config else dataset_config["K"]
 
-        return LorencoDataset(circuit_config["order"], circuit_config["sign"], train_config["n"], train_config["K"], train_config, epsilon)
+        return LorencoDataset(circuit_config["order"], circuit_config["sign"], dataset_config["n"], dataset_config["K"], dataset_config, epsilon)
 
-    if train_config["dataset"]=="Base":
+    if dataset_type =="Base":
         print("Return Base Dataset")
-        return BaseDataset(circuit_config["order"], circuit_config["sign"], train_config)
+        return BaseDataset(circuit_config["order"], circuit_config["sign"], dataset_config)
 
-    if train_config["dataset"]=='SoftArgmax':
+    if dataset_type =='SoftArgmax':
         print("Return SoftArgMax Dataset")
 
-        return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+        return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], dataset_config, epsilon)
 
-    if train_config["dataset"]=='SoftBase':
+    if dataset_type =='SoftBase':
         print("Return Soft Base Dataset")
-        return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+        return SoftBaseDataset(circuit_config["order"], circuit_config["sign"], dataset_config, epsilon)
 
-    if train_config["dataset"]=='Ablation':
+    if dataset_type =='Ablation':
         print("Return Ablation Duplication Dataset")
-        return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"], train_config["duplication"], train_config, epsilon)
+        dataset_config["duplication"] = 500 if "duplication" not in dataset_config else dataset_config["duplication"]
+        return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"],
+                                        dataset_config["duplication"], dataset_config, epsilon)
 
-    if train_config["dataset"]=='Argmax':
+    if dataset_type =='Argmax':
         print("Return Argmax Dataset")
-        return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config, epsilon)
+        dataset_config["evaluation_same_distribution"] = False if "evaluation_same_distribution" not in \
+                                                                  dataset_config else dataset_config["evaluation_same_distribution"]
+        return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], dataset_config, epsilon)
 
 
 def generate_circuit_given_config(circuit_name):
@@ -66,25 +72,36 @@ def generate_circuit_given_config(circuit_name):
     return circuit
 
 def generate_model_given_config(model_config,num_params,num_perf):
-    model_config['parameter_count'] = num_perf
-    model_config['output_count'] = num_params
+
     
-    model_mapping = {
+    sklearn_model_mapping = {
         "RandomForestRegressor": SklearnModel,
-        "Model500GELU": Model500GELU,
+
     }
 
-    if model_config["model"] in model_mapping.keys():
-        eval_model = model_mapping[model_config["model"]]
+    dl_model_mapping = {
+        "Model500GELU": Model500GELU,
+    }
+    if model_config["model"] in sklearn_model_mapping.keys():
+        eval_model = sklearn_model_mapping[model_config["model"]]
         copy_model_config = dict(model_config)
-        del copy_model_config["model"]
-        return eval_model(**copy_model_config)
+        copy_model_config.pop("extra_args", None)
+        copy_model_config.pop("model", None)
+        return eval_model(**copy_model_config), 0
+    elif model_config["model"] in dl_model_mapping.keys():
+        model_config['parameter_count'] = num_perf
+        model_config['output_count'] = num_params
+        eval_model = dl_model_mapping[model_config["model"]]
+        copy_model_config = dict(model_config)
+        copy_model_config.pop("extra_args", None)
+        copy_model_config.pop("model", None)
 
+        return eval_model(**copy_model_config), 1
     else:
         raise KeyError("The model you defined does not exist")
 
 
-def generate_visual_given_result(result, train_config, visual_config, pipeline_save_name):
+def generate_visual_given_result(result, train_config, visual_config, pipeline_save_name, dataset_type):
     folder_path = os.path.join(os.path.join(os.getcwd(), "out_plot"), pipeline_save_name)
     try:
         os.mkdir(folder_path)
@@ -93,7 +110,7 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
     result_dict = dict()
 
     if train_config["test_margin_accuracy"] or train_config["train_margin_accuracy"]:
-        margin_plot_result = plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        margin_plot_result = plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name, dataset_type)
         result_dict.update(margin_plot_result)
     if train_config["test_accuracy_per_epoch"] or train_config["train_accuracy_per_epoch"]:
         accuracy_plot_result = plot_multiple_accuracy_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
@@ -126,62 +143,106 @@ def generate_circuit_status(circuit_config, parameter, performance, train_config
 def pipeline(configpath):
 
     train_config = load_train_config(configpath=configpath)
+    visual_config = load_visual_config()
+
+
+    if train_config["compare_dataset"] and train_config["compare_method"]:
+        raise ValueError("You cannot compare dataset and method at the same time")
+
+
+
     for circuit in train_config['circuits']:
         print("Pipeline with {} circuit".format(circuit))
-        validate_config(train_config)
-        visual_config = load_visual_config()
-        circuit_config = generate_circuit_given_config(circuit)
-        dataset = generate_dataset_given_config(train_config, circuit_config)
-
-        simulator = load_simulator(circuit_config=circuit_config,
-                                    simulator_config=train_config['simulator_config'])
-
-        model = generate_model_given_config(train_config['model_config'],num_params=simulator.num_params,
-                                                         num_perf=simulator.num_perf)
-
-
-        if train_config["rerun_training"] or not check_save_data_status(circuit_config):
-            data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
-
-            start =time.time()
-            print('start sim')
-            parameter, performance = simulator.runSimulation(data_for_evaluation, True)
-            print('took for sim', time.time()-start)
-            print('Params shape', parameter.shape)
-            print('Perfomance shape',performance.shape)
-
-
-            print("Saving metadata for this simulation")
-            metadata_path = os.path.join(circuit_config["arguments"]["out"], "metadata.txt")
-            saveDictToTxt(circuit_config["arguments"], metadata_path)
+        pipeline_cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
+        if train_config["compare_dataset"]:
+            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-dataset")
         else:
-            print("Load from saved data")
-            parameter= np.load(os.path.join(simulator.arguments["out"], "x.npy"))
-            performance =np.load(os.path.join(simulator.arguments["out"], "y.npy"))
+            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-method")
+        print("Save comparison folder is {}".format(save_path))
 
-        print("Check Alias Problem")
-        checkAlias(parameter, performance)
+        compare_margin_error_mean_list = []
+        compare_margin_error_upper_bound_list = []
+        compare_margin_error_lower_bound_list = []
 
-        print("Generate Circuit Status")
-        circuit_status_path = os.path.join(os.getcwd(), circuit_config["arguments"]["out"], "circuit_stats.txt")
-        if not os.path.exists(circuit_status_path):
-            generate_circuit_status(circuit_config, parameter, performance, train_config, circuit_status_path)
+        label = []
 
-        print("Pipeline Start")
-        if train_config["metric"] == "absolute":
-            use_metric = get_margin_error
-        else:
-            use_metric = get_relative_margin_error
+        for model_template_config in train_config["model_config"]:
+            print("Pipeline with {} model".format(model_template_config["model"]))
+            for dataset_type_config in train_config["dataset"]:
 
-        model_pipeline = ModelEvaluator(parameter, performance, dataset, metric=use_metric, simulator=simulator,
-                                  train_config=train_config, model=model)
+                circuit_config = generate_circuit_given_config(circuit)
+                dataset = generate_dataset_given_config(train_config, circuit_config, dataset_type_config)
 
-        cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
-        pipeline_save_name = "{}-circuit-{}-pipeline-{}".format(circuit, train_config["pipeline"], cur_time)
+                new_train_config = generate_train_config_for_single_pipeline(train_config, model_template_config, dataset_type_config)
 
-        result = model_pipeline.eval()
-        visual_result = generate_visual_given_result(result, train_config, visual_config, pipeline_save_name)
-        result.update(visual_result)
-        save_result(result, pipeline_save_name)
+                simulator = load_simulator(circuit_config=circuit_config,
+                                            simulator_config=new_train_config['simulator_config'])
+
+                model, model_type = generate_model_given_config(dict(model_template_config),num_params=simulator.num_params,
+                                                                 num_perf=simulator.num_perf)
+
+                update_train_config_given_model_type(model_type, new_train_config)
+                new_train_config["model_type"] = model_type
+                if new_train_config["rerun_training"] or not check_save_data_status(circuit_config):
+                    data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
+
+                    start =time.time()
+                    print('start sim')
+                    parameter, performance = simulator.runSimulation(data_for_evaluation, True)
+                    print('took for sim', time.time()-start)
+                    print('Params shape', parameter.shape)
+                    print('Perfomance shape',performance.shape)
+
+
+                    print("Saving metadata for this simulation")
+                    metadata_path = os.path.join(circuit_config["arguments"]["out"], "metadata.txt")
+                    saveDictToTxt(circuit_config["arguments"], metadata_path)
+                else:
+                    print("Load from saved data")
+                    parameter= np.load(os.path.join(simulator.arguments["out"], "x.npy"))
+                    performance =np.load(os.path.join(simulator.arguments["out"], "y.npy"))
+
+                print("Check Alias Problem")
+                checkAlias(parameter, performance)
+
+                print("Generate Circuit Status")
+                circuit_status_path = os.path.join(os.getcwd(), circuit_config["arguments"]["out"], "circuit_stats.txt")
+                if not os.path.exists(circuit_status_path):
+                    generate_circuit_status(circuit_config, parameter, performance, new_train_config, circuit_status_path)
+
+                print("Pipeline Start")
+                if new_train_config["metric"] == "absolute":
+                    use_metric = get_margin_error
+                else:
+                    use_metric = get_relative_margin_error
+
+                model_pipeline = ModelEvaluator(parameter, performance, dataset, metric=use_metric, simulator=simulator,
+                                          train_config=new_train_config, model=model)
+
+                cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
+                pipeline_save_name = "{}-circuit-{}-dataset-{}-method-{}".format(circuit,
+                                                                                 dataset_type_config["type"], model_template_config["model"], cur_time)
+                print("Pipeline save name is {}".format(pipeline_save_name))
+                result = model_pipeline.eval()
+                visual_result = generate_visual_given_result(result, new_train_config,
+                                                             visual_config, pipeline_save_name, dataset_type_config["type"])
+                result.update(visual_result)
+                save_result(result, pipeline_save_name)
+
+                if new_train_config["compare_dataset"] or new_train_config["compare_method"]:
+                    compare_margin_error_mean_list.append(result["multi_test_mean"])
+                    compare_margin_error_lower_bound_list.append(result["multi_test_lower_bound"])
+                    compare_margin_error_upper_bound_list.append(result["multi_test_upper_bound"])
+                if new_train_config["compare_dataset"]:
+                    label.append(dataset_type_config["type"])
+                if new_train_config["compare_method"]:
+                    label.append(model_template_config["model"])
+
+        if train_config["compare_dataset"] or train_config["compare_method"]:
+
+            plot_multiple_margin_with_confidence_comparison(compare_margin_error_mean_list,
+                                                            compare_margin_error_upper_bound_list,
+                                                            compare_margin_error_lower_bound_list,
+                                                            label, train_config["subset"], save_path, visual_config)
 
 

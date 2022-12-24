@@ -34,10 +34,10 @@ class BasePytorchModelDataset(Dataset):
 
 
 class BaseDataset:
-    def __init__(self, order,sign, train_config) -> None:
+    def __init__(self, order,sign, dataset_config) -> None:
         self.order = order
         self.sign = np.array(sign)
-        self.train_config = train_config
+        self.dataset_config = dataset_config
 
     @staticmethod
     def transform_data(parameter, performance):
@@ -84,8 +84,8 @@ class BaseDataset:
 
 
 class SoftBaseDataset(BaseDataset):
-    def __init__(self, order, sign, train_config, epsilon=0.0):
-        super().__init__(order, sign, train_config)
+    def __init__(self, order, sign, dataset_config, epsilon=0.0):
+        super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
         if train:
@@ -95,8 +95,8 @@ class SoftBaseDataset(BaseDataset):
 
 
 class LorencoDataset(BaseDataset):
-    def __init__(self, order, sign, n, K, train_config, epsilon=0.0) -> None:
-        super().__init__(order,sign, train_config)
+    def __init__(self, order, sign, n, K, dataset_config, epsilon=0.0) -> None:
+        super().__init__(order,sign, dataset_config)
         self.n = n
         self.K = K
         self.epsilon = epsilon
@@ -134,8 +134,8 @@ class LorencoDataset(BaseDataset):
 
 
 class ArgMaxDataset(BaseDataset):
-    def __init__(self, order, sign, train_config, epsilon=0.0) -> None:
-        super().__init__(order, sign, train_config)
+    def __init__(self, order, sign, dataset_config, epsilon=0.0) -> None:
+        super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
 
     def find_best_performance(self, parameter, performance):
@@ -179,7 +179,7 @@ class ArgMaxDataset(BaseDataset):
         if train:
             return self.argmaxModifyData(train_parameter, train_performance)
         else:
-            if self.train_config["evaluation_same_distribution"]:
+            if self.dataset_config["evaluation_same_distribution"]:
                 return self.argmaxModifyData(test_parameter, test_performance, train_parameter, train_performance)
             else:
                 return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
@@ -207,8 +207,8 @@ class ArgMaxDataset(BaseDataset):
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
-    def __init__(self, order, sign, train_config, epsilon=0.0) -> None:
-        super().__init__(order, sign, train_config)
+    def __init__(self, order, sign, dataset_config, epsilon=0.0) -> None:
+        super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
         print(f'Epsilon is {epsilon}')
 
@@ -222,8 +222,8 @@ class SoftArgMaxDataset(ArgMaxDataset):
 
 
 class AblationDuplicateDataset(SoftArgMaxDataset):
-    def __init__(self, order, sign, duplication, train_config, epsilon=0.2) -> None:
-        super().__init__(order, sign, train_config, epsilon)
+    def __init__(self, order, sign, duplication, dataset_config, epsilon=0.2) -> None:
+        super().__init__(order, sign, dataset_config, epsilon)
         self.duplication = duplication
 
     def sort_vectors(self, parameter, performance):

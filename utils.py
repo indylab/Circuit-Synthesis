@@ -49,22 +49,6 @@ def load_circuit(circuit_name):
 def load_train_config(configpath=DEFAULT_TRAIN_CONFIG_PATH):
 
     train_config = load_yaml(configpath)
-    default_config_folder_path = os.path.join(CONFIG_PATH, "default_config")
-    existing_pipeline = {
-        "CrossFoldValidationPipeline": os.path.join(default_config_folder_path, "crossfold_validation_train_config.yaml"),
-        "LourencoPipeline": os.path.join(default_config_folder_path, "Lourenco_train_config.yaml"),
-        "LourencoSklearnPipeline": os.path.join(default_config_folder_path, "Lourenco_train_config.yaml"),
-        "SklearnPipeline": os.path.join(default_config_folder_path, "sklearn_train_config.yaml")
-    }
-
-    if train_config["pipeline"] in existing_pipeline.keys():
-        default_config_path = existing_pipeline[train_config["pipeline"]]
-        default_config = load_yaml(default_config_path)
-        for k in default_config.keys():
-            if k not in train_config:
-                train_config[k] = default_config[k]
-    else:
-        raise KeyError("The Pipeline you specify is not defined")
     if train_config["device"] == "cuda":
         if is_available():
             train_config["device"] = "cuda:0"
@@ -127,17 +111,6 @@ def delete_testing_files(out_directory, names):
         if not(dir.startswith("batch")):
             continue
         shutil.rmtree(os.path.join(out, dir))
-
-def validate_config(train_config):
-    conflict_config = load_conflict_config()
-    for rule in conflict_config["conflict_rule"]:
-        if rule["pipeline"] == train_config["pipeline"]:
-            if rule["type"] == "Boolean":
-                key = rule["key"]
-                value = rule["value"]
-                assert train_config[key] == value, "The {} config you choose for {} have conflict, " \
-                                                   "please fix the conflict or use default value".format(key, rule["pipeline"])
-
 
 def generate_metrics_given_config(train_config):
 
@@ -335,7 +308,41 @@ def evalCircuit(num_sample_check, simulator, scaler, random_scale):
     print(simulate_performance)
 
 
+def generate_train_config_for_single_pipeline(train_config, model_config, dataset_config):
+
+    new_train_config = dict(train_config)
+
+    del new_train_config["circuits"]
+    del new_train_config["dataset"]
+    del new_train_config["model_config"]
+
+    if "extra_args" in model_config.keys():
+        for k,v in model_config["extra_args"].items():
+            new_train_config[k] = v
+
+    for k,v in dataset_config.items():
+        new_train_config[k] = v
+
+    return new_train_config
+
+def update_train_config_given_model_type(model_type, train_config):
 
 
+    train_config["train_margin_accuracy"] = False if "train_margin_accuracy" not in train_config else train_config["train_margin_accuracy"]
+    train_config["test_margin_accuracy"] = True if "test_margin_accuracy" not in train_config else train_config["test_margin_accuracy"]
+    train_config["loss_per_epoch"] = True if "loss_per_epoch" not in train_config else train_config["loss_per_epoch"]
+    train_config["test_accuracy_per_epoch"] = True if "test_accuracy_per_epoch" not in train_config else train_config["test_accuracy_per_epoch"]
+    train_config["train_accuracy_per_epoch"] = False if "train_accuracy_per_epoch" not in train_config else train_config["train_accuracy_per_epoch"]
 
+    if model_type == 0:
+        #Sklearn model, so no loss and accuracy per epochs
+        train_config["loss_per_epoch"] = False
+        train_config["test_accuracy_per_epoch"] = False
+        train_config["train_accuracy_per_epoch"] = False
+    else:
+        train_config["check_every"] = 20 if "check_every" not in train_config else train_config["check_every"]
+        train_config["epochs"] = 100 if "epochs" not in train_config else train_config["epochs"]
+        train_config["first_eval"] = 1 if "first_eval" not in train_config else train_config["first_eval"]
+        train_config["accuracy_per_epoch_threshold"] = 0.05 if "accuracy_per_epoch_threshold" not in train_config \
+            else train_config["accuracy_per_epoch_threshold"]
 
