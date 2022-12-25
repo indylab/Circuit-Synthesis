@@ -191,6 +191,7 @@ def pipeline(configpath):
 
                 update_train_config_given_model_type(model_type, new_train_config)
                 new_train_config["model_type"] = model_type
+
                 if new_train_config["rerun_training"] or not check_save_data_status(circuit_config):
                     data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
 
