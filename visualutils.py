@@ -5,9 +5,87 @@ import numpy as np
 from scipy import stats
 
 
+def plot_multiple_loss_with_confidence_comparison(loss_mean, loss_upper_bound, loss_lower_bound,
+                                                  labels, subsets, save_folder, visual_config, epochs):
+
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
+
+    color = visual_config["color"]
+    font_size = visual_config["font_size"]
+    plt.rcParams.update({'font.size': font_size})
+    fig = plt.figure()
+    for percentage_index in range(len(subsets)):
+        plt.clf()
+        ax = fig.add_subplot()
+        percentage_loss_mean_cross_comparison = [i[percentage_index] for i in loss_mean]
+        percentage_loss_upper_bound_cross_comparison = [i[percentage_index] for i in loss_upper_bound]
+        percentage_loss_lower_bound_cross_comparison = [i[percentage_index] for i in loss_lower_bound]
+
+        for compared_item_index in range(len(percentage_loss_mean_cross_comparison)):
+            ax.plot(np.arange(epochs), percentage_loss_mean_cross_comparison[compared_item_index], label=labels[compared_item_index],
+                    color=color[compared_item_index])
+            ax.fill_between(np.arange(epochs), percentage_loss_lower_bound_cross_comparison[compared_item_index],
+                            percentage_loss_upper_bound_cross_comparison[compared_item_index], alpha=.3,
+                            color=color[compared_item_index])
+
+        ax.set_xlim([0, None])
+        ax.set_ylim([0, None])
+        ax.legend()
+        plt.ylabel("{} {} Loss".format("Train", "L1"))
+        plt.xlabel("Epochs")
+
+        image_save_path = os.path.join(save_folder, "subset-{}-loss.png".format(subsets[percentage_index]))
+        plt.savefig(image_save_path, dpi=250)
+
+
+
+
+def plot_multiple_accuracy_per_epochs_with_confidence_comparison(accuracy_mean, accuracy_upper_bound, accuracy_lower_bound,
+                                                                 labels, subsets, save_folder, visual_config,
+                                                                 epochs, check_every, first_eval):
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
+
+    color = visual_config["color"]
+    font_size = visual_config["font_size"]
+    plt.rcParams.update({'font.size': font_size})
+
+    step = epochs // check_every
+    if first_eval is not None:
+        eva_epochs = [i * check_every for i in range(step + 1)]
+        eva_epochs[0] = first_eval
+    else:
+        eva_epochs = [(i + 1) * check_every for i in range(step)]
+
+    fig = plt.figure()
+    for percentage_index in range(len(subsets)):
+        plt.clf()
+        ax = fig.add_subplot()
+        percentage_accuracy_mean_cross_comparison = [i[percentage_index] for i in accuracy_mean]
+        percentage_accuracy_upper_bound_cross_comparison = [i[percentage_index] for i in accuracy_upper_bound]
+        percentage_accuracy_lower_bound_cross_comparison = [i[percentage_index] for i in accuracy_lower_bound]
+
+        for compared_item_index in range(len(percentage_accuracy_mean_cross_comparison)):
+            ax.plot(eva_epochs, percentage_accuracy_mean_cross_comparison[compared_item_index], label=labels[compared_item_index],
+                    color=color[compared_item_index])
+            ax.fill_between(eva_epochs, percentage_accuracy_lower_bound_cross_comparison[compared_item_index],
+                            percentage_accuracy_upper_bound_cross_comparison[compared_item_index], alpha=.3,
+                            color=color[compared_item_index])
+
+        ax.set_xlim([0, None])
+        ax.set_ylim([0, None])
+        ax.legend()
+        plt.ylabel("Test Success Rate")
+        plt.xlabel("Epochs")
+
+        image_save_path = os.path.join(save_folder, "subset-{}-accuracy-per-epochs.png".format(subsets[percentage_index]))
+        plt.savefig(image_save_path, dpi=250)
+
 def plot_multiple_margin_with_confidence_comparison(margin_array_mean, margin_array_upper_bound, margin_array_lower_bound,
                                                     labels, subsets, save_folder, visual_config):
-    os.mkdir(save_folder)
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
 
     color = visual_config["color"]
     eval_margin = visual_config["margin_threshold"]
@@ -35,7 +113,7 @@ def plot_multiple_margin_with_confidence_comparison(margin_array_mean, margin_ar
         plt.xlabel("Accuracy")
         plt.ylabel("Test Success Rate")
 
-        image_save_path = os.path.join(save_folder, "subset-{}.png".format(subsets[percentage_index]))
+        image_save_path = os.path.join(save_folder, "subset-{}-margin.png".format(subsets[percentage_index]))
         plt.savefig(image_save_path, dpi=250)
 
 
@@ -98,9 +176,9 @@ def plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, r
     result_dict = dict()
     result_dict["multi_train_loss"] = multi_train_loss
     result_dict["multi_test_loss"] = multi_test_loss
-    result_dict["multi_train_loss_lower_bounds"] = multi_train_loss_lower_bounds
-    result_dict["multi_test_loss_lower_bounds"] = multi_test_loss_lower_bounds
-    result_dict["multi_train_loss_upper_bounds"] = multi_train_loss_upper_bounds
+    result_dict["multi_train_loss_lower_bound"] = multi_train_loss_lower_bounds
+    result_dict["multi_test_loss_lower_bound"] = multi_test_loss_lower_bounds
+    result_dict["multi_train_loss_upper_bound"] = multi_train_loss_upper_bounds
     result_dict["multi_test_loss_upper_bound"] = multi_test_loss_upper_bounds
 
     return result_dict

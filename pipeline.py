@@ -4,14 +4,15 @@ import os
 
 from models import ModelEvaluator
 from simulator import load_simulator
-from utils import load_circuit, load_train_config, load_visual_config, load_model_config, getData, \
+from utils import load_circuit, load_train_config, load_visual_config, \
     save_result, check_save_data_status, saveDictToTxt, checkAlias, \
-    generate_train_config_for_single_pipeline, update_train_config_given_model_type
+    generate_train_config_for_single_pipeline, update_train_config_given_model_type, check_comparison_value_diff
 from metrics import get_margin_error, get_relative_margin_error
 from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
     plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold, \
-    plot_multiple_margin_with_confidence_comparison
+    plot_multiple_margin_with_confidence_comparison, plot_multiple_loss_with_confidence_comparison, \
+    plot_multiple_accuracy_per_epochs_with_confidence_comparison
 from datetime import datetime
 import time
 
@@ -172,7 +173,22 @@ def pipeline(configpath):
         compare_margin_error_upper_bound_list = []
         compare_margin_error_lower_bound_list = []
 
+        compare_loss_mean_list = []
+        compare_loss_upper_bound_list = []
+        compare_loss_lower_bound_list = []
+
+        compare_accuracy_per_epochs_mean_list = []
+        compare_accuracy_per_epochs_upper_bound_list = []
+        compare_accuracy_per_epochs_lower_bound_list = []
+
         label = []
+
+        epochs = None
+        check_every = None
+        first_eval = None
+        test_margin_accuracy = None
+        loss_per_epoch = None
+        test_accuracy_per_epoch = None
 
         for model_template_config in train_config["model_config"]:
             print("Pipeline with {} model".format(model_template_config["model"]))
@@ -191,6 +207,13 @@ def pipeline(configpath):
 
                 update_train_config_given_model_type(model_type, new_train_config)
                 new_train_config["model_type"] = model_type
+
+                epochs = check_comparison_value_diff(new_train_config, epochs, "epochs")
+                check_every = check_comparison_value_diff(new_train_config, check_every, "check_every")
+                first_eval = check_comparison_value_diff(new_train_config, first_eval, "first_eval")
+                test_margin_accuracy = check_comparison_value_diff(new_train_config, test_margin_accuracy, "test_margin_accuracy")
+                loss_per_epoch = check_comparison_value_diff(new_train_config, loss_per_epoch, "loss_per_epoch")
+                test_accuracy_per_epoch = check_comparison_value_diff(new_train_config, test_accuracy_per_epoch, "test_accuracy_per_epoch")
 
                 if new_train_config["rerun_training"] or not check_save_data_status(circuit_config):
                     data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
@@ -239,19 +262,39 @@ def pipeline(configpath):
                 save_result(result, pipeline_save_name)
 
                 if new_train_config["compare_dataset"] or new_train_config["compare_method"]:
-                    compare_margin_error_mean_list.append(result["multi_test_mean"])
-                    compare_margin_error_lower_bound_list.append(result["multi_test_lower_bound"])
-                    compare_margin_error_upper_bound_list.append(result["multi_test_upper_bound"])
+                    if new_train_config["loss_per_epoch"]:
+                        compare_loss_mean_list.append(result["multi_train_loss"])
+                        compare_loss_upper_bound_list.append(result["multi_train_loss_upper_bound"])
+                        compare_loss_lower_bound_list.append(result["multi_train_loss_lower_bound"])
+                    if new_train_config["test_accuracy_per_epoch"]:
+                        compare_accuracy_per_epochs_mean_list.append(result["multi_test_accuracy"])
+                        compare_accuracy_per_epochs_upper_bound_list.append(result["multi_test_accuracy_upper_bound"])
+                        compare_accuracy_per_epochs_lower_bound_list.append(result["multi_test_accuracy_lower_bound"])
+                    if new_train_config["test_margin_accuracy"]:
+                        compare_margin_error_mean_list.append(result["multi_test_mean"])
+                        compare_margin_error_lower_bound_list.append(result["multi_test_lower_bound"])
+                        compare_margin_error_upper_bound_list.append(result["multi_test_upper_bound"])
                 if new_train_config["compare_dataset"]:
                     label.append(dataset_type_config["type"])
                 if new_train_config["compare_method"]:
                     label.append(model_template_config["model"])
 
         if train_config["compare_dataset"] or train_config["compare_method"]:
+            if test_margin_accuracy:
+                plot_multiple_margin_with_confidence_comparison(compare_margin_error_mean_list,
+                                                                compare_margin_error_upper_bound_list,
+                                                                compare_margin_error_lower_bound_list,
+                                                                label, train_config["subset"], save_path, visual_config)
+            if loss_per_epoch:
+                plot_multiple_loss_with_confidence_comparison(compare_loss_mean_list, compare_loss_upper_bound_list,
+                                                              compare_loss_lower_bound_list, label, train_config["subset"],
+                                                              save_path, visual_config, epochs)
 
-            plot_multiple_margin_with_confidence_comparison(compare_margin_error_mean_list,
-                                                            compare_margin_error_upper_bound_list,
-                                                            compare_margin_error_lower_bound_list,
-                                                            label, train_config["subset"], save_path, visual_config)
+            if test_accuracy_per_epoch:
+                plot_multiple_accuracy_per_epochs_with_confidence_comparison(compare_accuracy_per_epochs_mean_list,
+                                                                             compare_accuracy_per_epochs_upper_bound_list,
+                                                                             compare_accuracy_per_epochs_lower_bound_list,
+                                                                             label, train_config["subset"], save_path,
+                                                                             visual_config, epochs, check_every, first_eval)
 
 

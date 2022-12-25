@@ -301,3 +301,16 @@ def update_train_config_given_model_type(model_type, train_config):
         train_config["loss_per_epoch"] = False
         train_config["test_accuracy_per_epoch"] = False
         train_config["train_accuracy_per_epoch"] = False
+
+
+def check_comparison_value_diff(train_config, value, key):
+    if value is None:
+        if key in train_config.keys():
+            return train_config[key]
+        else:
+            return None
+    else:
+        if key not in train_config.keys() or train_config[key] != value:
+            raise ValueError("The {} across different comparison is not the same".format(key))
+        else:
+            return value

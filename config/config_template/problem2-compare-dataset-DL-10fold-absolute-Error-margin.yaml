@@ -28,8 +28,8 @@ circuits:
   - vco
   - pa
   - two_stage
-loss_per_epoch: False
-test_accuracy_per_epoch: False
+loss_per_epoch: True
+test_accuracy_per_epoch: True
 train_accuracy_per_epoch: False
 compare_dataset: True
 compare_method: False
