@@ -22,7 +22,7 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
     if dataset_type == "Lourenco":
         print("Return Lourenco Dataset")
         dataset_config["n"] = 0.15 if "n" not in dataset_config else dataset_config["n"]
-        dataset_config["K"] = 1 if "K" not in dataset_config else dataset_config["K"]
+        dataset_config["K"] = 15 if "K" not in dataset_config else dataset_config["K"]
 
         return LorencoDataset(circuit_config["order"], circuit_config["sign"], dataset_config["n"], dataset_config["K"], dataset_config, epsilon)
 
@@ -41,7 +41,7 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
 
     if dataset_type =='Ablation':
         print("Return Ablation Duplication Dataset")
-        dataset_config["duplication"] = 500 if "duplication" not in dataset_config else dataset_config["duplication"]
+        dataset_config["duplication"] = 20 if "duplication" not in dataset_config else dataset_config["duplication"]
         return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"],
                                         dataset_config["duplication"], dataset_config, epsilon)
 
@@ -164,9 +164,9 @@ def pipeline(configpath):
         print("Pipeline with {} circuit".format(circuit))
         pipeline_cur_time = str(datetime.now().strftime('%Y-%m-%d %H-%M'))
         if train_config["compare_dataset"]:
-            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-dataset")
+            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-dataset-" + circuit)
         else:
-            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-method")
+            save_path = os.path.join(os.getcwd(), "out_plot", pipeline_cur_time + "-" + "compare-method-" + circuit)
         print("Save comparison folder is {}".format(save_path))
 
         compare_margin_error_mean_list = []
