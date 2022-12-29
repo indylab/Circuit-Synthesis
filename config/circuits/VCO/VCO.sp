@@ -28,7 +28,7 @@ repeat $i
    let f = 3G
    let Q = 30
 alter @mn0[w] = $wn_array[$&index]
-alter @mn1[w] = $wt_array[$&index]    
+alter @mn1[w] = $wt_array[$&index]
 alter @mn4[w] = $wt_array[$&index]
 alter @mn5[w] = $wv_array[$&index]
 alter @mn6[w] = $wv_array[$&index]
@@ -38,35 +38,31 @@ alter R0 = ($lt_array[$&index])*2*pi*f*Q
 alter R0 = ($lt_array[$&index])*2*pi*f*Q
 alter C1 = 1/(185.15*f*f*($lt_array[$&index]))
 alter C0 = 1/(185.15*f*f*($lt_array[$&index]))
-
 let w = $wn_array[$&index]
 let w1 = $wt_array[$&index]
 let w2 = $wv_array[$&index]
 let w3 = $lt_array[$&index]
-
 print w >> {out}/vco-wn.csv
 print w1 >> {out}/vco-wt.csv
 print w2 >> {out}/vco-wv.csv
 print w3 >> {out}/vco-lt.csv
-
 let index = index + 1
 tran 0.05n 20n
 let Vout = v(Vout1)-(Vout2)
-meas tran hp TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
 meas tran Voutrms RMS Vout from=10ns to=18ns
 let Pout = Voutrms*Voutrms/50
-print Pout >> {out}/vco-out_power.csv 
+print Pout >> {out}/vco-out_power.csv
 meas tran Itot RMS i(V0) from=10ns to=18ns
 let DC_Power= Itot * 1.2
 print DC_Power >> {out}/vco-power_consumption.csv
 alter @V1[dc] = 0
 tran 0.05n 20n
-meas tran tdiff1 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
-let f1 = 1/(2*tdiff1)
+meas tran tdiff1 TRIG v(vo) VAL=0 cross=50 TARG v(vo) VAL=0 cross=70
+let f1 = 10/(tdiff1)
 alter @V1[dc] = 1.2
 tran 0.05n 20n
-meas tran tdiff2 TRIG v(vo) VAL=0 cross=75 TARG v(vo) VAL=0 cross=76
-let f2 = 1/(2*tdiff2)
+meas tran tdiff2 TRIG v(vo) VAL=0 cross=50 TARG v(vo) VAL=0 cross=70
+let f2 = 10/(tdiff2)
 let TR = abs((tran2.f1)-f2)
 print TR >> {out}/vco-tuningrange.csv
 end
