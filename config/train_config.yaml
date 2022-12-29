@@ -1,7 +1,7 @@
 dataset:
   - type: Argmax
 model_config:
-  - model: RandomForestRegressor #RandomForestRegressor #Model500GELU
+  - model: RandomForestRegressor
 metric: absolute
 rerun_training: True
 device: cpu
@@ -17,6 +17,6 @@ epsilon: 0.3
 subset:
   - 0.9
 circuits:
-  - pa
+  - nmos
 compare_dataset: False
 compare_method: False
