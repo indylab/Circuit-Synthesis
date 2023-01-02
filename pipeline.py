@@ -207,13 +207,16 @@ def pipeline(configpath):
 
                 update_train_config_given_model_type(model_type, new_train_config)
                 new_train_config["model_type"] = model_type
-
-                epochs = check_comparison_value_diff(new_train_config, epochs, "epochs")
-                check_every = check_comparison_value_diff(new_train_config, check_every, "check_every")
-                first_eval = check_comparison_value_diff(new_train_config, first_eval, "first_eval")
                 test_margin_accuracy = check_comparison_value_diff(new_train_config, test_margin_accuracy, "test_margin_accuracy")
                 loss_per_epoch = check_comparison_value_diff(new_train_config, loss_per_epoch, "loss_per_epoch")
                 test_accuracy_per_epoch = check_comparison_value_diff(new_train_config, test_accuracy_per_epoch, "test_accuracy_per_epoch")
+
+                if new_train_config["test_accuracy_per_epoch"]:
+                    epochs = check_comparison_value_diff(new_train_config, epochs, "epochs")
+                    check_every = check_comparison_value_diff(new_train_config, check_every, "check_every")
+                    first_eval = check_comparison_value_diff(new_train_config, first_eval, "first_eval")
+                elif new_train_config["loss_per_epoch"]:
+                    epochs = check_comparison_value_diff(new_train_config, epochs, "epochs")
 
                 if new_train_config["rerun_training"] or not check_save_data_status(circuit_config):
                     data_for_evaluation = prepare_data(simulator.parameter_list, simulator.arguments)
