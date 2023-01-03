@@ -17,6 +17,6 @@ epsilon: 0.3
 subset:
   - 0.9
 circuits:
-  - nmos
+  - cascode
 compare_dataset: False
 compare_method: False

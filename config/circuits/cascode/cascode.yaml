@@ -17,13 +17,13 @@ sign:
   - 1
 arguments:
   model_path: config/model/45nm_CS.pm
-  cascode-w0_start: 4u
-  cascode-w0_stop: 7.5u
+  cascode-w0_start: 8u
+  cascode-w0_stop: 11.5u
   cascode-w0_change: 0.25u
-  cascode-w1_start: 7u
-  cascode-w1_stop: 10u
+  cascode-w1_start: 2u
+  cascode-w1_stop: 5u
   cascode-w1_change: 0.2u
-  cascode-r_start: 200
-  cascode-r_stop: 500
-  cascode-r_change: 18.75
+  cascode-r_start: 9000
+  cascode-r_stop: 11000
+  cascode-r_change: 125
   out: data/cascode
