@@ -17,7 +17,7 @@ sign:
   - 1
   - 1
 arguments:
-  model_path: config/model/45n270AModels.pm
+  model_path: config/model/45nm_CS.pm
   mixer-vbrf_start: 600m
   mixer-vbrf_stop: 810m
   mixer-vbrf_change: 30m

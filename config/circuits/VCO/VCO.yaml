@@ -5,17 +5,14 @@ parameter_list:
   - vco-wv
   - vco-lt
 performance_list:
-  # - vco-freq
   - vco-power_consumption
   - vco-out_power
   - vco-tuningrange
 order:
-  # - 0
   - 0
   - 1
   - 2
 sign:
-  # - 1
   - -1
   - 1
   - 1
