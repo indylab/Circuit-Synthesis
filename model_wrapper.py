@@ -51,8 +51,8 @@ class LookupWrapper:
                     greater = True
                     break
                 temp_err = (np.abs(sign_performance_train[cmp_data_index] - sign_performance_test[data_index]))
-                temp_diff = np.divide(temp_err, sign_performance_test[data_index],
-                                      where=sign_performance_test[data_index] != 0)
+                temp_diff = np.abs(np.divide(temp_err, sign_performance_test[data_index],
+                                      where=sign_performance_test[data_index] != 0))
 
                 temp_max_diff = np.max(temp_diff)
                 if minimum_err is None or temp_max_diff < minimum_err:
