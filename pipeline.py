@@ -19,6 +19,12 @@ import time
 def generate_dataset_given_config(train_config, circuit_config, dataset_config):
     epsilon = train_config["epsilon"]
     dataset_type = dataset_config["type"]
+    subset_parameter_percentage = train_config["subset_percentage"]
+    subset_parameter_mode = train_config["mode"]
+
+    if subset_parameter_mode not in ("drop", "replace"):
+        raise ValueError("Provided Parameter argmax replace policy is not defined")
+
     if dataset_type == "Lourenco":
         print("Return Lourenco Dataset")
         dataset_config["n"] = 0.15 if "n" not in dataset_config else dataset_config["n"]
@@ -33,7 +39,8 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
     if dataset_type =='SoftArgmax':
         print("Return SoftArgMax Dataset")
 
-        return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"], dataset_config, epsilon)
+        return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"],
+                                 dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
 
     if dataset_type =='SoftBase':
         print("Return Soft Base Dataset")
@@ -43,13 +50,15 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
         print("Return Ablation Duplication Dataset")
         dataset_config["duplication"] = 20 if "duplication" not in dataset_config else dataset_config["duplication"]
         return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"],
-                                        dataset_config["duplication"], dataset_config, epsilon)
+                                        dataset_config["duplication"],
+                                        dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
 
     if dataset_type =='Argmax':
         print("Return Argmax Dataset")
         dataset_config["evaluation_same_distribution"] = False if "evaluation_same_distribution" not in \
                                                                   dataset_config else dataset_config["evaluation_same_distribution"]
-        return ArgMaxDataset(circuit_config["order"], circuit_config["sign"], dataset_config, epsilon)
+        return ArgMaxDataset(circuit_config["order"], circuit_config["sign"],
+                             dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
 
 
 def generate_circuit_given_config(circuit_name):

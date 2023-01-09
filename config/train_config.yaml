@@ -3,7 +3,7 @@ dataset:
 model_config:
   - model: RandomForestRegressor
 metric: absolute
-rerun_training: True
+rerun_training: False
 device: cpu
 check_circuit: True
 num_sample_check: 8
@@ -20,3 +20,5 @@ circuits:
   - cascode
 compare_dataset: False
 compare_method: False
+subset_percentage: 0.3
+mode: replace
