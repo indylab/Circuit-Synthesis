@@ -119,24 +119,26 @@ class LorencoDataset(BaseDataset):
         for k in range(self.K):
             rand_delta = np.random.rand(*performance.shape)
             random_sample = (rand_delta * self.n)/ average_perform
-            
+
             for idx_axis in range(len(self.sign)):
                 if self.sign[idx_axis] == 1:
                     random_sample[:,idx_axis] -= random_sample[:,idx_axis]
                 else:
                     random_sample[:,idx_axis] += random_sample[:, idx_axis]
 
-            new_perform.append(performance - random_sample) 
+            new_perform.append(performance - random_sample)
             new_param.append(parameter)
 
-    
+
         return np.vstack(new_param), np.vstack(new_perform), {}
 
 
 class ArgMaxDataset(BaseDataset):
-    def __init__(self, order, sign, dataset_config, epsilon=0.0) -> None:
+    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_percentage = 0.2,subset_parameter_mode="replace") -> None:
         super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
+        self.subset_percentage = subset_percentage
+        self.subset_parameter_mode = subset_parameter_mode
 
     def find_best_performance(self, parameter, performance):
         """
@@ -164,6 +166,25 @@ class ArgMaxDataset(BaseDataset):
                                                                            candidates_vector_performance)
         return sort_vector_parameter, sort_vector_performance, find_max_boolean
 
+    def find_closest_max(self, parameter, performance, temp_performance):
+        sign_performance = np.array(self.sign * performance)
+        sign_temp_performance = np.array(self.sign * temp_performance)
+        minimum_err = None
+        minimum_index = None
+        for data_index in range(len(sign_performance)):
+            temp_err = (np.abs(sign_performance[data_index] - sign_temp_performance))
+            temp_diff = np.abs(np.divide(temp_err, sign_temp_performance,
+                                         where=sign_temp_performance != 0))
+
+            temp_max_diff = np.max(temp_diff)
+
+            if minimum_err is None or temp_max_diff < minimum_err:
+                minimum_index = data_index
+                minimum_err = temp_max_diff
+
+        return parameter[minimum_index]
+
+
     def find_feasible(self,parameter, performance, temp_performance):
         # slow ... calls for each point in the dataset 
         _, fit_performance = self.fit(parameter, performance)
@@ -186,10 +207,24 @@ class ArgMaxDataset(BaseDataset):
 
     def argmaxModifyData(self, parameter, performance, same_dist_parameter = None, same_dist_performance = None):
         new_parameter = []
+        new_performance = []
         argmax_ratio = 0
-        for (temp_performance,temp_parameter) in zip(performance,parameter):
+
+        subsample_index = np.random.choice(np.arange(0, parameter.shape[0]),
+                                           size = max(int(parameter.shape[0] * self.subset_percentage),1), replace=False)
+
+        sampled_performance = performance[subsample_index]
+        sampled_parameter = parameter[subsample_index]
+
+
+        for (temp_performance,temp_parameter) in zip(sampled_performance,sampled_parameter):
             if same_dist_parameter is None:
-                new_temp_parameter, _, _ = self.find_max(parameter, performance, temp_performance)
+                new_temp_parameter, _, find_max_boolean = self.find_max(sampled_performance, sampled_parameter, temp_performance)
+                if not find_max_boolean:
+                    if self.subset_parameter_mode == "drop":
+                        continue
+                    else:
+                        new_temp_parameter = self.find_closest_max(sampled_performance, sampled_parameter, temp_performance)
 
             else:
                 new_temp_parameter, _, find_max_boolean = self.find_max(same_dist_parameter, same_dist_performance, temp_performance)
@@ -198,18 +233,20 @@ class ArgMaxDataset(BaseDataset):
             if (new_temp_parameter != temp_parameter).all():
                 argmax_ratio += 1
             new_parameter.append(new_temp_parameter)
+            new_performance.append(temp_performance)
+
+        # Argmax ratio might be not useful anymore
         print(f'Argmax ratio is {argmax_ratio/len(parameter)} with argmax replaced {argmax_ratio} times')
 
         extra_info = dict()
         extra_info["Argmax_ratio"] = argmax_ratio / len(parameter)
         extra_info["Argmax_modify_num"] = argmax_ratio
-        return np.array(new_parameter),np.array(performance), extra_info
+        return np.array(new_parameter),np.array(new_performance), extra_info
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
-    def __init__(self, order, sign, dataset_config, epsilon=0.0) -> None:
-        super().__init__(order, sign, dataset_config)
-        self.epsilon = epsilon
+    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_percentage = 0.2, subset_parameter_mode="replace") -> None:
+        super().__init__(order, sign, dataset_config, epsilon, subset_percentage, subset_parameter_mode)
         print(f'Epsilon is {epsilon}')
 
 
@@ -222,8 +259,8 @@ class SoftArgMaxDataset(ArgMaxDataset):
 
 
 class AblationDuplicateDataset(SoftArgMaxDataset):
-    def __init__(self, order, sign, duplication, dataset_config, epsilon=0.2) -> None:
-        super().__init__(order, sign, dataset_config, epsilon)
+    def __init__(self, order, sign, duplication, dataset_config, epsilon=0.2, subset_percentage = 0.2,subset_parameter_mode="replace") -> None:
+        super().__init__(order, sign, dataset_config, epsilon, subset_percentage, subset_parameter_mode)
         self.duplication = duplication
 
     def sort_vectors(self, parameter, performance):
@@ -260,7 +297,7 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
         new_parameter, new_performance = [], []
         for temp_performance in scale_down_performance:
             new_temp_parameters, new_temp_performances = self.generate_duplication_data(parameter, performance, temp_performance, train)
-            
+
             new_parameter += list(new_temp_parameters)
             new_performance += list(new_temp_performances)
 
