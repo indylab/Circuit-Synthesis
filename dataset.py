@@ -186,7 +186,8 @@ class ArgMaxDataset(BaseDataset):
 
 
     def find_feasible(self,parameter, performance, temp_performance):
-        # slow ... calls for each point in the dataset 
+        # slow ... calls for each point in the dataset
+
         _, fit_performance = self.fit(parameter, performance)
 
         fit_temp_performance = (temp_performance*self.sign)[self.order]
@@ -213,18 +214,18 @@ class ArgMaxDataset(BaseDataset):
         subsample_index = np.random.choice(np.arange(0, parameter.shape[0]),
                                            size = max(int(parameter.shape[0] * self.subset_percentage),1), replace=False)
 
-        sampled_performance = performance[subsample_index]
-        sampled_parameter = parameter[subsample_index]
-
+        sampled_performance = np.array(performance[subsample_index])
+        sampled_parameter = np.array(parameter[subsample_index])
 
         for (temp_performance,temp_parameter) in zip(sampled_performance,sampled_parameter):
+
             if same_dist_parameter is None:
-                new_temp_parameter, _, find_max_boolean = self.find_max(sampled_performance, sampled_parameter, temp_performance)
+                new_temp_parameter, _, find_max_boolean = self.find_max(sampled_parameter, sampled_performance, temp_performance)
                 if not find_max_boolean:
                     if self.subset_parameter_mode == "drop":
                         continue
                     else:
-                        new_temp_parameter = self.find_closest_max(sampled_performance, sampled_parameter, temp_performance)
+                        new_temp_parameter = self.find_closest_max(sampled_parameter, sampled_performance, temp_performance)
 
             else:
                 new_temp_parameter, _, find_max_boolean = self.find_max(same_dist_parameter, same_dist_performance, temp_performance)
@@ -241,6 +242,7 @@ class ArgMaxDataset(BaseDataset):
         extra_info = dict()
         extra_info["Argmax_ratio"] = argmax_ratio / len(parameter)
         extra_info["Argmax_modify_num"] = argmax_ratio
+
         return np.array(new_parameter),np.array(new_performance), extra_info
 
 
