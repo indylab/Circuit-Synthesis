@@ -76,7 +76,7 @@ class BaseDataset:
         inverse_fit_performance = inverse_fit_performance * self.sign
         return parameter,inverse_fit_performance
 
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
             return train_parameter, train_performance, {}
         else:
@@ -87,7 +87,7 @@ class SoftBaseDataset(BaseDataset):
     def __init__(self, order, sign, dataset_config, epsilon=0.0):
         super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
             return train_parameter, train_performance, {}
         else:
@@ -101,7 +101,7 @@ class LorencoDataset(BaseDataset):
         self.K = K
         self.epsilon = epsilon
 
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
             return self.LourencoMethod(train_parameter, train_performance)
         else:
@@ -134,10 +134,9 @@ class LorencoDataset(BaseDataset):
 
 
 class ArgMaxDataset(BaseDataset):
-    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_percentage = 0.2,subset_parameter_mode="replace") -> None:
+    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_parameter_mode="replace") -> None:
         super().__init__(order, sign, dataset_config)
         self.epsilon = epsilon
-        self.subset_percentage = subset_percentage
         self.subset_parameter_mode = subset_parameter_mode
 
     def find_best_performance(self, parameter, performance):
@@ -197,40 +196,33 @@ class ArgMaxDataset(BaseDataset):
         return parameter[comparison_matrix], performance[comparison_matrix]
 
 
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
-            return self.argmaxModifyData(train_parameter, train_performance)
+            return self.argmaxModifyData(extra_args, train_performance, extra_args)
         else:
-            if self.dataset_config["evaluation_same_distribution"]:
-                return self.argmaxModifyData(test_parameter, test_performance, train_parameter, train_performance)
-            else:
-                return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
+            return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
-    def argmaxModifyData(self, parameter, performance, same_dist_parameter = None, same_dist_performance = None):
+    def argmaxModifyData(self, parameter, performance, subsample_args):
         new_parameter = []
         new_performance = []
         argmax_ratio = 0
 
-        subsample_index = np.random.choice(np.arange(0, parameter.shape[0]),
-                                           size = max(int(parameter.shape[0] * self.subset_percentage),1), replace=False)
+        target_performance = performance
+        target_parameter = parameter
 
-        sampled_performance = np.array(performance[subsample_index])
-        sampled_parameter = np.array(parameter[subsample_index])
+        if subsample_args is not None:
+            target_performance = subsample_args["performance"]
+            target_parameter = subsample_args["parameter"]
 
-        for (temp_performance,temp_parameter) in zip(sampled_performance,sampled_parameter):
+        for (temp_performance,temp_parameter) in zip(target_performance,target_parameter):
 
-            if same_dist_parameter is None:
-                new_temp_parameter, _, find_max_boolean = self.find_max(sampled_parameter, sampled_performance, temp_performance)
-                if not find_max_boolean:
-                    if self.subset_parameter_mode == "drop":
-                        continue
-                    else:
-                        new_temp_parameter = self.find_closest_max(sampled_parameter, sampled_performance, temp_performance)
+            new_temp_parameter, _, find_max_boolean = self.find_max(target_parameter, target_performance, temp_performance)
+            if not find_max_boolean:
+                if self.subset_parameter_mode == "drop":
+                    continue
+                else:
+                    new_temp_parameter = self.find_closest_max(target_parameter, target_performance, temp_performance)
 
-            else:
-                new_temp_parameter, _, find_max_boolean = self.find_max(same_dist_parameter, same_dist_performance, temp_performance)
-                if not find_max_boolean:
-                    new_temp_parameter, _, _ = self.find_max(parameter, performance, temp_performance)
             if (new_temp_parameter != temp_parameter).all():
                 argmax_ratio += 1
             new_parameter.append(new_temp_parameter)
@@ -247,22 +239,22 @@ class ArgMaxDataset(BaseDataset):
 
 
 class SoftArgMaxDataset(ArgMaxDataset):
-    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_percentage = 0.2, subset_parameter_mode="replace") -> None:
-        super().__init__(order, sign, dataset_config, epsilon, subset_percentage, subset_parameter_mode)
+    def __init__(self, order, sign, dataset_config, epsilon=0.0, subset_parameter_mode="replace") -> None:
+        super().__init__(order, sign, dataset_config, epsilon, subset_parameter_mode)
         print(f'Epsilon is {epsilon}')
 
 
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
             parameter, scale_down_performance,_ = scale_down_data(train_parameter, train_performance, self.epsilon, self.sign)
-            return super().argmaxModifyData(parameter, scale_down_performance)
+            return super().argmaxModifyData(parameter, scale_down_performance, extra_args)
         else:
             return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 
 
 class AblationDuplicateDataset(SoftArgMaxDataset):
-    def __init__(self, order, sign, duplication, dataset_config, epsilon=0.2, subset_percentage = 0.2,subset_parameter_mode="replace") -> None:
-        super().__init__(order, sign, dataset_config, epsilon, subset_percentage, subset_parameter_mode)
+    def __init__(self, order, sign, duplication, dataset_config, epsilon=0.2, subset_parameter_mode="replace") -> None:
+        super().__init__(order, sign, dataset_config, epsilon, subset_parameter_mode)
         self.duplication = duplication
 
     def sort_vectors(self, parameter, performance):
@@ -287,7 +279,7 @@ class AblationDuplicateDataset(SoftArgMaxDataset):
             num_sample = 1
         return sort_vector_parameter[:num_sample], sort_vector_performance[:num_sample]
 
-    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True):
+    def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
             return self.ablationModifyData(train_parameter, train_performance)
         else:

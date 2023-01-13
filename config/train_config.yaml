@@ -20,5 +20,4 @@ circuits:
   - cascode
 compare_dataset: False
 compare_method: False
-subset_percentage: 0.3
 mode: replace

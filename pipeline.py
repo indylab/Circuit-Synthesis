@@ -19,7 +19,6 @@ import time
 def generate_dataset_given_config(train_config, circuit_config, dataset_config):
     epsilon = train_config["epsilon"]
     dataset_type = dataset_config["type"]
-    subset_parameter_percentage = train_config["subset_percentage"]
     subset_parameter_mode = train_config["mode"]
 
     if subset_parameter_mode not in ("drop", "replace"):
@@ -40,7 +39,7 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
         print("Return SoftArgMax Dataset")
 
         return SoftArgMaxDataset(circuit_config["order"], circuit_config["sign"],
-                                 dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
+                                 dataset_config, epsilon, subset_parameter_mode)
 
     if dataset_type =='SoftBase':
         print("Return Soft Base Dataset")
@@ -51,14 +50,12 @@ def generate_dataset_given_config(train_config, circuit_config, dataset_config):
         dataset_config["duplication"] = 20 if "duplication" not in dataset_config else dataset_config["duplication"]
         return AblationDuplicateDataset(circuit_config["order"], circuit_config["sign"],
                                         dataset_config["duplication"],
-                                        dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
+                                        dataset_config, epsilon, subset_parameter_mode)
 
     if dataset_type =='Argmax':
         print("Return Argmax Dataset")
-        dataset_config["evaluation_same_distribution"] = False if "evaluation_same_distribution" not in \
-                                                                  dataset_config else dataset_config["evaluation_same_distribution"]
         return ArgMaxDataset(circuit_config["order"], circuit_config["sign"],
-                             dataset_config, epsilon, subset_parameter_percentage, subset_parameter_mode)
+                             dataset_config, epsilon, subset_parameter_mode)
 
 
 def generate_circuit_given_config(circuit_name):
@@ -215,6 +212,9 @@ def pipeline(configpath):
                                                                  num_perf=simulator.num_perf)
 
                 update_train_config_given_model_type(model_type, new_train_config)
+                if train_config["compare_dataset"] or train_config["compare_method"] or dataset_type_config[
+                    "type"] not in ("SoftArgmax", "Argmax"):
+                    new_train_config["subset_parameter_check"] = False
                 new_train_config["model_type"] = model_type
                 test_margin_accuracy = check_comparison_value_diff(new_train_config, test_margin_accuracy, "test_margin_accuracy")
                 loss_per_epoch = check_comparison_value_diff(new_train_config, loss_per_epoch, "loss_per_epoch")

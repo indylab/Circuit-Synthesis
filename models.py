@@ -86,7 +86,7 @@ class ModelEvaluator:
         if self.train_config["check_circuit"]:
             evalCircuit(self.train_config["num_sample_check"], self.simulator, self.scaler, self.train_config["random_sample_scale"])
 
-        for percentage in subset:
+        for index, percentage in enumerate(subset):
             print("Running with percentage {}".format(percentage))
             if percentage == 1 or percentage > 1:
                 raise ValueError("Subset Percentage must smaller than 1")
@@ -99,16 +99,51 @@ class ModelEvaluator:
             for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage):
                 count += 1
                 print("Run with {} percentage of training data, Run number {}".format(percentage, count))
+                kfold_metrics_dict = generate_metrics_given_config(self.train_config)
+                if self.train_config["subset_parameter_check"]:
+                    for subset_index in subset[:index+1]:
 
-                
-                new_train_parameter, new_train_performance,_ = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=True)
-                new_test_parameter, new_test_performance,_ = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
+                        subset_parameter_percentage = subset[subset_index]
+                        subset_parameter_size = int(parameter_train.shape[0] * (subset_parameter_percentage/percentage))
 
-                result_eval_model = EvalModel(self.train_config, self.model_wrapper,
-                                              new_train_parameter, new_train_performance,
-                                              new_test_parameter, new_test_performance, self.simulator, self.scaler)
-                kfold_metrics_dict = result_eval_model.eval()
+                        subsample_index = np.random.choice(np.arange(0, parameter_train.shape[0]),
+                                                           size=subset_parameter_size,
+                                                           replace=False)
+                        subsample_parameter = parameter_train[subsample_index,:]
+                        subsample_performance = performance_train[subsample_index, :]
+                        subsample_args = {
+                            "parameter": subsample_parameter,
+                            "performance": subsample_performance
 
+                        }
+
+                        new_train_parameter, new_train_performance,_ = self.eval_dataset.modify_data(parameter_train,
+                                                                                                     performance_train, parameter_test,
+                                                                                                     performance_test, train=True, extra_args=subsample_args)
+                        new_test_parameter, new_test_performance,_ = self.eval_dataset.modify_data(parameter_train, performance_train, parameter_test, performance_test, train=False)
+
+                        result_eval_model = EvalModel(self.train_config, self.model_wrapper,
+                                                      new_train_parameter, new_train_performance,
+                                                      new_test_parameter, new_test_performance, self.simulator, self.scaler)
+                        subset_kfold_metrics_dict = result_eval_model.eval()
+                        merge_metrics(kfold_metrics_dict, subset_kfold_metrics_dict)
+                else:
+                    new_train_parameter, new_train_performance, _ = self.eval_dataset.modify_data(parameter_train,
+                                                                                                  performance_train,
+                                                                                                  parameter_test,
+                                                                                                  performance_test,
+                                                                                                  train=True)
+                    new_test_parameter, new_test_performance, _ = self.eval_dataset.modify_data(parameter_train,
+                                                                                                performance_train,
+                                                                                                parameter_test,
+                                                                                                performance_test,
+                                                                                                train=False)
+
+                    result_eval_model = EvalModel(self.train_config, self.model_wrapper,
+                                                  new_train_parameter, new_train_performance,
+                                                  new_test_parameter, new_test_performance, self.simulator, self.scaler)
+                    subset_kfold_metrics_dict = result_eval_model.eval()
+                    merge_metrics(kfold_metrics_dict, subset_kfold_metrics_dict)
                 merge_metrics(subset_metrics_dict, kfold_metrics_dict)
             merge_metrics(metrics_dict, subset_metrics_dict)
         return metrics_dict
