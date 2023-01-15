@@ -198,7 +198,7 @@ class ArgMaxDataset(BaseDataset):
 
     def modify_data(self, train_parameter, train_performance, test_parameter, test_performance, train=True, extra_args=None):
         if train:
-            return self.argmaxModifyData(extra_args, train_performance, extra_args)
+            return self.argmaxModifyData(train_parameter, train_performance, extra_args)
         else:
             return scale_down_data(test_parameter, test_performance, self.epsilon, self.sign)
 

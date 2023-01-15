@@ -101,7 +101,7 @@ class ModelEvaluator:
                 print("Run with {} percentage of training data, Run number {}".format(percentage, count))
                 kfold_metrics_dict = generate_metrics_given_config(self.train_config)
                 if self.train_config["subset_parameter_check"]:
-                    for subset_index in subset[:index+1]:
+                    for subset_index in range(index + 1):
 
                         subset_parameter_percentage = subset[subset_index]
                         subset_parameter_size = int(parameter_train.shape[0] * (subset_parameter_percentage/percentage))

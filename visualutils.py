@@ -203,14 +203,17 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
 
 
     #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
-    for percentage_performance in margin_errors:
+    for index, percentage_performance in enumerate(margin_errors):
         temp_mean = []
         temp_lower_bound = []
         temp_upper_bound = []
         for margin in eval_margin:
             temp_run_result = []
             for run in range(len(percentage_performance)):
-                inner_run_performance = percentage_performance[run]
+                if train_config["subset_parameter_check"]:
+                    inner_run_performance = percentage_performance[run][index]
+                else:
+                    inner_run_performance = percentage_performance[run][0]
                 greater_num = 0
                 for i in inner_run_performance:
                     if i <= margin:
@@ -280,9 +283,17 @@ def plot_multiple_accuracy_with_confidence(accuracy, train_config, visual_config
     multi_accuracy_lower_bound = []
     multi_accuracy_upper_bound = []
 
-    for percentage_performance in accuracy:
-        temp_performance_mean = np.average(percentage_performance, axis=0)
-        temp_performance_std = stats.sem(percentage_performance, axis=0)
+    for percentage_performance_index in range(len(accuracy)):
+
+        if train_config["subset_parameter_check"]:
+            nested_subset_data_index = percentage_performance_index
+        else:
+            nested_subset_data_index = 0
+        temp_performance = [accuracy[percentage_performance_index][i][nested_subset_data_index] for i
+                            in range(len(accuracy[percentage_performance_index]))]
+
+        temp_performance_mean = np.average(temp_performance, axis=0)
+        temp_performance_std = stats.sem(temp_performance, axis=0)
         multi_accuracy.append(temp_performance_mean)
         multi_accuracy_lower_bound.append(temp_performance_mean - temp_performance_std)
         multi_accuracy_upper_bound.append(temp_performance_mean + temp_performance_std)
@@ -331,9 +342,17 @@ def plot_multiple_loss_with_confidence(loss, train_config, visual_config, save_f
     save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder),
                              save_name + "-loss.png")
 
-    for percentage_loss in loss:
-        temp_loss_mean = np.average(percentage_loss, axis=0)
-        temp_loss_std = stats.sem(percentage_loss, axis=0)
+    for percentage_loss_index in range(len(loss)):
+        if train_config["subset_parameter_check"]:
+            nested_subset_data_index = percentage_loss_index
+        else:
+            nested_subset_data_index = 0
+
+        temp_loss = [loss[percentage_loss_index][i][nested_subset_data_index] for i
+                     in range(len(loss[percentage_loss_index]))]
+
+        temp_loss_mean = np.average(temp_loss, axis=0)
+        temp_loss_std = stats.sem(temp_loss, axis=0)
 
         multi_loss.append(temp_loss_mean)
         multi_loss_lower_bounds.append(temp_loss_mean - temp_loss_std)
@@ -341,6 +360,7 @@ def plot_multiple_loss_with_confidence(loss, train_config, visual_config, save_f
 
     fig = plt.figure()
     ax = fig.add_subplot()
+
 
     for i in range(len(multi_loss)):
         if subset[i] <= 0.5:
