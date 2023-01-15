@@ -117,6 +117,17 @@ def plot_multiple_margin_with_confidence_comparison(margin_array_mean, margin_ar
         plt.savefig(image_save_path, dpi=250)
 
 
+def plot_multiple_subset_parameter_margin_accuracy_with_confidence_cross_fold(train_config, visual_config, result, save_name, dataset_type):
+    plt.clf()
+    eval_margin = visual_config["margin_threshold"]
+    result_dict = dict()
+    multi_margin_mean, multi_margin_upper_bound, multi_margin_lower_bound = plot_multiple_subset_margin_with_confidence(eval_margin,
+                                                                                result["test_margins"], train_config, visual_config, save_name)
+    result_dict["subset_parameter_multi_margin_mean"] = multi_margin_mean
+    result_dict["subset_parameter_multi_margin_upper_bound"] = multi_margin_upper_bound
+    result_dict["subset_parameter_multi_margin_lower_bound"] = multi_margin_lower_bound
+
+    return result_dict
 
 
 def plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, save_name, dataset_type):
@@ -183,6 +194,88 @@ def plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, r
 
     return result_dict
 
+
+
+def plot_multiple_subset_margin_with_confidence(eval_margin, margins, train_config, visual_config, save_folder):
+
+
+    subset = train_config["subset"]
+    master_save_path = os.path.join(os.getcwd(), "out_plot", save_folder)
+
+    master_margin_mean = []
+    master_margin_upper_bound = []
+    master_margin_lower_bound = []
+    for index, percentage_margin in enumerate(margins):
+        plt.clf()
+        save_path = os.path.join(master_save_path, "subset-parameter-" + str(subset[index]) + "-margin.png")
+        temp_margin_mean, temp_margin_upper_bound, temp_margin_lower_bound = plot_subset_parameter_margin_with_confidence(eval_margin,
+                                                                                                                          percentage_margin, train_config,
+                                                                                                                          visual_config, save_path, index)
+        master_margin_mean.append(temp_margin_mean)
+        master_margin_upper_bound.append(temp_margin_upper_bound)
+        master_margin_lower_bound.append(temp_margin_lower_bound)
+    return master_margin_mean, master_margin_upper_bound, master_margin_lower_bound
+
+def plot_subset_parameter_margin_with_confidence(eval_margin, margins, train_config, visual_config, save_path, index):
+
+    font_size = visual_config["font_size"]
+    plt.rcParams.update({'font.size': font_size})
+
+    subset = train_config["subset"]
+    color = visual_config["color"][:len(subset)]
+    log = visual_config["log"]
+
+    vertical_point = 0.05
+    multi_mean = []
+    multi_lower_bound = []
+    multi_upper_bound = []
+
+    for i in range(index+1):
+        temp_mean = []
+        temp_lower_bound = []
+        temp_upper_bound = []
+        for margin in eval_margin:
+            temp_run_result = []
+            for run in range(len(margins)):
+                inner_run_performance = margins[run][i]
+                greater_num = 0
+                for j in inner_run_performance:
+                    if j <= margin:
+                        greater_num += 1
+                temp_run_result.append(greater_num / len(inner_run_performance))
+
+            success = np.array(temp_run_result)
+            success_mean = np.average(success)
+            success_std = stats.sem(success)
+
+            temp_mean.append(success_mean)
+            temp_lower_bound.append(success_mean - success_std)
+            temp_upper_bound.append(success_mean + success_std)
+        multi_mean.append(temp_mean)
+        multi_lower_bound.append(temp_lower_bound)
+        multi_upper_bound.append(temp_upper_bound)
+
+    for i in range(index+1):
+        temp_label = "{}% training parameter".format(subset[i] * 100)
+
+        plt.plot(eval_margin, multi_mean[i], label=temp_label, color=color[i])
+        plt.fill_between(eval_margin, multi_lower_bound[i], multi_upper_bound[i], alpha=.3, color=color[i])
+
+
+    plt.axvline(x=vertical_point, linestyle='dashed', color="k")
+    plt.legend()
+    if log:
+        plt.xscale('log')
+    plt.xlabel("Accuracy")
+    plt.ylabel("Test Success Rate")
+
+
+    plt.savefig(save_path, dpi=250)
+
+
+    return multi_mean, multi_upper_bound, multi_lower_bound
+
+
 def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_config, visual_config, save_folder, save_name, dataset_type):
 
 
@@ -203,14 +296,17 @@ def plot_multiple_margin_with_confidence(eval_margin, margin_errors, train_confi
 
 
     #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
-    for percentage_performance in margin_errors:
+    for index, percentage_performance in enumerate(margin_errors):
         temp_mean = []
         temp_lower_bound = []
         temp_upper_bound = []
         for margin in eval_margin:
             temp_run_result = []
             for run in range(len(percentage_performance)):
-                inner_run_performance = percentage_performance[run]
+                if train_config["subset_parameter_check"]:
+                    inner_run_performance = percentage_performance[run][index]
+                else:
+                    inner_run_performance = percentage_performance[run][0]
                 greater_num = 0
                 for i in inner_run_performance:
                     if i <= margin:
@@ -280,9 +376,17 @@ def plot_multiple_accuracy_with_confidence(accuracy, train_config, visual_config
     multi_accuracy_lower_bound = []
     multi_accuracy_upper_bound = []
 
-    for percentage_performance in accuracy:
-        temp_performance_mean = np.average(percentage_performance, axis=0)
-        temp_performance_std = stats.sem(percentage_performance, axis=0)
+    for percentage_performance_index in range(len(accuracy)):
+
+        if train_config["subset_parameter_check"]:
+            nested_subset_data_index = percentage_performance_index
+        else:
+            nested_subset_data_index = 0
+        temp_performance = [accuracy[percentage_performance_index][i][nested_subset_data_index] for i
+                            in range(len(accuracy[percentage_performance_index]))]
+
+        temp_performance_mean = np.average(temp_performance, axis=0)
+        temp_performance_std = stats.sem(temp_performance, axis=0)
         multi_accuracy.append(temp_performance_mean)
         multi_accuracy_lower_bound.append(temp_performance_mean - temp_performance_std)
         multi_accuracy_upper_bound.append(temp_performance_mean + temp_performance_std)
@@ -331,9 +435,17 @@ def plot_multiple_loss_with_confidence(loss, train_config, visual_config, save_f
     save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder),
                              save_name + "-loss.png")
 
-    for percentage_loss in loss:
-        temp_loss_mean = np.average(percentage_loss, axis=0)
-        temp_loss_std = stats.sem(percentage_loss, axis=0)
+    for percentage_loss_index in range(len(loss)):
+        if train_config["subset_parameter_check"]:
+            nested_subset_data_index = percentage_loss_index
+        else:
+            nested_subset_data_index = 0
+
+        temp_loss = [loss[percentage_loss_index][i][nested_subset_data_index] for i
+                     in range(len(loss[percentage_loss_index]))]
+
+        temp_loss_mean = np.average(temp_loss, axis=0)
+        temp_loss_std = stats.sem(temp_loss, axis=0)
 
         multi_loss.append(temp_loss_mean)
         multi_loss_lower_bounds.append(temp_loss_mean - temp_loss_std)
@@ -341,6 +453,7 @@ def plot_multiple_loss_with_confidence(loss, train_config, visual_config, save_f
 
     fig = plt.figure()
     ax = fig.add_subplot()
+
 
     for i in range(len(multi_loss)):
         if subset[i] <= 0.5:
