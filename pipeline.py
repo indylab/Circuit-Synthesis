@@ -12,7 +12,8 @@ from eval_model import *
 from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
     plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold, \
     plot_multiple_margin_with_confidence_comparison, plot_multiple_loss_with_confidence_comparison, \
-    plot_multiple_accuracy_per_epochs_with_confidence_comparison
+    plot_multiple_accuracy_per_epochs_with_confidence_comparison, \
+    plot_multiple_subset_parameter_margin_accuracy_with_confidence_cross_fold
 from datetime import datetime
 import time
 
@@ -131,7 +132,10 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
     if train_config["loss_per_epoch"]:
         loss_plot_result = plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
         result_dict.update(loss_plot_result)
-
+    if train_config["subset_parameter_check"]:
+        subset_parameter_plot_result = plot_multiple_subset_parameter_margin_accuracy_with_confidence_cross_fold(train_config,
+                                                                                                                 visual_config, result, pipeline_save_name, dataset_type)
+        result_dict.update(subset_parameter_plot_result)
     return result_dict
 
 
