@@ -9,11 +9,11 @@ from utils import load_circuit, load_train_config, load_visual_config, \
     generate_train_config_for_single_pipeline, update_train_config_given_model_type, check_comparison_value_diff
 from metrics import get_margin_error, get_relative_margin_error
 from eval_model import *
-from visualutils import plot_multiple_margin_with_confidence_cross_fold, \
-    plot_multiple_loss_with_confidence_cross_fold, plot_multiple_accuracy_with_confidence_cross_fold, \
+from visualutils import plot_multiple_margin_with_confidence_entrypoint, \
+    plot_multiple_loss_with_confidence_entrypoint, plot_multiple_accuracy_with_confidence_entrypoint, \
     plot_multiple_margin_with_confidence_comparison, plot_multiple_loss_with_confidence_comparison, \
     plot_multiple_accuracy_per_epochs_with_confidence_comparison, \
-    plot_multiple_subset_parameter_margin_accuracy_with_confidence_cross_fold
+    plot_multiple_subset_parameter_margin_accuracy_with_confidence_entrypoint
 from datetime import datetime
 import time
 
@@ -124,17 +124,17 @@ def generate_visual_given_result(result, train_config, visual_config, pipeline_s
     result_dict = dict()
 
     if train_config["test_margin_accuracy"] or train_config["train_margin_accuracy"]:
-        margin_plot_result = plot_multiple_margin_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name, dataset_type)
+        margin_plot_result = plot_multiple_margin_with_confidence_entrypoint(train_config, visual_config, result, pipeline_save_name, dataset_type)
         result_dict.update(margin_plot_result)
     if train_config["test_accuracy_per_epoch"] or train_config["train_accuracy_per_epoch"]:
-        accuracy_plot_result = plot_multiple_accuracy_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        accuracy_plot_result = plot_multiple_accuracy_with_confidence_entrypoint(train_config, visual_config, result, pipeline_save_name)
         result_dict.update(accuracy_plot_result)
     if train_config["loss_per_epoch"]:
-        loss_plot_result = plot_multiple_loss_with_confidence_cross_fold(train_config, visual_config, result, pipeline_save_name)
+        loss_plot_result = plot_multiple_loss_with_confidence_entrypoint(train_config, visual_config, result, pipeline_save_name)
         result_dict.update(loss_plot_result)
     if train_config["subset_parameter_check"]:
-        subset_parameter_plot_result = plot_multiple_subset_parameter_margin_accuracy_with_confidence_cross_fold(train_config,
-                                                                                                                 visual_config, result, pipeline_save_name, dataset_type)
+        subset_parameter_plot_result = plot_multiple_subset_parameter_margin_accuracy_with_confidence_entrypoint(train_config,
+                                                                                                                 visual_config, result, pipeline_save_name)
         result_dict.update(subset_parameter_plot_result)
     return result_dict
 
@@ -275,7 +275,7 @@ def pipeline(configpath):
                 visual_result = generate_visual_given_result(result, new_train_config,
                                                              visual_config, pipeline_save_name, dataset_type_config["type"])
                 result.update(visual_result)
-                save_result(result, pipeline_save_name)
+                save_result(result, pipeline_save_name, configpath)
 
                 if new_train_config["compare_dataset"] or new_train_config["compare_method"]:
                     if new_train_config["loss_per_epoch"]:

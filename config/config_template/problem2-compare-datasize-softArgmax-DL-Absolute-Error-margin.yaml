@@ -33,5 +33,5 @@ test_accuracy_per_epoch: False
 train_accuracy_per_epoch: False
 compare_dataset: False
 compare_method: False
-subset_parameter_check: True
+subset_parameter_check: False
 mode: replace

@@ -154,13 +154,16 @@ def generate_performance_diff_metrics(performance_prediction, test_performance, 
 
     return metrics_dict
 
-def save_result(result, pipeline_save_name):
+def save_result(result, pipeline_save_name, config_path=None):
 
     save_folder = os.path.join(os.path.join(os.getcwd(), "result_out"), pipeline_save_name)
     os.mkdir(save_folder)
     for k in result.keys():
         out_variable_save_path = os.path.join(save_folder, k + ".npy")
         np.save(out_variable_save_path, result[k])
+
+    if config_path is not None:
+        shutil.copyfile(config_path, os.path.join(save_folder, "train_config.yaml"))
 
 
 def check_save_data_status(circuit_config):
