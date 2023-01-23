@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
+from utils import generate_margin_eval_accuracy_given_config
+
 
 def plot_multiple_loss_with_confidence_comparison(loss_mean, loss_upper_bound, loss_lower_bound,
                                                   labels, subsets, save_folder, visual_config, epochs):
@@ -275,44 +277,13 @@ def generate_plot_subset_margin_given_result(eval_margin, margins, train_config,
 def generate_plot_margin_given_result(margin_errors, train_config, visual_config, save_folder, save_name, dataset_type):
 
 
-    eval_margin = visual_config["margin_threshold"]
 
-    multi_mean = []
-    multi_lower_bound = []
-    multi_upper_bound = []
+
+
 
     save_path = os.path.join(os.path.join(os.path.join(os.getcwd(), "out_plot"), save_folder), save_name + f"-margin_{dataset_type}.png")
 
-
-    #Outer axis is different percentage, inner axis is different run, most inner axis is each prediction number
-    for index, percentage_performance in enumerate(margin_errors):
-        temp_mean = []
-        temp_lower_bound = []
-        temp_upper_bound = []
-        for margin in eval_margin:
-            temp_run_result = []
-            for run in range(len(percentage_performance)):
-                if train_config["subset_parameter_check"]:
-                    inner_run_performance = percentage_performance[run][index]
-                else:
-                    inner_run_performance = percentage_performance[run][0]
-                greater_num = 0
-                for i in inner_run_performance:
-                    if i <= margin:
-                        greater_num += 1
-                temp_run_result.append(greater_num / len(inner_run_performance))
-
-            success = np.array(temp_run_result)
-            success_mean = np.average(success)
-            success_std = stats.sem(success)
-
-            temp_mean.append(success_mean)
-            temp_lower_bound.append(success_mean - success_std)
-            temp_upper_bound.append(success_mean + success_std)
-        multi_mean.append(temp_mean)
-        multi_lower_bound.append(temp_lower_bound)
-        multi_upper_bound.append(temp_upper_bound)
-
+    multi_mean, multi_upper_bound, multi_lower_bound = generate_margin_eval_accuracy_given_config(margin_errors, train_config, visual_config)
 
     plot_margin(multi_mean, multi_upper_bound, multi_lower_bound, visual_config, train_config, save_path)
 

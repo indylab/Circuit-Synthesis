@@ -65,10 +65,20 @@ def reconstruct_comparing_plot(result_paths, new_save_path, train_config = None)
                                                                          labels, train_config["subset"], new_save_path_folder,
                                                                          visual_config, epochs, check_every, first_eval)
 
-        if "multi_test_mean" in result_dict_list[0].keys():
-            multi_margin = [i["multi_test_mean"] for i in result_dict_list]
-            multi_margin_upper_bound = [i["multi_test_upper_bound"] for i in result_dict_list]
-            multi_margin_lower_bound = [i["multi_test_lower_bound"] for i in result_dict_list]
+        if "test_margins" in result_dict_list[0].keys():
+            multi_margin = []
+            multi_margin_upper_bound = []
+            multi_margin_lower_bound = []
+
+            for result_dict in result_dict_list:
+                margin_mean, margin_upper_bound, margin_lower_bound = generate_margin_eval_accuracy_given_config(
+                    result_dict["test_margins"],
+                    train_config,
+                    visual_config)
+                multi_margin.append(margin_mean)
+                multi_margin_upper_bound.append(margin_upper_bound)
+                multi_margin_lower_bound.append(margin_lower_bound)
+
             plot_multiple_margin_with_confidence_comparison(multi_margin, multi_margin_upper_bound,
                                                             multi_margin_lower_bound, labels, train_config["subset"], new_save_path_folder, visual_config)
 
@@ -100,10 +110,12 @@ def reconstruct_plot(result_path, new_save_path, train_config = None):
         plot_accuracy(result_dict["multi_test_accuracy"], result_dict["multi_test_accuracy_upper_bound"],
                       result_dict["multi_test_accuracy_lower_bound"], visual_config, train_config, save_name=os.path.join(new_save_path_folder, "accuracy.png"))
 
-    if "multi_test_mean" in result_dict.keys():
-        plot_margin(result_dict["multi_test_mean"], result_dict["multi_test_upper_bound"],
-                    result_dict["multi_test_lower_bound"], visual_config, train_config, save_name=os.path.join(new_save_path_folder, "margin.png"))
-
+    if "test_margins" in result_dict.keys():
+        multi_margin_mean, multi_margin_upper_bound, multi_margin_lower_bound = generate_margin_eval_accuracy_given_config(result_dict["test_margins"],
+                                                                                                      train_config,
+                                                                                                      visual_config)
+        plot_margin(multi_margin_mean, multi_margin_upper_bound,
+                    multi_margin_lower_bound, visual_config, train_config, save_name=os.path.join(new_save_path_folder, "margin.png"))
 
 
 

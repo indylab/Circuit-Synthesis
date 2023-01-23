@@ -317,3 +317,41 @@ def check_comparison_value_diff(train_config, value, key):
             raise ValueError("The {} across different comparison is not the same".format(key))
         else:
             return value
+
+
+def generate_margin_eval_accuracy_given_config(margin_errors, train_config, visual_config):
+
+    multi_mean = []
+    multi_lower_bound = []
+    multi_upper_bound = []
+
+    eval_margin = visual_config["margin_threshold"]
+
+    for index, percentage_performance in enumerate(margin_errors):
+        temp_mean = []
+        temp_lower_bound = []
+        temp_upper_bound = []
+        for margin in eval_margin:
+            temp_run_result = []
+            for run in range(len(percentage_performance)):
+                if train_config["subset_parameter_check"]:
+                    inner_run_performance = percentage_performance[run][index]
+                else:
+                    inner_run_performance = percentage_performance[run][0]
+                greater_num = 0
+                for i in inner_run_performance:
+                    if i <= margin:
+                        greater_num += 1
+                temp_run_result.append(greater_num / len(inner_run_performance))
+
+            success = np.array(temp_run_result)
+            success_mean = np.average(success)
+            success_std = stats.sem(success)
+
+            temp_mean.append(success_mean)
+            temp_lower_bound.append(success_mean - success_std)
+            temp_upper_bound.append(success_mean + success_std)
+        multi_mean.append(temp_mean)
+        multi_lower_bound.append(temp_lower_bound)
+        multi_upper_bound.append(temp_upper_bound)
+    return multi_mean, multi_upper_bound, multi_lower_bound
