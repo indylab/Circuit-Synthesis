@@ -16,10 +16,10 @@ sign:
   - 1
 arguments:
   model_path: config/model/45nm_CS.pm
-  nmos-w_start: 2.88u
+  nmos-w_start: 2.00u
   nmos-w_stop: 6.63u
-  nmos-w_change: 0.2u
-  nmos-r_start: 620
+  nmos-w_change: 0.1u
+  nmos-r_start: 420
   nmos-r_stop: 1450
-  nmos-r_change: 5
+  nmos-r_change: 2
   out: data/nmos

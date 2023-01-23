@@ -1,8 +1,5 @@
 test_netlist: pa/pa-test.sp
 parameter_list:
-  - pa-lint #const
-  - pa-ls1  #const
-  - pa-ls2 #const
   - pa-vb1
   - pa-vb2
   - pa-w1
@@ -21,15 +18,6 @@ sign:
   - 1
 arguments:
   model_path: config/model/45nm_CS.pm
-  pa-lint_start: 160p
-  pa-lint_stop: 160p #170p
-  pa-lint_change: 5p ##
-  pa-ls1_start: 450p
-  pa-ls1_stop: 450p #470
-  pa-ls1_change: 5p
-  pa-ls2_start: 480p #470
-  pa-ls2_stop: 480p
-  pa-ls2_change: 5p ##
   pa-vb1_start: 785m
   pa-vb1_stop: 815m
   pa-vb1_change: 5m

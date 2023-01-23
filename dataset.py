@@ -118,15 +118,16 @@ class LorencoDataset(BaseDataset):
 
         for k in range(self.K):
             rand_delta = np.random.rand(*performance.shape)
-            random_sample = (rand_delta * self.n)/ average_perform
+            random_sample = (rand_delta * self.n) * average_perform
 
+            temp_perfm = np.copy(performance)
             for idx_axis in range(len(self.sign)):
                 if self.sign[idx_axis] == 1:
-                    random_sample[:,idx_axis] -= random_sample[:,idx_axis]
+                    temp_perfm[:,idx_axis] -= random_sample[:,idx_axis]
                 else:
-                    random_sample[:,idx_axis] += random_sample[:, idx_axis]
+                    temp_perfm[:,idx_axis] += random_sample[:, idx_axis]
 
-            new_perform.append(performance - random_sample)
+            new_perform.append(temp_perfm)
             new_param.append(parameter)
 
 
