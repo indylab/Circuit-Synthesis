@@ -148,10 +148,14 @@ def generate_circuit_status(circuit_config, parameter, performance, train_config
 
     argmax_dataset = ArgMaxDataset(circuit_config["order"], circuit_config["sign"], train_config)
 
-    _, _, extra_info = argmax_dataset.modify_data(parameter, performance, None, None, True)
+    modified_parameter, modified_performance, extra_info = argmax_dataset.modify_data(parameter, performance, None, None, True)
 
     circuit_dict["argmax_ratio"] = extra_info["Argmax_ratio"]
     circuit_dict["argmax_modify_num"] = extra_info["Argmax_modify_num"]
+
+    circuit_dict["unique_param"] = np.unique(modified_parameter, axis=0).shape[0]
+
+    print(np.argmax(performance, axis=0))
 
     saveDictToTxt(circuit_dict, path)
 

@@ -224,8 +224,9 @@ class ArgMaxDataset(BaseDataset):
                 else:
                     new_temp_parameter = self.find_closest_max(target_parameter, target_performance, temp_performance)
 
-            if (new_temp_parameter != temp_parameter).all():
+            if (new_temp_parameter != temp_parameter).any():
                 argmax_ratio += 1
+
             new_parameter.append(new_temp_parameter)
             new_performance.append(temp_performance)
 
