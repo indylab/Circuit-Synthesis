@@ -11,6 +11,7 @@ from torch.cuda import is_available
 import platform
 from dataset import BaseDataset
 import shutil
+import time
 
 CONFIG_PATH = os.path.join(os.path.join(os.getcwd(), "config"))
 
@@ -107,7 +108,11 @@ def delete_testing_files(out_directory, names):
     for dir in dirs:
         if not(dir.startswith("batch")):
             continue
-        shutil.rmtree(os.path.join(out, dir))
+        try:
+            shutil.rmtree(os.path.join(out, dir))
+        except PermissionError:
+            time.sleep(5)
+            shutil.rmtree(os.path.join(out, dir))
 
 def generate_metrics_given_config(train_config):
 
