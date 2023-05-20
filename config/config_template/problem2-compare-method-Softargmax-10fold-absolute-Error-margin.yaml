@@ -33,3 +33,4 @@ compare_dataset: False
 compare_method: True
 mode: replace
 subset_parameter_check: False
+independent_sample: False

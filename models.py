@@ -5,23 +5,37 @@ from utils import generate_metrics_given_config, merge_metrics, run_simulation_g
     generate_performance_diff_metrics, evalCircuit
 from model_wrapper import SklearnModelWrapper, PytorchModelWrapper, LookupWrapper
 
-def subset_split(X,y,train_percentage):
+def subset_split(X,y,train_percentage, independent = False):
+
     split_size = np.gcd(int(train_percentage * 100), 100)
     split_time = int(100 / split_size)
     X_size = X.shape[1]
     combine = np.hstack((X, y))
     np.random.shuffle(combine)
 
-    split_array = np.array_split(combine, split_time)
-    for split_time in range(len(split_array)):
-        concat_list = [split_array[k] for k in range(len(split_array)) if k != split_time]
-        if np.gcd(int(train_percentage * 100), 100) + int(train_percentage * 100) == 100:
-            train_data = np.concatenate(concat_list)
-            validate_data = split_array[split_time]
-        else:
-            train_data = split_array[split_time]
-            validate_data = np.concatenate(concat_list)
-        yield train_data[:,:X_size], validate_data[:,:X_size], train_data[:,X_size:], validate_data[:,X_size:]
+    if independent:
+        for _ in range(split_time):
+            split_array = np.array_split(combine, split_time)
+            concat_list = [split_array[k] for k in range(len(split_array)) if k != 0]
+            if np.gcd(int(train_percentage * 100), 100) + int(train_percentage * 100) == 100:
+                train_data = np.concatenate(concat_list)
+                validate_data = split_array[0]
+            else:
+                train_data = split_array[0]
+                validate_data = np.concatenate(concat_list)
+            yield train_data[:,:X_size], validate_data[:,:X_size], train_data[:,X_size:], validate_data[:,X_size:]
+
+    else:
+        split_array = np.array_split(combine, split_time)
+        for st in range(len(split_array)):
+            concat_list = [split_array[k] for k in range(len(split_array)) if k != st]
+            if np.gcd(int(train_percentage * 100), 100) + int(train_percentage * 100) == 100:
+                train_data = np.concatenate(concat_list)
+                validate_data = split_array[st]
+            else:
+                train_data = split_array[st]
+                validate_data = np.concatenate(concat_list)
+            yield train_data[:,:X_size], validate_data[:,:X_size], train_data[:,X_size:], validate_data[:,X_size:]
 
 class EvalModel:
     def __init__(self, train_config, model, train_parameter, train_performance, test_parameter, test_performance, simulator, scaler):
@@ -96,7 +110,7 @@ class ModelEvaluator:
 
             subset_metrics_dict = generate_metrics_given_config(self.train_config)
             count = 0
-            for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage):
+            for (parameter_train, parameter_test, performance_train, performance_test) in subset_split(self.parameter, self.performance, percentage, self.train_config["independent_sample"]):
                 count += 1
                 print("Run with {} percentage of training data, Run number {}".format(percentage, count))
                 kfold_metrics_dict = generate_metrics_given_config(self.train_config)
