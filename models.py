@@ -11,10 +11,11 @@ def subset_split(X,y,train_percentage, independent = False):
     split_time = int(100 / split_size)
     X_size = X.shape[1]
     combine = np.hstack((X, y))
-    np.random.shuffle(combine)
+    
 
     if independent:
         for _ in range(split_time):
+            np.random.shuffle(combine)
             split_array = np.array_split(combine, split_time)
             concat_list = [split_array[k] for k in range(len(split_array)) if k != 0]
             if np.gcd(int(train_percentage * 100), 100) + int(train_percentage * 100) == 100:
@@ -26,6 +27,7 @@ def subset_split(X,y,train_percentage, independent = False):
             yield train_data[:,:X_size], validate_data[:,:X_size], train_data[:,X_size:], validate_data[:,X_size:]
 
     else:
+        np.random.shuffle(combine)
         split_array = np.array_split(combine, split_time)
         for st in range(len(split_array)):
             concat_list = [split_array[k] for k in range(len(split_array)) if k != st]
