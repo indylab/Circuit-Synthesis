@@ -9,9 +9,9 @@
  - Website Comning Soon
 
 ## Docker
-To export running result to host machine: 
+To export running results to host machine: 
 
-1. Create two folder, one for out_plot and another for result_out. 
+1. Create two folders, one for out_plot and another for result_out. 
 2. Run the docker using command 
 
 ```
@@ -31,7 +31,7 @@ python main.py --path=./config/config_template/problem2-compare-dataset-DL-10fol
 ```
 
 ### Problem 2 Number 2
-Test success rate; Compare training methods (DL, lookup, RF, …) with “softargmax”, 10-fold Cross Validation as a function of error margin: 
+Test success rate; Compare training methods (DL, lookup, RF, …) with “softargmax”, 10-fold cross validation as a function of error margin: 
 ```
 python main.py --path=./config/config_template/problem2-compare-method-Softargmax-10fold-absolute-Error-margin.yaml
 ```
